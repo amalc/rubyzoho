@@ -1,6 +1,5 @@
-# rcov generated
+# simplecov generated
 coverage
-coverage.data
 
 # rdoc generated
 rdoc
@@ -47,3 +46,9 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+# For Rubymine
+.idea
+
+# RubyZoho configuration file
+zoho_api_configuration.yaml
