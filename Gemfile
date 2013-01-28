@@ -9,7 +9,10 @@ group :development do
   gem "shoulda", ">= 0"
   gem "rdoc"
   gem "bundler"
+  gem 'httparty'
   gem "jeweler", "~> 1.8.4"
   gem 'rspec'
+  gem 'xml-simple'
+
   gem 'simplecov', :require => false, :group => :test
 end
