@@ -11,6 +11,7 @@ group :development do
   gem "bundler"
   gem 'httparty'
   gem "jeweler", "~> 1.8.4"
+  gem 'roxml'
   gem 'rspec'
   gem 'xml-simple'
 
