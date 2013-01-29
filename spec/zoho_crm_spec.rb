@@ -8,7 +8,7 @@ describe ZohoApi do
   before(:all) do
     base_path = "../spec/fixtures/"
     @config_file = "../spec/fixtures/zoho_api_configuration.yaml"
-    @z = ZohoApi.new(@config_file)
+    @z = ZohoApi::Crm.new(@config_file)
     @email_address = 'jane@smith.com'
     @sample_contact_search_xml = base_path + 'sample_contact_search.xml'
   end

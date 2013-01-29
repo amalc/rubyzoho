@@ -52,6 +52,10 @@ module ZohoApi
          {:newFormat => '1', :authtoken => @auth_token, :scope => 'crmapi', :xmlData => xml_data})
     end
 
+    def string_to_method_name(s)
+      s.gsub(' ', '_').downcase
+    end
+
     def string_to_symbol(s)
       s.gsub(' ', '_').downcase.to_sym
     end
@@ -61,7 +65,8 @@ module ZohoApi
       pp doc.root.attributes['uri']
       unless REXML::XPath.first(doc, "//Contacts").nil?
         contact = RubyZoho::Crm::Contact.new
-        REXML::XPath.each(doc, "//FL") { |e| puts "#{string_to_symbol(e.attribute('val').to_s)} => \"#{e.text}\""}
+        REXML::XPath.each(doc, "//FL") { |e| "#{string_to_method_name(e.attribute('val').to_s)}" }
+        #REXML::XPath.each(doc, "//FL") { |e| puts "#{string_to_symbol(e.attribute('val').to_s)} => \"#{e.text}\""}
       end
     end
   end
