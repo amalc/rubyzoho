@@ -14,11 +14,8 @@ describe ZohoApi do
   end
 
   it "should find a contact by email address" do
-    @contact = @z.find_contact_by_email(@email_address)
-    #f = File.new('sample_contact_search.xml', 'w+')
-    #f.write(@contact)
-    #f.close
-    @contact.should_not eq(nil)
+    contact = @z.find_contact_by_email(@email_address)
+    contact.should_not eq(nil)
   end
 
   it "should get a list of contacts" do
@@ -26,6 +23,9 @@ describe ZohoApi do
     contacts.should_not eq(nil)
     r =  XmlSimple.xml_in(contacts)
     r['uri'].should eq('/crm/private/xml/Contacts/getRecords')
+    f = File.new('sample_contacts_list.xml', 'w+')
+    f.write(contacts)
+    f.close
   end
 
   it "should get a list of leads" do

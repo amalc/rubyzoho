@@ -26,14 +26,15 @@ module ZohoApi
 
     def contacts
       r = self.class.get(create_url('Contacts', "getRecords"),
-        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi' })
-      return r.body if r.response.code == "200" && r.body.index('4422').ni?
+        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
+      pp r.body
+      return r.body if r.response.code == "200" && r.body.index('4422').nil?
       nil
     end
 
     def find_contact_by_email(email)
       r = self.class.get(create_url('Contacts', "getSearchRecords"),
-        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
         :selectColumns => "Contacts(First Name,Last Name,Email,Company)",
         :searchCondition => "(Email|=|#{email})" })
         return r.body if r.response.code == "200" && r.body.index("4422").nil?
@@ -42,7 +43,7 @@ module ZohoApi
 
     def leads
       r = self.class.get(create_url('Leads', "getRecords"),
-        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi' })
+        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
       return r.body if r.response.code == "200"
       nil
     end
