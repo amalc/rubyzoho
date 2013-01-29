@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<response uri="/crm/private/xml/Contacts/getSearchRecords"><result><Contacts><row no="1"><FL val="CONTACTID">748054000000056069</FL><FL val="First Name"><![CDATA[Jane]]></FL><FL val="Last Name"><![CDATA[Smith]]></FL><FL val="Email"><![CDATA[jane@smith.com]]></FL></row></Contacts></result></response>
