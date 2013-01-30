@@ -17,9 +17,9 @@ Jeweler::Tasks.new do |gem|
   gem.name = "ruby_zoho"
   gem.homepage = "http://github.com/amalc/ruby_zoho"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "amalc@pobox.com"
+  gem.summary = "A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API."
+  gem.description = ""
+  gem.email = ""
   gem.authors = ["amalc"]
   # dependencies defined in Gemfile
 end
