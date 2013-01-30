@@ -1,6 +1,7 @@
 = rubyzoho
 
-Description goes here.
+Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
+ActiveRecord lifecycle but without ActiveRecord.
 
 == Contributing to rubyzoho
  
