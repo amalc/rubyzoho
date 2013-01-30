@@ -24,10 +24,17 @@ module ZohoApi
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
 
+    def contact_fields
+      r = self.class.get(create_url('Contacts', "getRecords"),
+        :query => { :newFormat => 2, :authtoken => @auth_token,
+        :scope => 'crmapi', :toIndex => 1 })
+      return r.body if r.response.code == "200" && r.body.index('4422').nil?
+      nil
+    end
+
     def contacts
       r = self.class.get(create_url('Contacts', "getRecords"),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
-      pp r.body
       return r.body if r.response.code == "200" && r.body.index('4422').nil?
       nil
     end
@@ -51,6 +58,22 @@ module ZohoApi
     def lead=
       response = get(create_url('Leads', "getRecords"), :body =>
          {:newFormat => '1', :authtoken => @auth_token, :scope => 'crmapi', :xmlData => xml_data})
+    end
+
+    def record_to_hash(doc)
+      r = []
+      REXML::XPath.each(doc, "FL") { |e| r << [string_to_method_name(e.attribute('val').to_s), e.text] }
+      Hash[r]
+    end
+
+    def records_to_array(xml_doc)
+      result = []
+      doc = REXML::Document.new(xml_doc)
+      pp doc.root.attributes['uri']
+      REXML::XPath.each(doc, "/response/result/Contacts/row").each do |r|
+        result << record_to_hash(r)
+      end
+      result
     end
 
     def string_to_method_name(s)
