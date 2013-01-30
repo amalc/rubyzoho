@@ -1,6 +1,8 @@
+$:.unshift File.join('..', File.dirname(__FILE__), 'lib')
+
 require 'httparty'
-require '../lib/ruby_zoho'
 require 'rexml/document'
+require 'ruby_zoho'
 require 'yaml'
 
 module ZohoApi
@@ -55,9 +57,11 @@ module ZohoApi
       nil
     end
 
-    def lead=
+    def lead=(lead_data)
+      xml_data = lead_data
       response = get(create_url('Leads', "getRecords"), :body =>
          {:newFormat => '1', :authtoken => @auth_token, :scope => 'crmapi', :xmlData => xml_data})
+      response.body
     end
 
     def record_to_hash(doc)
