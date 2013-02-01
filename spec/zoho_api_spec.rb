@@ -6,7 +6,6 @@ require "xmlsimple"
 
 describe ZohoApi do
 
-
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), "fixtures")
     @config_file = File.join(base_path, "zoho_api_configuration.yaml")
