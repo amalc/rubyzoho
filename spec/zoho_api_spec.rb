@@ -17,15 +17,24 @@ describe ZohoApi do
     @sample_contacts_xml = File.join(base_path, 'sample_contacts_list.xml')
   end
 
+  it "should add accessors using a list of names" do
+    doc = File.read(@sample_contact_xml)
+    r = @zoho.records_to_array(doc)
+    ZohoApi::Crm.create_accessor(r[0].keys)
+    z = ZohoApi::Crm.new(@config_file)
+    z.first_name= 'Raj'
+    z.first_name.should eq('Raj')
+  end
+
   it "should convert many zoho records to an array of hashes" do
     doc = File.read(@sample_contacts_xml)
     r = @zoho.records_to_array(doc)
     r.count.should be == 7
   end
 
-  it "should convert one zoho record to an array of one hashe" do
+  it "should convert one zoho record to an array of one hash" do
     doc = File.read(@sample_contact_xml)
-    pp r = @zoho.records_to_array(doc)
+    r = @zoho.records_to_array(doc)
     r.count.should be == 1
   end
 

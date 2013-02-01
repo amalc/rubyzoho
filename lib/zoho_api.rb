@@ -22,6 +22,31 @@ module ZohoApi
       @auth_token = @params['auth_token']
     end
 
+    def self.create_accessor(names)
+      names.each do |n|
+        create_getter(n)
+        create_setter(n)
+      end
+    end
+
+    def self.create_getter(*names)
+        names.each do |name|
+          define_method("#{name}") { instance_variable_get("@#{name}") }
+        end
+      names
+    end
+
+    def self.create_method(name, &block)
+      self.class.send(:define_method, name, &block)
+    end
+
+    def self.create_setter(*names)
+        names.each do |name|
+            define_method("#{name}=") { |val| instance_variable_set("@#{name}", val) }
+        end
+      names
+    end
+
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
@@ -73,7 +98,7 @@ module ZohoApi
     def records_to_array(xml_doc)
       result = []
       doc = REXML::Document.new(xml_doc)
-      pp doc.root.attributes['uri']
+      doc.root.attributes['uri']
       REXML::XPath.each(doc, "/response/result/Contacts/row").each do |r|
         result << record_to_hash(r)
       end
@@ -90,7 +115,7 @@ module ZohoApi
 
     def xml_to_ruby(xml_document)
       doc = REXML::Document.new(xml_document)
-      pp doc.root.attributes['uri']
+      doc.root.attributes['uri']
       unless REXML::XPath.first(doc, "//Contacts").nil?
         contact = RubyZoho::Crm::Contact.new
         REXML::XPath.each(doc, "//FL") { |e| "#{string_to_method_name(e.attribute('val').to_s)}" }

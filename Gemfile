@@ -13,9 +13,8 @@ group :development do
   gem 'relish'
   gem 'roxml'
   gem "rdoc"
-  gem 'rspec'
+  gem 'rspec', ">= 2.12.0"
   gem "shoulda", ">= 0"
   gem 'xml-simple'
-
   gem 'simplecov', :require => false, :group => :test
 end

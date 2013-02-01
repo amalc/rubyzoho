@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
     "spec/fixtures/sample_leads_list.xml",
     "spec/spec_helper.rb",
     "spec/zoho_api_configuration_spec.rb",
-    "spec/zoho_crm_spec.rb"
+    "spec/zoho_api_spec.rb"
   ]
   s.homepage = "http://github.com/amalc/ruby_zoho"
   s.licenses = ["MIT"]
@@ -58,6 +58,10 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<xml-simple>, [">= 0"])
       s.add_development_dependency(%q<simplecov>, [">= 0"])
+      s.add_development_dependency 'rspec', '>= 2.12.0'
+      s.add_development_dependency 'cucumber'
+      s.add_development_dependency 'rake'
+      s.add_development_dependency 'rdoc'
     else
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
