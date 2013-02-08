@@ -48,11 +48,17 @@ module ZohoApi
     end
 
     def add_contact(c)
+      return nil unless c.class == RubyZoho::Crm::Contact
       x = REXML::Document.new
       contacts = x.add_element 'Contacts'
       row = contacts.add_element 'Row', { 'no' => '1'}
+      pp c.instance_variables
       pp x.to_s
       c
+    end
+
+    def camelize(str)
+      str.split('_').map {|w| w.capitalize}.join
     end
 
     def create_url(module_name, api_call)
