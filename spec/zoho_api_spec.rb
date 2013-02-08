@@ -25,6 +25,20 @@ describe ZohoApi do
     z.first_name.should eq('Raj')
   end
 
+  it "should add a new contact" do
+    h = { :first_name => 'Robert',
+          :last_name => 'Smith',
+          :email => 'rsmith@smithereens.com',
+          :department => 'Waste Collection and Management',
+          :phone => '13452129087',
+          :mobile => '12341238790'
+    }
+    r = @zoho.add_contact(h)
+    r.should eq(h)
+    contact = @zoho.find_contact_by_email(h[:email])
+    contact.should_not eq(nil)
+  end
+
   it "should convert many zoho records to an array of hashes" do
     doc = File.read(@sample_contacts_xml)
     r = @zoho.records_to_array(doc)
@@ -72,6 +86,8 @@ describe ZohoApi do
     #f.write(r)
     #f.close
     r.should_not eq(nil)
+    xml = REXML::Document.new(r)
+    REXML::XPath.each(xml, '//FL').count.should eq(336)
   end
 
 end

@@ -47,6 +47,14 @@ module ZohoApi
       names
     end
 
+    def add_contact(c)
+      x = REXML::Document.new
+      contacts = x.add_element 'Contacts'
+      row = contacts.add_element 'Row', { 'no' => '1'}
+      pp x.to_s
+      c
+    end
+
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
