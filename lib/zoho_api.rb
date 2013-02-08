@@ -98,7 +98,6 @@ module ZohoApi
     def records_to_array(xml_doc)
       result = []
       doc = REXML::Document.new(xml_doc)
-      doc.root.attributes['uri']
       REXML::XPath.each(doc, "/response/result/Contacts/row").each do |r|
         result << record_to_hash(r)
       end
