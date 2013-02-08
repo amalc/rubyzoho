@@ -72,11 +72,6 @@ describe ZohoApi do
     r['uri'].should eq('/crm/private/xml/Leads/getRecords')
   end
 
-  it "should convert a string to a symbol" do
-    r = @zoho.string_to_symbol("Last Name")
-    r.should eq(:last_name)
-  end
-
   it "should convert an XML result to a Ruby object" do
     xml = File.read(@sample_contact_search_xml)
     @zoho.xml_to_ruby(xml)
