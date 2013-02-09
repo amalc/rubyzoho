@@ -4,8 +4,11 @@ require 'httparty'
 require 'rexml/document'
 require 'ruby_zoho'
 require 'yaml'
+require 'api_utils'
 
 module ZohoApi
+
+  include ApiUtils
 
   class Crm
     include HTTParty
@@ -48,9 +51,11 @@ module ZohoApi
     end
 
     def add_contact(c)
+      return nil unless c.class == RubyZoho::Crm::Contact
       x = REXML::Document.new
       contacts = x.add_element 'Contacts'
       row = contacts.add_element 'Row', { 'no' => '1'}
+      pp c.instance_variables
       pp x.to_s
       c
     end
@@ -98,26 +103,26 @@ module ZohoApi
     end
 
     def record_to_hash(doc)
+      ZohoApi::Crm.record_to_h(doc)
+    end
+
+    def self.record_to_h(doc)
       r = []
-      REXML::XPath.each(doc, "FL") { |e| r << [string_to_method_name(e.attribute('val').to_s), e.text] }
+      REXML::XPath.each(doc, "FL") { |e| r << [ApiUtils.string_to_method_name(e.attribute('val').to_s), e.text] }
       Hash[r]
     end
 
     def records_to_array(xml_doc)
+      ZohoApi::Crm.records_to_a(xml_doc)
+    end
+
+    def self.records_to_a(xml_doc)
       result = []
       doc = REXML::Document.new(xml_doc)
       REXML::XPath.each(doc, "/response/result/Contacts/row").each do |r|
-        result << record_to_hash(r)
+        result << record_to_h(r)
       end
       result
-    end
-
-    def string_to_method_name(s)
-      s.gsub(' ', '_').downcase
-    end
-
-    def string_to_symbol(s)
-      s.gsub(' ', '_').downcase.to_sym
     end
 
     def xml_to_ruby(xml_document)
@@ -125,7 +130,7 @@ module ZohoApi
       doc.root.attributes['uri']
       unless REXML::XPath.first(doc, "//Contacts").nil?
         contact = RubyZoho::Crm::Contact.new
-        REXML::XPath.each(doc, "//FL") { |e| "#{string_to_method_name(e.attribute('val').to_s)}" }
+        REXML::XPath.each(doc, "//FL") { |e| "#{ApiUtils.string_to_method_name(e.attribute('val').to_s)}" }
         #REXML::XPath.each(doc, "//FL") { |e| puts "#{string_to_symbol(e.attribute('val').to_s)} => \"#{e.text}\""}
       end
     end

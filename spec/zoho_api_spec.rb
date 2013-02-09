@@ -26,6 +26,7 @@ describe ZohoApi do
   end
 
   it "should add a new contact" do
+    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -33,7 +34,8 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
-    r = @zoho.add_contact(h)
+    c = RubyZoho::Crm::Contact.new
+    r = @zoho.add_contact(c)
     r.should eq(h)
     contact = @zoho.find_contact_by_email(h[:email])
     contact.should_not eq(nil)
@@ -68,11 +70,6 @@ describe ZohoApi do
     leads.should_not eq(nil)
     r =  XmlSimple.xml_in(leads)
     r['uri'].should eq('/crm/private/xml/Leads/getRecords')
-  end
-
-  it "should convert a string to a symbol" do
-    r = @zoho.string_to_symbol("Last Name")
-    r.should eq(:last_name)
   end
 
   it "should convert an XML result to a Ruby object" do
