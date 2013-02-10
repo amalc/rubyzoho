@@ -93,12 +93,6 @@ describe ZohoApi do
     r['uri'].should eq('/crm/private/xml/Leads/getRecords')
   end
 
-  it "should convert an XML result to a Ruby object" do
-    pending
-    xml = File.read(@sample_contact_search_xml)
-    @zoho.xml_to_ruby(xml)
-  end
-
   it "should return a list of fields for a contact" do
     r = @zoho.contact_fields
     #f = File.new('sample_contact.xml', 'w+')

@@ -25,6 +25,41 @@ module ZohoApi
       @auth_token = @params['auth_token']
     end
 
+    def add_contact(c)
+      return nil unless c.class == RubyZoho::Crm::Contact
+      x = REXML::Document.new
+      contacts = x.add_element 'Contacts'
+      row = contacts.add_element 'Row', { 'no' => '1'}
+      pp c.methods.grep(/\w=$/)
+      pp x.to_s
+      c
+    end
+
+    def add_dummy_contact
+      x = REXML::Document.new
+      contacts = x.add_element 'Contacts'
+      row = contacts.add_element 'row', { 'no' => '1'}
+      [
+          ['First Name', 'BobDifficultToMatch'],
+          ['Last Name', 'SmithDifficultToMatch'],
+          ['Email', 'bob@smith.com']
+      ].each { |f| add_field(row, f[0], f[1]) }
+      r = self.class.post(create_url('Contacts', "insertRecords"),
+                          :query => { :newFormat => 1, :authtoken => @auth_token,
+                                      :scope => 'crmapi', :xmlData => x },
+                          :headers => { "Content-length" => "0" })
+      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      r.response.code
+    end
+
+    def add_field(row, field, value)
+      r = (REXML::Element.new 'FL')
+      r.attributes['val'] = field
+      r.add_text(value)
+      row.elements << r
+      row
+    end
+
     def self.create_accessor(names)
       names.each do |n|
         create_getter(n)
@@ -50,33 +85,6 @@ module ZohoApi
       names
     end
 
-    def add_contact(c)
-      return nil unless c.class == RubyZoho::Crm::Contact
-      x = REXML::Document.new
-      contacts = x.add_element 'Contacts'
-      row = contacts.add_element 'Row', { 'no' => '1'}
-      pp c.methods.grep(/\w=$/)
-      pp x.to_s
-      c
-    end
-
-    def add_dummy_contact
-      x = REXML::Document.new
-      contacts = x.add_element 'Contacts'
-      row = contacts.add_element 'row', { 'no' => '1'}
-      [
-          ['First Name', 'BobDifficultToMatch'],
-          ['Last Name', 'SmithDifficultToMatch'],
-          ['Email', 'bob@smith.com']
-      ].each { |f| add_field(row, f[0], f[1]) }
-      r = self.class.post(create_url('Contacts', "insertRecords"),
-        :query => { :newFormat => 1, :authtoken => @auth_token,
-        :scope => 'crmapi', :xmlData => x },
-        :headers => { "Content-length" => "0" })
-      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
-    end
-
     def delete_dummy_contact
       c = find_contact_by_email('bob@smith.com')
       c_id = REXML::Document.new(c).elements.to_a(
@@ -90,18 +98,6 @@ module ZohoApi
           :scope => 'crmapi', :id => record_id },
         :headers => { "Content-length" => "0" })
       raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-    end
-
-    def add_field(row, field, value)
-      r = (REXML::Element.new 'FL')
-      r.attributes['val'] = field
-      r.add_text(value)
-      row.elements << r
-      row
-    end
-
-    def create_url(module_name, api_call)
-      "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
 
     def contact_fields
@@ -119,6 +115,10 @@ module ZohoApi
       nil
     end
 
+    def create_url(module_name, api_call)
+      "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
+    end
+
     def find_contact_by_email(email)
       r = self.class.get(create_url('Contacts', "getSearchRecords"),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
@@ -133,13 +133,6 @@ module ZohoApi
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
       return r.body if r.response.code == "200"
       nil
-    end
-
-    def lead=(lead_data)
-      xml_data = lead_data
-      response = get(create_url('Leads', "getRecords"), :body =>
-         {:newFormat => '1', :authtoken => @auth_token, :scope => 'crmapi', :xmlData => xml_data})
-      response.body
     end
 
     def record_to_hash(doc)
@@ -165,15 +158,6 @@ module ZohoApi
       result
     end
 
-    def xml_to_ruby(xml_document)
-      doc = REXML::Document.new(xml_document)
-      doc.root.attributes['uri']
-      unless REXML::XPath.first(doc, "//Contacts").nil?
-        contact = RubyZoho::Crm::Contact.new
-        REXML::XPath.each(doc, "//@val=CONTACTID") { |e| "#{ApiUtils.string_to_method_name(e.attribute('val').to_s)}" }
-        #REXML::XPath.each(doc, "//FL") { |e| puts "#{string_to_symbol(e.attribute('val').to_s)} => \"#{e.text}\""}
-      end
-    end
   end
 
 end
