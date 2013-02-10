@@ -61,6 +61,10 @@ describe ZohoApi do
     @zoho.delete_record('Contacts', r_id)
   end
 
+  it 'should find by module and field for columns' do
+
+  end
+
   it 'should find a contact by email address' do
     contact = @zoho.find_contact_by_email(@email_address)
     contact.should_not eq(nil)

@@ -14,4 +14,8 @@ module ApiUtils
     s.gsub(' ', '_').downcase.to_sym
   end
 
+  def self.symbol_to_string(sym)
+    self.camelize_with_space(sym.to_s)
+  end
+
 end

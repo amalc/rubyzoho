@@ -129,6 +129,17 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
+    def find_by_module_name_and_field(module_name, field, columns)
+      select_columns = columns.collect { |c| ApiUtils. }
+      select_columns = 'Contacts(First Name,Last Name,Email,Company)'
+      r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
+                         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+                                     :selectColumns => select_columns,
+                                     :searchCondition => "(Email|=|#{email})" })
+      return r.body if r.response.code == '200' && r.body.index('4422').nil?
+      nil
+    end
+
     def find_contact_by_email(email)
       r = self.class.get(create_url('Contacts', 'getSearchRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
