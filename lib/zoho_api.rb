@@ -158,6 +158,30 @@ module ZohoApi
       result
     end
 
+    def some(module_name, index = 1)
+      r = self.class.get(create_url(module_name, "getRecords"),
+        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+          :fromIndex => index, :toIndex => 200 })
+      return nil unless r.response.code == "200"
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      to_hash(x)
+    end
+
+    def to_hash(xml_results)
+      r = []
+      xml_results.each do |e|
+        record = {}
+        e.elements.to_a.each do |n|
+          k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
+          break if k.nil?
+          v = n.text == 'null' ? nil : n.text
+          record.merge!({ k => v })
+        end
+        r << record
+      end
+      r
+    end
+
   end
 
 end
