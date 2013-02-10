@@ -25,6 +25,14 @@ describe ZohoApi do
     z.first_name.should eq('Raj')
   end
 
+  it "should add a dummy contact" do
+    r = @zoho.add_dummy_contact
+    r.should eq('200')
+    contact = @zoho.find_contact_by_email('bob@smith.com')
+    contact.should_not eq(nil)
+    @zoho.delete_dummy_contact
+  end
+
   it "should add a new contact" do
     pending
     h = { :first_name => 'Robert',
@@ -35,7 +43,6 @@ describe ZohoApi do
           :mobile => '12341238790'
     }
     c = RubyZoho::Crm::Contact.new
-    r = @zoho.add_dummy_contact
     r.should eq(h)
     contact = @zoho.find_contact_by_email(h[:email])
     contact.should_not eq(nil)
@@ -51,6 +58,20 @@ describe ZohoApi do
     doc = File.read(@sample_contact_xml)
     r = @zoho.records_to_array(doc)
     r.count.should be == 1
+  end
+
+  it "should delete a dummy contact" do
+    @zoho.add_dummy_contact
+    r = @zoho.delete_dummy_contact
+    contact = @zoho.find_contact_by_email('bob@smith.com')
+    contact.should eq(nil)
+  end
+
+  it "should delete a contact record with id" do
+    pending
+    c = @zoho.find_contact_by_email('bob@smith.com')
+    pp c
+    @zoho.delete_record(r_id)
   end
 
   it "should find a contact by email address" do
@@ -73,6 +94,7 @@ describe ZohoApi do
   end
 
   it "should convert an XML result to a Ruby object" do
+    pending
     xml = File.read(@sample_contact_search_xml)
     @zoho.xml_to_ruby(xml)
   end

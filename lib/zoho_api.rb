@@ -64,30 +64,40 @@ module ZohoApi
       x = REXML::Document.new
       contacts = x.add_element 'Contacts'
       row = contacts.add_element 'row', { 'no' => '1'}
-      r1 = (REXML::Element.new 'FL')
-      r1.attributes['val'] = 'First Name'
-      r1.add_text('BobDifficultToMatch')
-      row.elements << r1
-      r2 = (REXML::Element.new 'FL')
-      r2.attributes['val'] = 'Last Name'
-      r2.add_text('SmithbDifficultToMatch')
-      row.elements << r2
-      #r3 = (REXML::Element.new 'FL')
-      #r3.attributes['val'] = 'SMOWNERID'
-      #r3.add_text('achaudhuri@bondfactor.com')
-      #row.elements << r3
-      r4 = (REXML::Element.new 'FL')
-      r4.attributes['val'] = 'Email'
-      r4.add_text('bob@smith.com')
-      row.elements << r4
-      pp xml_data = x.to_s
+      [
+          ['First Name', 'BobDifficultToMatch'],
+          ['Last Name', 'SmithDifficultToMatch'],
+          ['Email', 'bob@smith.com']
+      ].each { |f| add_field(row, f[0], f[1]) }
       r = self.class.post(create_url('Contacts', "insertRecords"),
         :query => { :newFormat => 1, :authtoken => @auth_token,
-        :scope => 'crmapi', :xmlData => xml_data },
+        :scope => 'crmapi', :xmlData => x },
         :headers => { "Content-length" => "0" })
-      pp r.response.code
-      pp r.response.body.to_s
       raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      r.response.code
+    end
+
+    def delete_dummy_contact
+      c = find_contact_by_email('bob@smith.com')
+      c_id = REXML::Document.new(c).elements.to_a(
+          "//FL[@val='CONTACTID']").collect { |e| e.text }
+      delete_record('Contacts', c_id[0]) unless c_id == []
+    end
+
+    def delete_record(module_name, record_id)
+      r = self.class.post(create_url(module_name, 'deleteRecords'),
+        :query => { :newFormat => 1, :authtoken => @auth_token,
+          :scope => 'crmapi', :id => record_id },
+        :headers => { "Content-length" => "0" })
+      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+    end
+
+    def add_field(row, field, value)
+      r = (REXML::Element.new 'FL')
+      r.attributes['val'] = field
+      r.add_text(value)
+      row.elements << r
+      row
     end
 
     def create_url(module_name, api_call)
@@ -160,7 +170,7 @@ module ZohoApi
       doc.root.attributes['uri']
       unless REXML::XPath.first(doc, "//Contacts").nil?
         contact = RubyZoho::Crm::Contact.new
-        REXML::XPath.each(doc, "//FL") { |e| "#{ApiUtils.string_to_method_name(e.attribute('val').to_s)}" }
+        REXML::XPath.each(doc, "//@val=CONTACTID") { |e| "#{ApiUtils.string_to_method_name(e.attribute('val').to_s)}" }
         #REXML::XPath.each(doc, "//FL") { |e| puts "#{string_to_symbol(e.attribute('val').to_s)} => \"#{e.text}\""}
       end
     end
