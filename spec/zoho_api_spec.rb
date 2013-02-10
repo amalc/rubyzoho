@@ -17,11 +17,10 @@ describe ZohoApi do
   end
 
   it 'should add accessors using a list of names' do
-    doc = File.read(@sample_contact_xml)
-    r = @zoho.records_to_array(doc)
-    ZohoApi::Crm.create_accessor(r[0].keys)
+    fields = @zoho.fields('Contacts')
+    ZohoApi::Crm.create_accessor(fields)
     z = ZohoApi::Crm.new(@config_file)
-    z.first_name= 'Raj'
+    z.first_name = 'Raj'
     z.first_name.should eq('Raj')
   end
 
@@ -48,18 +47,6 @@ describe ZohoApi do
     contact.should_not eq(nil)
   end
 
-  it 'should convert many zoho records to an array of hashes' do
-    doc = File.read(@sample_contacts_xml)
-    r = @zoho.records_to_array(doc)
-    r.count.should be == 7
-  end
-
-  it 'should convert one zoho record to an array of one hash' do
-    doc = File.read(@sample_contact_xml)
-    r = @zoho.records_to_array(doc)
-    r.count.should be == 1
-  end
-
   it 'should delete a dummy contact' do
     @zoho.add_dummy_contact
     r = @zoho.delete_dummy_contact
@@ -71,7 +58,7 @@ describe ZohoApi do
     pending
     c = @zoho.find_contact_by_email('bob@smith.com')
     pp c
-    @zoho.delete_record(r_id)
+    @zoho.delete_record('Contacts', r_id)
   end
 
   it 'should find a contact by email address' do
@@ -82,15 +69,20 @@ describe ZohoApi do
   it 'should get a list of contacts' do
     contacts = @zoho.contacts
     contacts.should_not eq(nil)
-    r =  XmlSimple.xml_in(contacts)
-    r['uri'].should eq('/crm/private/xml/Contacts/getRecords')
+    contacts[0][:email].should_not eq(nil)
+    contacts.count.should be > 1
+  end
+
+  it 'should get a list of fields for a module' do
+    r = @zoho.fields('Contacts')
+    r.count.should eq(43)
+    r = @zoho.fields('Leads')
+    r.count.should eq(34)
   end
 
   it 'should get a list of leads' do
     leads = @zoho.leads
     leads.should_not eq(nil)
-    r =  XmlSimple.xml_in(leads)
-    r['uri'].should eq('/crm/private/xml/Leads/getRecords')
   end
 
   it 'should retrieve records by module name' do

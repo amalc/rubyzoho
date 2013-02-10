@@ -63,7 +63,9 @@ module ZohoApi
     end
 
     def self.create_accessor(names)
-      names.each do |n|
+      names.each do |name|
+        n = name
+        n = name.to_s if name.class == Symbol
         create_getter(n)
         create_setter(n)
       end
@@ -110,15 +112,21 @@ module ZohoApi
       nil
     end
 
-    def contacts
-      r = self.class.get(create_url('Contacts', 'getRecords'),
-        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
-      return r.body if r.response.code == '200' && r.body.index('4422').nil?
-      nil
+    def contacts(index = 1, number_of_records = nil)
+      some('Contacts', index, number_of_records)
     end
 
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
+    end
+
+    def fields(module_name)
+      record = first(module_name)
+      record[0].keys
+    end
+
+    def first(module_name)
+      some(module_name, 1, 1)
     end
 
     def find_contact_by_email(email)
@@ -130,34 +138,8 @@ module ZohoApi
       nil
     end
 
-    def leads
-      r = self.class.get(create_url('Leads', 'getRecords'),
-        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
-      return r.body if r.response.code == '200'
-      nil
-    end
-
-    def record_to_hash(doc)
-      ZohoApi::Crm.record_to_h(doc)
-    end
-
-    def self.record_to_h(doc)
-      r = []
-      REXML::XPath.each(doc, 'FL') { |e| r << [ApiUtils.string_to_method_name(e.attribute('val').to_s), e.text] }
-      Hash[r]
-    end
-
-    def records_to_array(xml_doc)
-      ZohoApi::Crm.records_to_a(xml_doc)
-    end
-
-    def self.records_to_a(xml_doc)
-      result = []
-      doc = REXML::Document.new(xml_doc)
-      REXML::XPath.each(doc, '/response/result/Contacts/row').each do |r|
-        result << record_to_h(r)
-      end
-      result
+    def leads(index = 1, number_of_records = nil)
+      some('Leads', index, number_of_records)
     end
 
     def some(module_name, index = 1, number_of_records = nil)
