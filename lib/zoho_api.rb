@@ -11,6 +11,8 @@ module ZohoApi
   include ApiUtils
 
   class Crm
+    NUMBER_OF_RECORDS_TO_GET = 200
+
     include HTTParty
 
     #debug_output $stderr
@@ -44,11 +46,11 @@ module ZohoApi
           ['Last Name', 'SmithDifficultToMatch'],
           ['Email', 'bob@smith.com']
       ].each { |f| add_field(row, f[0], f[1]) }
-      r = self.class.post(create_url('Contacts', "insertRecords"),
+      r = self.class.post(create_url('Contacts', 'insertRecords'),
                           :query => { :newFormat => 1, :authtoken => @auth_token,
                                       :scope => 'crmapi', :xmlData => x },
-                          :headers => { "Content-length" => "0" })
-      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+                          :headers => { 'Content-length' => '0' })
+      raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
       r.response.code
     end
 
@@ -88,7 +90,7 @@ module ZohoApi
     def delete_dummy_contact
       c = find_contact_by_email('bob@smith.com')
       c_id = REXML::Document.new(c).elements.to_a(
-          "//FL[@val='CONTACTID']").collect { |e| e.text }
+          %q|//FL[@val='CONTACTID']|).collect { |e| e.text }
       delete_record('Contacts', c_id[0]) unless c_id == []
     end
 
@@ -96,22 +98,22 @@ module ZohoApi
       r = self.class.post(create_url(module_name, 'deleteRecords'),
         :query => { :newFormat => 1, :authtoken => @auth_token,
           :scope => 'crmapi', :id => record_id },
-        :headers => { "Content-length" => "0" })
-      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+        :headers => { 'Content-length' => '0' })
+      raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
     end
 
     def contact_fields
-      r = self.class.get(create_url('Contacts', "getRecords"),
+      r = self.class.get(create_url('Contacts', 'getRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token,
         :scope => 'crmapi', :toIndex => 1 })
-      return r.body if r.response.code == "200" && r.body.index('4422').nil?
+      return r.body if r.response.code == '200' && r.body.index('4422').nil?
       nil
     end
 
     def contacts
-      r = self.class.get(create_url('Contacts', "getRecords"),
+      r = self.class.get(create_url('Contacts', 'getRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
-      return r.body if r.response.code == "200" && r.body.index('4422').nil?
+      return r.body if r.response.code == '200' && r.body.index('4422').nil?
       nil
     end
 
@@ -120,18 +122,18 @@ module ZohoApi
     end
 
     def find_contact_by_email(email)
-      r = self.class.get(create_url('Contacts', "getSearchRecords"),
+      r = self.class.get(create_url('Contacts', 'getSearchRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-        :selectColumns => "Contacts(First Name,Last Name,Email,Company)",
+        :selectColumns => 'Contacts(First Name,Last Name,Email,Company)',
         :searchCondition => "(Email|=|#{email})" })
-        return r.body if r.response.code == "200" && r.body.index("4422").nil?
+        return r.body if r.response.code == '200' && r.body.index('4422').nil?
       nil
     end
 
     def leads
-      r = self.class.get(create_url('Leads', "getRecords"),
+      r = self.class.get(create_url('Leads', 'getRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi' })
-      return r.body if r.response.code == "200"
+      return r.body if r.response.code == '200'
       nil
     end
 
@@ -141,7 +143,7 @@ module ZohoApi
 
     def self.record_to_h(doc)
       r = []
-      REXML::XPath.each(doc, "FL") { |e| r << [ApiUtils.string_to_method_name(e.attribute('val').to_s), e.text] }
+      REXML::XPath.each(doc, 'FL') { |e| r << [ApiUtils.string_to_method_name(e.attribute('val').to_s), e.text] }
       Hash[r]
     end
 
@@ -152,17 +154,17 @@ module ZohoApi
     def self.records_to_a(xml_doc)
       result = []
       doc = REXML::Document.new(xml_doc)
-      REXML::XPath.each(doc, "/response/result/Contacts/row").each do |r|
+      REXML::XPath.each(doc, '/response/result/Contacts/row').each do |r|
         result << record_to_h(r)
       end
       result
     end
 
-    def some(module_name, index = 1)
-      r = self.class.get(create_url(module_name, "getRecords"),
+    def some(module_name, index = 1, number_of_records = nil)
+      r = self.class.get(create_url(module_name, 'getRecords'),
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-          :fromIndex => index, :toIndex => 200 })
-      return nil unless r.response.code == "200"
+          :fromIndex => index, :toIndex => number_of_records || NUMBER_OF_RECORDS_TO_GET })
+      return nil unless r.response.code == '200'
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end
