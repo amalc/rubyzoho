@@ -5,6 +5,9 @@ module RubyZoho
   module Crm
 
     class Contact
+
+    attr_accessor :first_name, :last_name
+
       def initialize
         #base_path = File.join(File.dirname(__FILE__), "..", "spec", "fixtures")
         #@sample_contact_xml = File.join(base_path, 'sample_contact.xml')

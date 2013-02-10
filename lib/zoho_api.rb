@@ -55,9 +55,39 @@ module ZohoApi
       x = REXML::Document.new
       contacts = x.add_element 'Contacts'
       row = contacts.add_element 'Row', { 'no' => '1'}
-      pp c.instance_variables
+      pp c.methods.grep(/\w=$/)
       pp x.to_s
       c
+    end
+
+    def add_dummy_contact
+      x = REXML::Document.new
+      contacts = x.add_element 'Contacts'
+      row = contacts.add_element 'row', { 'no' => '1'}
+      r1 = (REXML::Element.new 'FL')
+      r1.attributes['val'] = 'First Name'
+      r1.add_text('BobDifficultToMatch')
+      row.elements << r1
+      r2 = (REXML::Element.new 'FL')
+      r2.attributes['val'] = 'Last Name'
+      r2.add_text('SmithbDifficultToMatch')
+      row.elements << r2
+      #r3 = (REXML::Element.new 'FL')
+      #r3.attributes['val'] = 'SMOWNERID'
+      #r3.add_text('achaudhuri@bondfactor.com')
+      #row.elements << r3
+      r4 = (REXML::Element.new 'FL')
+      r4.attributes['val'] = 'Email'
+      r4.add_text('bob@smith.com')
+      row.elements << r4
+      pp xml_data = x.to_s
+      r = self.class.post(create_url('Contacts', "insertRecords"),
+        :query => { :newFormat => 1, :authtoken => @auth_token,
+        :scope => 'crmapi', :xmlData => xml_data },
+        :headers => { "Content-length" => "0" })
+      pp r.response.code
+      pp r.response.body.to_s
+      raise("Adding contact failed", RuntimeError, r.response.body.to_s) unless r.response.code == '200'
     end
 
     def create_url(module_name, api_call)

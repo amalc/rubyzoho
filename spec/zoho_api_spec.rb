@@ -35,7 +35,7 @@ describe ZohoApi do
           :mobile => '12341238790'
     }
     c = RubyZoho::Crm::Contact.new
-    r = @zoho.add_contact(c)
+    r = @zoho.add_dummy_contact
     r.should eq(h)
     contact = @zoho.find_contact_by_email(h[:email])
     contact.should_not eq(nil)
