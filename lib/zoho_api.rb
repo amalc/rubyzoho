@@ -19,12 +19,8 @@ module ZohoApi
 
     attr_reader :auth_token, :module_fields
 
-    def initialize(config_file_path)
-      @config_file_path = config_file_path
-      raise('Zoho configuration file not found', RuntimeError, config_file_path) unless
-          File.exist?(config_file_path)
-      @params = YAML.load(File.open(config_file_path))
-      @auth_token = @params['auth_token']
+    def initialize(auth_token)
+      @auth_token = auth_token
       @module_fields = reflect_module_fields
     end
 

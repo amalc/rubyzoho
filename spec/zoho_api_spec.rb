@@ -21,12 +21,9 @@ describe ZohoApi do
 
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
-    @config_file = File.join(base_path, 'zoho_api_configuration.yaml')
-    @zoho = ZohoApi::Crm.new(@config_file)
-    @email_address = 'jane@smith.com'
-    @sample_contact_xml = File.join(base_path, 'sample_contact.xml')
-    @sample_contact_search_xml = File.join(base_path, 'sample_contact_search.xml')
-    @sample_contacts_xml = File.join(base_path, 'sample_contacts_list.xml')
+    config_file = File.join(base_path, 'zoho_api_configuration.yaml')
+    params = YAML.load(File.open(config_file))
+    @zoho = ZohoApi::Crm.new(params['auth_token'])
   end
 
   it 'should add a new contact' do
