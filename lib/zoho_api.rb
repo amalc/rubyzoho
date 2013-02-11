@@ -25,6 +25,7 @@ module ZohoApi
           File.exist?(config_file_path)
       @params = YAML.load(File.open(config_file_path))
       @auth_token = @params['auth_token']
+      @module_fields = reflect_module_fields
     end
 
     def add_contact(c)
@@ -102,9 +103,13 @@ module ZohoApi
       names
     end
 
+    def create_url(module_name, api_call)
+      "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
+    end
+
     def delete_dummy_contact
       c = find_record(
-          'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
+          'Contacts', :email, 'bob@smith.com')
       delete_record('Contacts', c[0][:contactid]) unless c == []
     end
 
@@ -116,10 +121,6 @@ module ZohoApi
       raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
     end
 
-    def create_url(module_name, api_call)
-      "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
-    end
-
     def fields(module_name)
       record = first(module_name)
       record[0].keys
@@ -129,17 +130,26 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
-    def find_record(module_name, field, value, columns)
+    def find_record(module_name, field, value)
       f = field.class == Symbol ? ApiUtils.symbol_to_string(field) : field
       search_condition = "(#{f}|=|#{value})"
-      columns = columns.map { |c| ApiUtils.symbol_to_string(c) }
-      select_columns =  "#{module_name}(" + columns.join(',') + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                     :selectColumns => select_columns,
+                     :selectColumns => 'All',
                      :searchCondition => search_condition })
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
+    end
+
+    def self.module_names
+      %w{Leads Accounts Contacts Potentials}
+    end
+
+    def reflect_module_fields
+      module_names = ZohoApi::Crm.module_names
+      module_fields = {}
+      module_names.each { |n| module_fields.merge!({ ApiUtils.string_to_symbol(n) => fields(n) }) }
+      module_fields
     end
 
     def some(module_name, index = 1, number_of_records = nil)
