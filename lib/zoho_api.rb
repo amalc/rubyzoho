@@ -28,16 +28,6 @@ module ZohoApi
       @module_fields = reflect_module_fields
     end
 
-    def add_contact(c)
-      return nil unless c.class == RubyZoho::Crm::Contact
-      x = REXML::Document.new
-      contacts = x.add_element 'Contacts'
-      row = contacts.add_element 'Row', { 'no' => '1'}
-      pp c.methods.grep(/\w=$/)
-      pp x.to_s
-      c
-    end
-
     def add_dummy_contact
       x = REXML::Document.new
       contacts = x.add_element 'Contacts'

@@ -66,7 +66,7 @@ describe ZohoApi do
 
   it 'should find by module and field for columns' do
     @zoho.add_dummy_contact
-    pp r = @zoho.find_record(
+    r = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com')
     r[0][:email].should eq('bob@smith.com')
     @zoho.delete_dummy_contact
