@@ -27,7 +27,8 @@ describe ZohoApi do
   it 'should add a dummy contact' do
     r = @zoho.add_dummy_contact
     r.should eq('200')
-    contact = @zoho.find_contact_by_email('bob@smith.com')
+    contact = @zoho.find_record(
+        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
     contact.should_not eq(nil)
     @zoho.delete_dummy_contact
   end
@@ -43,35 +44,32 @@ describe ZohoApi do
     }
     c = RubyZoho::Crm::Contact.new
     r.should eq(h)
-    contact = @zoho.find_contact_by_email(h[:email])
+    contact = @zoho.find_record(
+        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
     contact.should_not eq(nil)
   end
 
   it 'should delete a dummy contact' do
     @zoho.add_dummy_contact
-    r = @zoho.delete_dummy_contact
-    contact = @zoho.find_contact_by_email('bob@smith.com')
+    @zoho.delete_dummy_contact
+    contact = @zoho.find_record(
+        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
     contact.should eq(nil)
   end
 
   it 'should delete a contact record with id' do
-    pending
-    c = @zoho.find_contact_by_email('bob@smith.com')
-    pp c
-    @zoho.delete_record('Contacts', r_id)
+    @zoho.add_dummy_contact
+    c = @zoho.find_record(
+        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
+    @zoho.delete_record('Contacts', c[0][:contactid])
   end
 
   it 'should find by module and field for columns' do
     @zoho.add_dummy_contact
-    r = @zoho.find_by_module_name_and_field_with_columns(
+    r = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
     r[0][:email].should eq('bob@smith.com')
     @zoho.delete_dummy_contact
-  end
-
-  it 'should find a contact by email address' do
-    contact = @zoho.find_contact_by_email(@email_address)
-    contact.should_not eq(nil)
   end
 
   it 'should get a list of fields for a module' do

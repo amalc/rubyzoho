@@ -90,10 +90,9 @@ module ZohoApi
     end
 
     def delete_dummy_contact
-      c = find_contact_by_email('bob@smith.com')
-      c_id = REXML::Document.new(c).elements.to_a(
-          %q|//FL[@val='CONTACTID']|).collect { |e| e.text }
-      delete_record('Contacts', c_id[0]) unless c_id == []
+      c = find_record(
+          'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
+      delete_record('Contacts', c[0][:contactid]) unless c == []
     end
 
     def delete_record(module_name, record_id)
@@ -117,7 +116,7 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
-    def find_by_module_name_and_field_with_columns(module_name, field, value, columns)
+    def find_record(module_name, field, value, columns)
       f = field.class == Symbol ? ApiUtils.symbol_to_string(field) : field
       search_condition = "(#{f}|=|#{value})"
       columns = columns.map { |c| ApiUtils.symbol_to_string(c) }
@@ -126,18 +125,8 @@ module ZohoApi
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
                      :selectColumns => select_columns,
                      :searchCondition => search_condition })
-      #return r.body if r.response.code == '200' && r.body.index('4422').nil?
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
-    end
-
-    def find_contact_by_email(email)
-      r = self.class.get(create_url('Contacts', 'getSearchRecords'),
-        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-        :selectColumns => 'Contacts(First Name,Last Name,Email,Company)',
-        :searchCondition => "(Email|=|#{email})" })
-        return r.body if r.response.code == '200' && r.body.index('4422').nil?
-      nil
     end
 
     def some(module_name, index = 1, number_of_records = nil)
@@ -155,12 +144,12 @@ module ZohoApi
         record = {}
         e.elements.to_a.each do |n|
           k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
-          break if k.nil?
           v = n.text == 'null' ? nil : n.text
           record.merge!({ k => v })
         end
         r << record
       end
+      return nil if r == []
       r
     end
 
