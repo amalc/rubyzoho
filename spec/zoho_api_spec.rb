@@ -34,7 +34,6 @@ describe ZohoApi do
   end
 
   it 'should add a new contact' do
-    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -42,11 +41,12 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
-    c = RubyZoho::Crm::Contact.new
-    r.should eq(h)
+    @zoho.add_record('Contacts', h)
     contact = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
+        'Contacts', :email, h[:email], [:first_name, :last_name, :email, :company])
+    @zoho.delete_record('Contacts', contact[0][:contactid])
     contact.should_not eq(nil)
+    contact.count.should eq(1)
   end
 
   it 'should delete a dummy contact' do

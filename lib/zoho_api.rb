@@ -54,6 +54,19 @@ module ZohoApi
       r.response.code
     end
 
+    def add_record(module_name, fields_values_hash)
+      x = REXML::Document.new
+      contacts = x.add_element module_name
+      row = contacts.add_element 'row', { 'no' => '1'}
+      fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      r = self.class.post(create_url(module_name, 'insertRecords'),
+                          :query => { :newFormat => 1, :authtoken => @auth_token,
+                                      :scope => 'crmapi', :xmlData => x },
+                          :headers => { 'Content-length' => '0' })
+      raise('Adding record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      r.response.code
+    end
+
     def add_field(row, field, value)
       r = (REXML::Element.new 'FL')
       r.attributes['val'] = field
