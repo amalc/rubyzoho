@@ -104,18 +104,6 @@ module ZohoApi
       raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
     end
 
-    def contact_fields
-      r = self.class.get(create_url('Contacts', 'getRecords'),
-        :query => { :newFormat => 2, :authtoken => @auth_token,
-        :scope => 'crmapi', :toIndex => 1 })
-      return r.body if r.response.code == '200' && r.body.index('4422').nil?
-      nil
-    end
-
-    def contacts(index = 1, number_of_records = nil)
-      some('Contacts', index, number_of_records)
-    end
-
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
@@ -129,15 +117,18 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
-    def find_by_module_name_and_field(module_name, field, columns)
-      select_columns = columns.collect { |c| ApiUtils. }
-      select_columns = 'Contacts(First Name,Last Name,Email,Company)'
+    def find_by_module_name_and_field_with_columns(module_name, field, value, columns)
+      f = field.class == Symbol ? ApiUtils.symbol_to_string(field) : field
+      search_condition = "(#{f}|=|#{value})"
+      columns = columns.map { |c| ApiUtils.symbol_to_string(c) }
+      select_columns =  "#{module_name}(" + columns.join(',') + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
-                         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                                     :selectColumns => select_columns,
-                                     :searchCondition => "(Email|=|#{email})" })
-      return r.body if r.response.code == '200' && r.body.index('4422').nil?
-      nil
+         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+                     :selectColumns => select_columns,
+                     :searchCondition => search_condition })
+      #return r.body if r.response.code == '200' && r.body.index('4422').nil?
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      to_hash(x)
     end
 
     def find_contact_by_email(email)
@@ -147,10 +138,6 @@ module ZohoApi
         :searchCondition => "(Email|=|#{email})" })
         return r.body if r.response.code == '200' && r.body.index('4422').nil?
       nil
-    end
-
-    def leads(index = 1, number_of_records = nil)
-      some('Leads', index, number_of_records)
     end
 
     def some(module_name, index = 1, number_of_records = nil)

@@ -62,19 +62,16 @@ describe ZohoApi do
   end
 
   it 'should find by module and field for columns' do
-
+    @zoho.add_dummy_contact
+    r = @zoho.find_by_module_name_and_field_with_columns(
+        'Contacts', :email, 'bob@smith.com', [:first_name, :last_name, :email, :company])
+    r[0][:email].should eq('bob@smith.com')
+    @zoho.delete_dummy_contact
   end
 
   it 'should find a contact by email address' do
     contact = @zoho.find_contact_by_email(@email_address)
     contact.should_not eq(nil)
-  end
-
-  it 'should get a list of contacts' do
-    contacts = @zoho.contacts
-    contacts.should_not eq(nil)
-    contacts[0][:email].should_not eq(nil)
-    contacts.count.should be > 1
   end
 
   it 'should get a list of fields for a module' do
@@ -84,24 +81,11 @@ describe ZohoApi do
     r.count.should eq(34)
   end
 
-  it 'should get a list of leads' do
-    leads = @zoho.leads
-    leads.should_not eq(nil)
-  end
-
   it 'should retrieve records by module name' do
     r = @zoho.some('Contacts')
     r.should_not eq(nil)
-  end
-
-  it 'should return a list of fields for a contact' do
-    r = @zoho.contact_fields
-    #f = File.new('sample_contact.xml', 'w+')
-    #f.write(r)
-    #f.close
-    r.should_not eq(nil)
-    xml = REXML::Document.new(r)
-    REXML::XPath.each(xml, '//FL').count.should_not eq(0)
+    r[0][:email].should_not eq(nil)
+    r.count.should be > 1
   end
 
 end
