@@ -17,7 +17,7 @@ module ZohoApi
 
     #debug_output $stderr
 
-    attr_reader :auth_token
+    attr_reader :auth_token, :module_fields
 
     def initialize(config_file_path)
       @config_file_path = config_file_path
@@ -47,33 +47,6 @@ module ZohoApi
       r.add_text(value)
       row.elements << r
       row
-    end
-
-    def self.create_accessor(names)
-      names.each do |name|
-        n = name
-        n = name.to_s if name.class == Symbol
-        create_getter(n)
-        create_setter(n)
-      end
-    end
-
-    def self.create_getter(*names)
-        names.each do |name|
-          define_method("#{name}") { instance_variable_get("@#{name}") }
-        end
-      names
-    end
-
-    def self.create_method(name, &block)
-      self.class.send(:define_method, name, &block)
-    end
-
-    def self.create_setter(*names)
-        names.each do |name|
-            define_method("#{name}=") { |val| instance_variable_set("@#{name}", val) }
-        end
-      names
     end
 
     def create_url(module_name, api_call)

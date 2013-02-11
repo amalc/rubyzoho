@@ -29,23 +29,6 @@ describe ZohoApi do
     @sample_contacts_xml = File.join(base_path, 'sample_contacts_list.xml')
   end
 
-  it 'should add accessors using a list of names' do
-    fields = @zoho.fields('Contacts')
-    ZohoApi::Crm.create_accessor(fields)
-    z = ZohoApi::Crm.new(@config_file)
-    z.first_name = 'Raj'
-    z.first_name.should eq('Raj')
-  end
-
-  it 'should add a dummy contact' do
-    r = add_dummy_contact
-    r.should eq('200')
-    contact = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com')
-    contact.should_not eq(nil)
-    delete_dummy_contact
-  end
-
   it 'should add a new contact' do
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
@@ -60,14 +43,6 @@ describe ZohoApi do
     @zoho.delete_record('Contacts', contact[0][:contactid])
     contact.should_not eq(nil)
     contact.count.should eq(1)
-  end
-
-  it 'should delete a dummy contact' do
-    add_dummy_contact
-    delete_dummy_contact
-    contact = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com')
-    contact.should eq(nil)
   end
 
   it 'should delete a contact record with id' do
