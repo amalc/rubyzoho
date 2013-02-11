@@ -28,23 +28,6 @@ module ZohoApi
       @module_fields = reflect_module_fields
     end
 
-    def add_dummy_contact
-      x = REXML::Document.new
-      contacts = x.add_element 'Contacts'
-      row = contacts.add_element 'row', { 'no' => '1'}
-      [
-          ['First Name', 'BobDifficultToMatch'],
-          ['Last Name', 'SmithDifficultToMatch'],
-          ['Email', 'bob@smith.com']
-      ].each { |f| add_field(row, f[0], f[1]) }
-      r = self.class.post(create_url('Contacts', 'insertRecords'),
-                          :query => { :newFormat => 1, :authtoken => @auth_token,
-                                      :scope => 'crmapi', :xmlData => x },
-                          :headers => { 'Content-length' => '0' })
-      raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
-    end
-
     def add_record(module_name, fields_values_hash)
       x = REXML::Document.new
       contacts = x.add_element module_name
@@ -95,12 +78,6 @@ module ZohoApi
 
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
-    end
-
-    def delete_dummy_contact
-      c = find_record(
-          'Contacts', :email, 'bob@smith.com')
-      delete_record('Contacts', c[0][:contactid]) unless c == []
     end
 
     def delete_record(module_name, record_id)

@@ -6,6 +6,19 @@ require 'xmlsimple'
 
 describe ZohoApi do
 
+  def add_dummy_contact
+    c = {:first_name => 'BobDifficultToMatch', :last_name => 'SmithDifficultToMatch',
+         :email => 'bob@smith.com'}
+    @zoho.add_record('Contacts', c)
+  end
+
+  def delete_dummy_contact
+    c = @zoho.find_record(
+        'Contacts', :email, 'bob@smith.com')
+    @zoho.delete_record('Contacts', c[0][:contactid]) unless c == []
+  end
+
+
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @config_file = File.join(base_path, 'zoho_api_configuration.yaml')
@@ -25,12 +38,12 @@ describe ZohoApi do
   end
 
   it 'should add a dummy contact' do
-    r = @zoho.add_dummy_contact
+    r = add_dummy_contact
     r.should eq('200')
     contact = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com')
     contact.should_not eq(nil)
-    @zoho.delete_dummy_contact
+    delete_dummy_contact
   end
 
   it 'should add a new contact' do
@@ -50,26 +63,26 @@ describe ZohoApi do
   end
 
   it 'should delete a dummy contact' do
-    @zoho.add_dummy_contact
-    @zoho.delete_dummy_contact
+    add_dummy_contact
+    delete_dummy_contact
     contact = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com')
     contact.should eq(nil)
   end
 
   it 'should delete a contact record with id' do
-    @zoho.add_dummy_contact
+    add_dummy_contact
     c = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com')
     @zoho.delete_record('Contacts', c[0][:contactid])
   end
 
   it 'should find by module and field for columns' do
-    @zoho.add_dummy_contact
+    add_dummy_contact
     r = @zoho.find_record(
         'Contacts', :email, 'bob@smith.com')
     r[0][:email].should eq('bob@smith.com')
-    @zoho.delete_dummy_contact
+    delete_dummy_contact
   end
 
   it 'should get a list of fields for a module' do
