@@ -1,6 +1,6 @@
 Travis CI - YRI 1.9.x
 
-    {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
 
 = rubyzoho
 
