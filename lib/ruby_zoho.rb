@@ -112,8 +112,6 @@ module RubyZoho
 
       def self.run_find_by_method(attrs, *args, &block)
         puts "In #{__method__}"
-        pp attrs
-        pp args
 
         # Make an array of attribute names
         attrs = attrs.split('_and_')
@@ -121,7 +119,7 @@ module RubyZoho
         # #transpose will zip the two arrays together like so:
         #   [[:a, :b, :c], [1, 2, 3]].transpose
         #   # => [[:a, 1], [:b, 2], [:c, 3]]
-        attrs_with_args = [attrs, args].transpose
+        pp attrs_with_args = [attrs, args].transpose
 
         # Hash[] will take the passed associative array and turn it
         # into a hash like so:

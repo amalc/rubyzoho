@@ -66,9 +66,10 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
-    def find_record(module_name, field, value)
-      f = field.class == Symbol ? ApiUtils.symbol_to_string(field) : field
-      search_condition = "(#{f}|=|#{value})"
+    def find_record(module_name, fields, conditions, values)
+      sc_fields = fields.collect { |f| ApiUtils.symbol_to_string(f) }
+      sc_vals = [sc_fields, conditions, values].transpose
+      search_condition = '(' + sc_vals.join('|') + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
                      :selectColumns => 'All',

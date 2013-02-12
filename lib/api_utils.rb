@@ -15,7 +15,7 @@ module ApiUtils
   end
 
   def self.symbol_to_string(sym)
-    self.camelize_with_space(sym.to_s)
+    sym.class == Symbol ? self.camelize_with_space(sym.to_s) : self.camelize_with_space(sym)
   end
 
 end

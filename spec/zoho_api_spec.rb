@@ -14,7 +14,7 @@ describe ZohoApi do
 
   def delete_dummy_contact
     c = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com')
+        'Contacts', [:email], ['='], ['bob@smith.com'])
     @zoho.delete_record('Contacts', c[0][:contactid]) unless c == []
   end
 
@@ -36,7 +36,7 @@ describe ZohoApi do
     }
     @zoho.add_record('Contacts', h)
     contact = @zoho.find_record(
-        'Contacts', :email, h[:email])
+        'Contacts', [:email], ['='], [h[:email]])
     @zoho.delete_record('Contacts', contact[0][:contactid])
     contact.should_not eq(nil)
     contact.count.should eq(1)
@@ -45,14 +45,14 @@ describe ZohoApi do
   it 'should delete a contact record with id' do
     add_dummy_contact
     c = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com')
+        'Contacts', [:email], ['='], ['bob@smith.com'])
     @zoho.delete_record('Contacts', c[0][:contactid])
   end
 
   it 'should find by module and field for columns' do
     add_dummy_contact
     r = @zoho.find_record(
-        'Contacts', :email, 'bob@smith.com')
+        'Contacts', [:email], ['='], ['bob@smith.com'])
     r[0][:email].should eq('bob@smith.com')
     delete_dummy_contact
   end
