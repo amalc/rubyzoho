@@ -5,13 +5,16 @@ source "http://rubygems.org"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
-group :development do
+
+gem 'httparty'
+gem 'roxml'
+
+
+group :development, :test do
   gem "bundler"
   gem 'cucumber'
-  gem 'httparty'
   gem "jeweler", "~> 1.8.4"
   gem 'relish'
-  gem 'roxml'
   gem "rdoc"
   gem 'rspec', ">= 2.12.0"
   gem "shoulda", ">= 0"

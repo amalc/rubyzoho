@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-
 require 'rubygems'
 require 'bundler'
 
@@ -37,6 +36,7 @@ Jeweler::Tasks.new do |gem|
   gem.authors = ["amalc"]
   # dependencies defined in Gemfile
 end
+
 Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
