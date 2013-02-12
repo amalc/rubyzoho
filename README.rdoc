@@ -55,14 +55,28 @@ or iterate through the returned set of records.
 
 Equality is the only match currently supported.
 
+To get a list of all accounts:
+
+    a = RubyZoho::Crm::Account.all
+    a.each do |account|
+      pp a.account_name
+    end
+
+Or for all quotes:
+
+    q = RubyZoho::Crm::Account.all
+    q.each do |account|
+      pp q.subject
+      pp q.quote_name
+    end
 
 To create a new record:
 
     c = RubyZoho::Crm::Contact.new(
-        :first_name => 'First Name',
-        :last_name => 'Last Name',
-        :email => 'email@domain.com',
-        etc.
+      :first_name => 'First Name',
+      :last_name => 'Last Name',
+      :email => 'email@domain.com',
+      etc.
     )
     c.save
     r = RubyZoho::Crm::Contact.find_by_email('email@domain.com')
@@ -73,12 +87,12 @@ To add a contact to an existing account:
 
     a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
     c = RubyZoho::Crm::Contact.new(
-        :first_name => 'First Name',
-        :last_name => 'Last Name',
-        :email => 'email@domain.com',
-        :account_name => a[0].account_name,
-        :accountid => a[0].accountid  # accountid instead of account_id because of Zoho's convention
-        etc.
+      :first_name => 'First Name',
+      :last_name => 'Last Name',
+      :email => 'email@domain.com',
+      :account_name => a[0].account_name,
+      :accountid => a[0].accountid  # accountid instead of account_id because of Zoho's convention
+      etc.
     )
     c.save
 
@@ -92,7 +106,7 @@ Objects currently supported are:
 
 
 ==Bugs and Enhancments
-Please open an issue on GitHub. Or better, send in a pull request.
+Please open an issue on GitHub. Or better yet, send in a pull request.
 
 ---
 
