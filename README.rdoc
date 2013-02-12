@@ -27,7 +27,7 @@ at this point.
 
 To get a list of supported attributes for a Zoho CRM contact:
 
-    require 'rubyzoho'
+    require 'ruby_zoho'
 
     c = RubyZoho::Crm::Contact.new
     c.attr_writers  # => Give a list of updatable attributes
