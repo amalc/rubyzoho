@@ -37,6 +37,9 @@ describe RubyZoho::Crm do
     r.each { |m| m.email.should eq('bob@smith.com') }
     r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     r.should_not eq(nil)
+    r.first.should_not eq(nil)
+    r.last.should_not eq(nil)
+    r.map { |c| c.last_name }.count.should eq(3)
     r.first.last_name.should eq('Smithereens')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) }
   end

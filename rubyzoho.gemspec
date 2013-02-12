@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rubyzoho"
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["amalc"]
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/api_utils.rb",
     "lib/ruby_zoho.rb",
     "lib/zoho_api.rb",
+    "rubyzoho-0.0.2.gem",
     "rubyzoho.gemspec",
     "spec/api_utils_spec.rb",
     "spec/fixtures/sample_contact.xml",
@@ -44,7 +45,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/amalc/rubyzoho"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.23"
+  s.rubygems_version = "1.8.24"
   s.summary = "A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API."
 
   if s.respond_to? :specification_version then
