@@ -1,17 +1,24 @@
 Travis CI - YRI 1.9.x
-{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+
+    {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
 
 = rubyzoho
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle but without ActiveRecord.
 
-== configuration
+== Installation
+    gem install rubyzoho
+
+== Configuration
 Put the following in an initializer (e.g. zoho.rb):
 
     RubyZoho.configure do |config|
       config.api_key = << API Key from Zoho>>
     end
+
+Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
+your daily allowance.
 
 ---
 
@@ -27,6 +34,6 @@ Put the following in an initializer (e.g. zoho.rb):
 
 == Copyright
 
-Copyright (c) 2013 amalc. See LICENSE.txt for
+Copyright (c) 2013 amalc. Released under the MIT license. See LICENSE.txt for
 further details.
 
