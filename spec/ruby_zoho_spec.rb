@@ -23,7 +23,6 @@ describe RubyZoho::Crm::Contact do
   end
 
   it 'should find a contact by email' do
-    pending
     c = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
     pp c
   end
@@ -40,6 +39,11 @@ describe RubyZoho::Crm::Contact do
 
   it 'should get a list of attr_writers for leads' do
     c = RubyZoho::Crm::Lead.new
+    c.attr_writers.count.should be >= 34
+  end
+
+  it 'should get a list of attr_writers for potentials' do
+    c = RubyZoho::Crm::Potential.new
     c.attr_writers.count.should be >= 34
   end
 

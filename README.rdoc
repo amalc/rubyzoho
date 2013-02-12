@@ -1,9 +1,18 @@
-{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+Travis CI {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
 
 = rubyzoho
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle but without ActiveRecord.
+
+== configuration
+Put the following in an initializer (e.g. zoho.rb):
+<tt>
+    RubyZoho.configure do |config|
+      config.api_key = << API Key from Zoho>>
+    end
+</tt>
+---
 
 == Contributing to rubyzoho
  

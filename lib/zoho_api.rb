@@ -78,7 +78,7 @@ module ZohoApi
     end
 
     def self.module_names
-      %w{Leads Accounts Contacts Potentials}
+      %w{Leads Accounts Contacts Potentials Quotes Invoices SalesOrders}
     end
 
     def reflect_module_fields

@@ -59,9 +59,15 @@ describe ZohoApi do
 
   it 'should get a list of fields for a module' do
     r = @zoho.fields('Contacts')
-    r.count.should eq(43)
+    r.count.should be >= 43
     r = @zoho.fields('Leads')
-    r.count.should eq(34)
+    r.count.should be >= 34
+    r = @zoho.fields('Quotes')
+    r.count.should be >= 33
+    r = @zoho.fields('SalesOrders')
+    r.count.should >= 45
+    r = @zoho.fields('Invoices')
+    r.count.should >= 41
   end
 
   it 'should retrieve records by module name' do
