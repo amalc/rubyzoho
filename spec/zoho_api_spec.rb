@@ -22,8 +22,9 @@ describe ZohoApi do
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     config_file = File.join(base_path, 'zoho_api_configuration.yaml')
-    params = YAML.load(File.open(config_file))
-    @zoho = ZohoApi::Crm.new(params['auth_token'])
+    #params = YAML.load(File.open(config_file))
+    #@zoho = ZohoApi::Crm.new(params['auth_token'])
+    @zoho = ZohoApi::Crm.new('62cedfe9427caef8afb9ea3b5bf68154')
   end
 
   it 'should add a new contact' do
@@ -35,8 +36,7 @@ describe ZohoApi do
           :mobile => '12341238790'
     }
     @zoho.add_record('Contacts', h)
-    contact = @zoho.find_record(
-        'Contacts', [:email], ['='], [h[:email]])
+    contact = @zoho.find_record('Contacts', [:email], ['='], [h[:email]])
     @zoho.delete_record('Contacts', contact[0][:contactid])
     contact.should_not eq(nil)
     contact.count.should eq(1)
@@ -44,15 +44,13 @@ describe ZohoApi do
 
   it 'should delete a contact record with id' do
     add_dummy_contact
-    c = @zoho.find_record(
-        'Contacts', [:email], ['='], ['bob@smith.com'])
+    c = @zoho.find_record('Contacts', [:email], ['='], ['bob@smith.com'])
     @zoho.delete_record('Contacts', c[0][:contactid])
   end
 
   it 'should find by module and field for columns' do
     add_dummy_contact
-    r = @zoho.find_record(
-        'Contacts', [:email], ['='], ['bob@smith.com'])
+    r = @zoho.find_record('Contacts', [:email], ['='], ['bob@smith.com'])
     r[0][:email].should eq('bob@smith.com')
     delete_dummy_contact
   end

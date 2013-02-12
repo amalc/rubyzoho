@@ -8,9 +8,10 @@ describe RubyZoho::Crm::Contact do
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     config_file = File.join(base_path, 'zoho_api_configuration.yaml')
-    params = YAML.load(File.open(config_file))
+    #params = YAML.load(File.open(config_file))
     RubyZoho.configure do |config|
-      config.api_key = params['auth_token']
+      #config.api_key = params['auth_token']
+      config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
     end
   end
 
@@ -44,12 +45,12 @@ describe RubyZoho::Crm::Contact do
 
   it 'should get a list of attr_writers for potentials' do
     c = RubyZoho::Crm::Potential.new
-    c.attr_writers.count.should be >= 34
+    c.attr_writers.count.should be >= 26
   end
 
-  it 'should get a list of attr_writers for potentials' do
-    c = RubyZoho::Crm::Potential.new
-    c.attr_writers.count.should be >= 34
+  it 'should get a list of attr_writers for quotes' do
+    c = RubyZoho::Crm::Quote.new
+    c.attr_writers.count.should be >= 33
   end
 
   it 'should get a list of contacts' do
