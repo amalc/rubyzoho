@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/api_utils.rb",
     "lib/ruby_zoho.rb",
     "lib/zoho_api.rb",
+    "rubyzoho.gemspec",
     "spec/api_utils_spec.rb",
     "spec/fixtures/sample_contact.xml",
     "spec/fixtures/sample_contact_search.xml",
