@@ -91,8 +91,15 @@ module RubyZoho
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       end
 
-      def self.all
-        RubyZoho.configuration.api.some('Contacts')
+      def self.all         #TODO Refactor into low level API
+        result = []
+        i = 1
+        begin
+          batch = RubyZoho.configuration.api.some('Contacts', i, 2)
+          i += 2
+          result.concat(batch) unless batch.nil?
+        end while !batch.nil?
+        result.collect { |r| new(r) }
       end
 
       def self.delete(id)

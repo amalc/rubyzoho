@@ -67,7 +67,9 @@ describe RubyZoho::Crm::Contact do
   end
 
   it 'should get a list of contacts' do
-    RubyZoho::Crm::Contact.all.count.should be > 1
+    r = RubyZoho::Crm::Contact.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Contact) }
   end
 
   it 'should save a record' do
@@ -76,6 +78,7 @@ describe RubyZoho::Crm::Contact do
     c.last_name = 'Portra'
     c.email = 'raj@portra.com'
     c.save
+    RubyZoho::Crm::Contact.delete(c.contactid)
   end
 
 end
