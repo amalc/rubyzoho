@@ -1,4 +1,5 @@
-Travis CI {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+Travis CI - YRI 1.9.x
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
 
 = rubyzoho
 
@@ -7,11 +8,11 @@ ActiveRecord lifecycle but without ActiveRecord.
 
 == configuration
 Put the following in an initializer (e.g. zoho.rb):
-<tt>
+
     RubyZoho.configure do |config|
       config.api_key = << API Key from Zoho>>
     end
-</tt>
+
 ---
 
 == Contributing to rubyzoho
