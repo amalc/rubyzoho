@@ -7,10 +7,10 @@ Travis CI - YRI 1.9.x
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle but without ActiveRecord.
 
-== Installation
+== Install
     gem install rubyzoho
 
-== Configuration
+== Configure
 Put the following in an initializer (e.g. zoho.rb):
 
     RubyZoho.configure do |config|
