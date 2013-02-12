@@ -28,8 +28,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "ruby_zoho"
-  gem.homepage = "http://github.com/amalc/ruby_zoho"
+  gem.name = "rubyzoho"
+  gem.homepage = "http://github.com/amalc/rubyzoho"
   gem.license = "MIT"
   gem.summary = "A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API."
   gem.description = ""
@@ -54,7 +54,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "ruby_zoho #{version}"
+  rdoc.title = "rubyzoho #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
