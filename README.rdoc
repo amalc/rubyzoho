@@ -70,6 +70,16 @@ Or for all quotes:
       pp quote.quote_name
     end
 
+To get the first quote:
+    q.first
+
+Or the last one:
+    q.last
+
+Since the result is Enumerable:
+    q.map { |m| m.last_name }
+works.
+
 To create a new record:
 
     c = RubyZoho::Crm::Contact.new(
