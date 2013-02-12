@@ -3,11 +3,14 @@ require 'api_utils'
 
 module RubyZoho
 
-  class Configuration
-    attr_accessor :api_key
+  attr_reader :api
 
-    def initialize(api_k = nil)
-      self.api_key = api_k || nil
+  class Configuration
+    attr_accessor :api, :api_key
+
+    def initialize
+      self.api_key = nil
+      self.api = nil
     end
   end
 
@@ -18,7 +21,9 @@ module RubyZoho
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
+    self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key)
   end
+
 
   module Crm
 
@@ -48,19 +53,19 @@ module RubyZoho
       end
     end
 
-    def create(api, object_attribute_hash)
-      initialize(api, object_attribute_hash)
+    def create(object_attribute_hash)
+      initialize(object_attribute_hash)
       save
     end
 
     def delete(id)
-      @api.delete_record(@module_name, id)
+      RubyZoho.configuration.api.delete_record(@module_name, id)
     end
 
     def save
       h = {}
       @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
-      @api.add_record(@module_name, h)
+      RubyZoho.configuration.api.add_record(@module_name, h)
     end
 
 
@@ -69,11 +74,10 @@ module RubyZoho
 
       attr_reader :fields
 
-      def initialize(api, object_attribute_hash = {})
+      def initialize(object_attribute_hash = {})
         @module_name = 'Accounts'
-        @fields = api.module_fields[:accounts]
+        @fields = RubyZoho.configuration.api.module_fields[:accounts]
         RubyZoho::Crm.create_accessor(RubyZoho::Crm::Account, @fields)
-        @api = api
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       end
 
@@ -85,56 +89,55 @@ module RubyZoho
 
       attr_reader :fields
 
-      def initialize(api, object_attribute_hash = {})
+      def initialize(object_attribute_hash = {})
         @module_name = 'Contacts'
-        @fields = api.module_fields[:contacts]
+        @fields = RubyZoho.configuration.api.module_fields[:contacts]
         RubyZoho::Crm.create_accessor(RubyZoho::Crm::Contact, @fields)
-        @api = api
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       end
 
-      def self.method_missing(meth, *args, &block)
-        print 'Method missing...'
-        pp meth
-        pp args
-        pp block
-
-        if meth.to_s =~ /^find_by_(.+)$/
-          run_find_by_method($1, *args, &block)
-        else
-          super
-        end
-      end
-
-      def self.respond_to?(method_sym, include_private = false)
-        if method_sym.to_s =~ /^find_by_(.*)$/
-          true
-        else
-          super
-        end
-      end
-
-      def self.run_find_by_method(attrs, *args, &block)
-        puts "In #{__method__}"
-        pp attrs
-        pp args
-
-        # Make an array of attribute names
-        attrs = attrs.split('_and_')
-
-        # #transpose will zip the two arrays together like so:
-        #   [[:a, :b, :c], [1, 2, 3]].transpose
-        #   # => [[:a, 1], [:b, 2], [:c, 3]]
-        attrs_with_args = [attrs, args].transpose
-
-        # Hash[] will take the passed associative array and turn it
-        # into a hash like so:
-        #   Hash[[[:a, 2], [:b, 4]]] # => { :a => 2, :b => 4 }
-        conditions = Hash[attrs_with_args]
-
-        pp conditions
-      end
-
+      #def self.method_missing(meth, *args, &block)
+      #  print 'Method missing...'
+      #  pp meth
+      #  pp args
+      #  pp block
+      #
+      #  if meth.to_s =~ /^find_by_(.+)$/
+      #    run_find_by_method($1, *args, &block)
+      #  else
+      #    super
+      #  end
+      #end
+      #
+      #def self.respond_to?(method_sym, include_private = false)
+      #  if method_sym.to_s =~ /^find_by_(.*)$/
+      #    true
+      #  else
+      #    super
+      #  end
+      #end
+      #
+      #def self.run_find_by_method(attrs, *args, &block)
+      #  puts "In #{__method__}"
+      #  pp attrs
+      #  pp args
+      #
+      #  # Make an array of attribute names
+      #  attrs = attrs.split('_and_')
+      #
+      #  # #transpose will zip the two arrays together like so:
+      #  #   [[:a, :b, :c], [1, 2, 3]].transpose
+      #  #   # => [[:a, 1], [:b, 2], [:c, 3]]
+      #  attrs_with_args = [attrs, args].transpose
+      #
+      #  # Hash[] will take the passed associative array and turn it
+      #  # into a hash like so:
+      #  #   Hash[[[:a, 2], [:b, 4]]] # => { :a => 2, :b => 4 }
+      #  conditions = Hash[attrs_with_args]
+      #
+      #  pp conditions
+      #end
+      #
     end
 
 
@@ -143,11 +146,10 @@ module RubyZoho
 
       attr_reader :fields
 
-      def initialize(api, object_attribute_hash = {})
+      def initialize(object_attribute_hash = {})
         @module_name = 'Leads'
-        @fields = api.module_fields[:leads]
+        @fields = RubyZoho.configuration.api.module_fields[:leads]
         RubyZoho::Crm.create_accessor(RubyZoho::Crm::Lead, @fields)
-        @api = api
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       end
 
@@ -158,11 +160,10 @@ module RubyZoho
 
       attr_reader :fields
 
-      def initialize(api, object_attribute_hash = {})
+      def initialize(object_attribute_hash = {})
         @module_name = 'Potentials'
-        @fields = api.module_fields[:leads]
+        @fields = RubyZoho.configuration.api.module_fields[:leads]
         RubyZoho::Crm.create_accessor(RubyZoho::Crm::Potential, @fields)
-        @api = api
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       end
 
