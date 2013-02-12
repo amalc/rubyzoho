@@ -112,7 +112,7 @@ Please open an issue on GitHub. Or better yet, send in a pull request.
 
 == Contributing to rubyzoho
 
-* Pull requests with specs and a version branch are welcomed.
+* Pull requests with unit tests or specs and a version branch are welcomed.
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
