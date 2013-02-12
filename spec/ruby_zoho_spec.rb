@@ -3,7 +3,7 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 require 'spec_helper'
 require 'zoho_api'
 
-describe RubyZoho::Crm::Contact do
+describe RubyZoho::Crm do
 
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
@@ -66,19 +66,62 @@ describe RubyZoho::Crm::Contact do
     c.attr_writers.count.should be >= 33
   end
 
+  it 'should get a list of accounts' do
+    r = RubyZoho::Crm::Account.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Account) }
+  end
+
   it 'should get a list of contacts' do
     r = RubyZoho::Crm::Contact.all
     r.count.should be > 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Contact) }
   end
 
-  it 'should save a record' do
-    c = RubyZoho::Crm::Contact.new
-    c.first_name = 'Raj'
-    c.last_name = 'Portra'
-    c.email = 'raj@portra.com'
+  it 'should get a list of potentials' do
+    r = RubyZoho::Crm::Potential.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Potential) }
+  end
+
+  it 'should get a list of quotes' do
+    r = RubyZoho::Crm::Quote.all
+    r.count.should be >= 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
+  end
+
+  it 'should save a contact record' do
+    c = RubyZoho::Crm::Contact.new(
+      :first_name => 'Raj',
+      :last_name => 'Portra',
+      :email => 'raj@portra.com')
     c.save
-    RubyZoho::Crm::Contact.delete(c.contactid)
+    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) }
+  end
+
+  it 'should save a lead record' do
+    l = RubyZoho::Crm::Lead.new(
+      :first_name => 'Raj',
+      :last_name => 'Portra',
+      :email => 'raj@portra.com')
+    l.save
+    r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
+    r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
+  end
+
+  it 'should save a potential record' do
+    potentials = RubyZoho::Crm::Potential.all
+    p = RubyZoho::Crm::Potential.new(
+        :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
+        :accountid => potentials[0].accountid,
+        :account_name => potentials[0].account_name,
+        :closing_date => '1/1/2014',
+        :type => 'New Business',
+        :stage => 'Needs Analysis')
+    p.save
+    r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
+    r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
   end
 
 end

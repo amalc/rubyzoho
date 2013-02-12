@@ -24,7 +24,19 @@ module RubyZoho
   end
 
 
-  module Crm
+
+  class Crm
+
+    class << self
+      attr_accessor :module_name
+    end
+
+    def initialize(object_attribute_hash = {})
+      @fields = RubyZoho.configuration.api.module_fields[
+          ApiUtils.string_to_symbol(Crm.module_name)]
+      RubyZoho::Crm.create_accessor(self.class, @fields)
+      object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+    end
 
     def attr_writers
       self.methods.grep(/\w=$/)
@@ -60,108 +72,147 @@ module RubyZoho
     def save
       h = {}
       @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
-      RubyZoho.configuration.api.add_record(@module_name, h)
+      RubyZoho.configuration.api.add_record(Crm.module_name, h)
     end
 
+    def self.all         #TODO Refactor into low level API
+      result = []
+      i = 1
+      begin
+        batch = RubyZoho.configuration.api.some(Crm.module_name, i, 200)
+        i += 200
+        result.concat(batch) unless batch.nil?
+      end while !batch.nil?
+      result.collect { |r| new(r) }
+    end
 
-    class Account
-      include RubyZoho::Crm
+    def self.delete(id)
+      RubyZoho.configuration.api.delete_record(Crm.module_name, id)
+    end
 
-      attr_reader :fields
-
-      def initialize(object_attribute_hash = {})
-        @module_name = 'Accounts'
-        @fields = RubyZoho.configuration.api.module_fields[:accounts]
-        RubyZoho::Crm.create_accessor(RubyZoho::Crm::Account, @fields)
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+    def self.method_missing(meth, *args, &block)
+      if meth.to_s =~ /^find_by_(.+)$/
+        run_find_by_method($1, *args, &block)
+      else
+        super
       end
     end
 
+    def self.run_find_by_method(attrs, *args, &block)
+      attrs = attrs.split('_and_')
+      conditions = Array.new(args.size, '=')
+      h = RubyZoho.configuration.api.find_records(
+          Crm.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
+      )
+      return h.collect { |r| new(r) } unless h.nil?
+      nil
+    end
 
-    class Contact
-      include RubyZoho::Crm
 
+    class Account < RubyZoho::Crm
+      include RubyZoho
       attr_reader :fields
+      Crm.module_name = 'Accounts'
 
       def initialize(object_attribute_hash = {})
-        @module_name = 'Contacts'
-        @fields = RubyZoho.configuration.api.module_fields[
-            ApiUtils.string_to_symbol(@module_name)]
-        RubyZoho::Crm.create_accessor(RubyZoho::Crm::Contact, @fields)
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+        Crm.module_name = 'Accounts'
+        super
       end
 
-      def self.all         #TODO Refactor into low level API
-        result = []
-        i = 1
-        begin
-          batch = RubyZoho.configuration.api.some('Contacts', i, 2)
-          i += 2
-          result.concat(batch) unless batch.nil?
-        end while !batch.nil?
-        result.collect { |r| new(r) }
+      def self.all
+        Crm.module_name = 'Accounts'
+        super
       end
 
       def self.delete(id)
-        RubyZoho.configuration.api.delete_record('Contacts', id)
-      end
-
-      def self.method_missing(meth, *args, &block)
-        if meth.to_s =~ /^find_by_(.+)$/
-          run_find_by_method($1, *args, &block)
-        else
-          super
-        end
-      end
-
-      def self.run_find_by_method(attrs, *args, &block)
-        attrs = attrs.split('_and_')
-        conditions = Array.new(args.size, '=')
-        h = RubyZoho.configuration.api.find_records(
-            'Contacts', ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
-        )
-        return h.collect { |r| new(r) } unless h.nil?
-        nil
+        Crm.module_name = 'Accounts'
+        super
       end
     end
 
 
-    class Lead
-      include RubyZoho::Crm
-
+    class Contact < RubyZoho::Crm
+      include RubyZoho
       attr_reader :fields
+      Crm.module_name = 'Contacts'
 
       def initialize(object_attribute_hash = {})
-        @module_name = 'Leads'
-        @fields = RubyZoho.configuration.api.module_fields[:leads]
-        RubyZoho::Crm.create_accessor(RubyZoho::Crm::Lead, @fields)
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+        Crm.module_name = 'Contacts'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Contacts'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Contacts'
+        super
       end
     end
 
-    class Potential
-      include RubyZoho::Crm
 
+    class Lead < RubyZoho::Crm
+      include RubyZoho
       attr_reader :fields
+      Crm.module_name = 'Leads'
 
       def initialize(object_attribute_hash = {})
-        @module_name = 'Potentials'
-        @fields = RubyZoho.configuration.api.module_fields[:potentials]
-        RubyZoho::Crm.create_accessor(RubyZoho::Crm::Potential, @fields)
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+        Crm.module_name = 'Leads'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Leads'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Leads'
+        super
       end
     end
 
-    class Quote
-      include RubyZoho::Crm
-
+    class Potential < RubyZoho::Crm
+      include RubyZoho
       attr_reader :fields
+      Crm.module_name = 'Potentials'
 
       def initialize(object_attribute_hash = {})
-        @module_name = 'Quotes'
-        @fields = RubyZoho.configuration.api.module_fields[:quotes]
-        RubyZoho::Crm.create_accessor(RubyZoho::Crm::Quote, @fields)
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+        Crm.module_name = 'Potentials'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Potentials'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Potentials'
+        super
+      end
+    end
+
+    class Quote < RubyZoho::Crm
+      include RubyZoho
+      attr_reader :fields
+      Crm.module_name = 'Quotes'
+
+      def initialize(object_attribute_hash = {})
+        Crm.module_name = 'Quotes'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Quotes'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Quotes'
+        super
       end
     end
 
