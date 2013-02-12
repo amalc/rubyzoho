@@ -66,14 +66,14 @@ module ZohoApi
       some(module_name, 1, 1)
     end
 
-    def find_record(module_name, fields, conditions, values)
-      sc_fields = fields.collect { |f| ApiUtils.symbol_to_string(f) }
-      sc_vals = [sc_fields, conditions, values].transpose
-      search_condition = '(' + sc_vals.join('|') + ')'
+    def find_records(module_name, field, condition, value)
+      sc_field = ApiUtils.symbol_to_string(field)
+      search_condition = '(' + sc_field + '|' + condition + '|' + value + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                     :selectColumns => 'All',
-                     :searchCondition => search_condition })
+                     :selectColumns => 'All', :searchCondition => search_condition,
+                     :fromIndex => 1, :toIndex =>  NUMBER_OF_RECORDS_TO_GET })
+      raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end

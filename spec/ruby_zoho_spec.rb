@@ -23,9 +23,22 @@ describe RubyZoho::Crm::Contact do
     c.email.should eq('raj@portra.com')
   end
 
-  it 'should find a contact by email' do
-    c = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
-    pp c
+  it 'should find a contact by email or last name' do
+    1.upto(3) do
+      c = RubyZoho::Crm::Contact.new(
+        :first_name => 'Bob',
+        :last_name => 'Smithereens',
+        :email => 'bob@smith.com')
+      c.save
+    end
+  r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
+    r.should_not eq(nil)
+    r.count.should eq(3)
+    r.each { |m| m.email.should eq('bob@smith.com') }
+    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    r.should_not eq(nil)
+    r.first.last_name.should eq('Smithereens')
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) }
   end
 
   it 'should get a list of attr_writers for accounts' do
@@ -54,8 +67,7 @@ describe RubyZoho::Crm::Contact do
   end
 
   it 'should get a list of contacts' do
-    pending
-    true.should == false
+    RubyZoho::Crm::Contact.all.count.should be > 1
   end
 
   it 'should save a record' do

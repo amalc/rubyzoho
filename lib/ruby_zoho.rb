@@ -57,10 +57,6 @@ module RubyZoho
       save
     end
 
-    def delete(id)
-      RubyZoho.configuration.api.delete_record(@module_name, id)
-    end
-
     def save
       h = {}
       @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
@@ -89,9 +85,18 @@ module RubyZoho
 
       def initialize(object_attribute_hash = {})
         @module_name = 'Contacts'
-        @fields = RubyZoho.configuration.api.module_fields[:contacts]
+        @fields = RubyZoho.configuration.api.module_fields[
+            ApiUtils.string_to_symbol(@module_name)]
         RubyZoho::Crm.create_accessor(RubyZoho::Crm::Contact, @fields)
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+      end
+
+      def self.all
+        RubyZoho.configuration.api.some('Contacts')
+      end
+
+      def self.delete(id)
+        RubyZoho.configuration.api.delete_record('Contacts', id)
       end
 
       def self.method_missing(meth, *args, &block)
@@ -102,31 +107,14 @@ module RubyZoho
         end
       end
 
-      #def self.respond_to?(method_sym, include_private = false)
-      #  if method_sym.to_s =~ /^find_by_(.*)$/
-      #    true
-      #  else
-      #    super
-      #  end
-      #end
-
       def self.run_find_by_method(attrs, *args, &block)
-        puts "In #{__method__}"
-
-        # Make an array of attribute names
         attrs = attrs.split('_and_')
-
-        # #transpose will zip the two arrays together like so:
-        #   [[:a, :b, :c], [1, 2, 3]].transpose
-        #   # => [[:a, 1], [:b, 2], [:c, 3]]
-        pp attrs_with_args = [attrs, args].transpose
-
-        # Hash[] will take the passed associative array and turn it
-        # into a hash like so:
-        #   Hash[[[:a, 2], [:b, 4]]] # => { :a => 2, :b => 4 }
-        conditions = Hash[attrs_with_args]
-
-        pp conditions
+        conditions = Array.new(args.size, '=')
+        h = RubyZoho.configuration.api.find_records(
+            'Contacts', ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
+        )
+        return h.collect { |r| new(r) } unless h.nil?
+        nil
       end
     end
 
