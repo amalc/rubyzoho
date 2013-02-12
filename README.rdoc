@@ -59,15 +59,15 @@ To get a list of all accounts:
 
     a = RubyZoho::Crm::Account.all
     a.each do |account|
-      pp a.account_name
+      pp account.account_name
     end
 
 Or for all quotes:
 
     q = RubyZoho::Crm::Account.all
-    q.each do |account|
-      pp q.subject
-      pp q.quote_name
+    q.each do |quote|
+      pp quote.subject
+      pp quote.quote_name
     end
 
 To create a new record:
