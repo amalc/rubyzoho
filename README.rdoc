@@ -20,10 +20,66 @@ Put the following in an initializer (e.g. zoho.rb):
 Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
 your daily allowance.
 
+
+== Use
+RubyZoho attenmpts to follow the ActiveRecord lifecycle, i.e. new, save and delete
+at this point.
+
+To get a list of supported attributes for a Zoho CRM contact:
+
+	require 'rubyzoho'
+
+	c = RubyZoho::Crm::Contact.new
+	c.attr_writers  # => Give a list of updatable attributes
+	c.fields # => Hash of all fields
+
+Attributes are reflected from the current API instance of Zoho, dynamically on
+initialization of the API, when the RubyZoho.configure block is called. This
+includes custom fields.
+
+Another example:
+
+	l = RubyZoho::Crm::Lead.new
+	l.attr_writers  # => Give a list of updatable attributes
+	l.fields # => Hash of all fields
+
+To retrieve an existing record:
+
+	l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
+
+Returns one or more records matching the query. The find_by_<attribute> follows
+ActiveRecord style reflections, so if the attribute is present in the API, it can
+be queried. There is currently a single attribute limitation imposed by the Zoho 
+API.
+
+Equality is the only match currently supported.
+
+
+To create a new record:
+
+	c = RubyZoho::Crm::Contact.new(
+		:first_name => 'First Name',
+		:last_name => 'Last Name',
+		:email => 'email@domain.com',
+		etc.
+	)
+	c.save
+	c = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
+	c.contactid # => Has the newly created contact's ID
+	
+
+Objects currently supported are:
+	RubyZoho::Crm::Account
+	RubyZoho::Crm::Contact
+	RubyZoho::Crm::Lead
+	RubyZoho::Crm::Potential
+	RubyZoho::Crm::Quote
+
 ---
 
 == Contributing to rubyzoho
  
+* Pull requests with specs and a version branch are welcomed.
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
