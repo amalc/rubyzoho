@@ -50,7 +50,8 @@ To retrieve an existing record:
 Returns one or more records matching the query. The find_by_<attribute> follows
 ActiveRecord style reflections, so if the attribute is present in the API, it can
 be queried. There is currently a single attribute limitation imposed by the Zoho 
-API.
+API. Note, what is returned is an Array class. Use subscripts at this point to access
+or iterate through the returned set of records.
 
 Equality is the only match currently supported.
 
