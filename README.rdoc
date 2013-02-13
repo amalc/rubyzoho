@@ -85,6 +85,9 @@ To sort a result set:
     sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
     pp sorted.collect { |c| c.last_name }
 
+To find by ID, note well, ID is a *string*:
+    leads = RubyZoho::Crm::Lead.all
+    l = RubyZoho::Crm::Lead.find_by_leadid(leads.last.leadid)
 
 To create a new record:
 
@@ -96,7 +99,7 @@ To create a new record:
     )
     c.save
     r = RubyZoho::Crm::Contact.find_by_email('email@domain.com')
-    r[0].contactid # => Has the newly created contact's ID
+    r.first.contactid # => Has the newly created contact's ID
 
 
 To add a contact to an existing account:
@@ -106,8 +109,8 @@ To add a contact to an existing account:
       :first_name => 'First Name',
       :last_name => 'Last Name',
       :email => 'email@domain.com',
-      :account_name => a[0].account_name,
-      :accountid => a[0].accountid  # accountid instead of account_id because of Zoho's convention
+      :account_name => a.first.account_name,
+      :accountid => a.first.accountid  # accountid instead of account_id because of Zoho's convention
       etc.
     )
     c.save

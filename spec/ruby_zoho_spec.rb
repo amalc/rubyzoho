@@ -95,20 +95,18 @@ describe RubyZoho::Crm do
 
   it 'should find a contact by ID' do
     contacts = RubyZoho::Crm::Contact.all
-    contacts.count.should be >= 1
-    pp contact_id = contacts.first.contactid
+    contact_id = contacts.first.contactid
     c = RubyZoho::Crm::Contact.find_by_contactid(contact_id)
-    pp c.first.contactid
-    c.first.should_not eq(nil)
+    c.first.contactid.should eq(contact_id)
+    c.first.last_name.should eq(contacts.first.last_name)
+    c.first.email.should eq(contacts.first.email)
   end
 
   it 'should find a lead by ID' do
     leads = RubyZoho::Crm::Lead.all
-    leads.count.should be >= 1
-    pp lead_id = leads.first.leadid
+    lead_id = leads.first.leadid
     l = RubyZoho::Crm::Lead.find_by_leadid(lead_id)
-    pp l
-    l.should_not eq(nil)
+    l.first.leadid.should eq(lead_id)
   end
 
   it 'should save a contact record' do
