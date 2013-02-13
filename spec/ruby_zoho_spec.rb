@@ -12,6 +12,7 @@ describe RubyZoho::Crm do
     RubyZoho.configure do |config|
       #config.api_key = params['auth_token']
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+      config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
     end
     r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -155,20 +156,18 @@ describe RubyZoho::Crm do
   end
 
   it 'should update a lead record' do
-    pending
     l = RubyZoho::Crm::Lead.new(
       :first_name => 'Raj',
       :last_name => 'Portra',
       :email => 'raj@portra.com')
     l.save
     r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
-    pp r.first.leadid
     RubyZoho::Crm::Lead.update(
         :id => r.first.leadid,
         :email => 'changed_raj@portra.com'
     )
     r_changed = RubyZoho::Crm::Lead.find_by_email('changed_raj@portra.com')
-    pp r_changed.first.leadid
+    r.first.leadid.should eq(r_changed.first.leadid)
     r_changed.should_not eq(nil)
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
   end

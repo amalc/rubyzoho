@@ -19,8 +19,9 @@ module ZohoApi
 
     attr_reader :auth_token, :module_fields
 
-    def initialize(auth_token)
+    def initialize(auth_token, modules)
       @auth_token = auth_token
+      @modules = modules
       @module_fields = reflect_module_fields
     end
 
@@ -106,12 +107,8 @@ module ZohoApi
       to_hash(x)
     end
 
-    def self.module_names
-      %w{Leads Accounts Contacts Potentials Quotes Invoices SalesOrders}
-    end
-
     def reflect_module_fields
-      module_names = ZohoApi::Crm.module_names
+      module_names = @modules
       module_fields = {}
       module_names.each { |n| module_fields.merge!({ ApiUtils.string_to_symbol(n) => fields(n) }) }
       module_fields

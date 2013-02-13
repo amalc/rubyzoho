@@ -5,11 +5,12 @@ require 'api_utils'
 module RubyZoho
 
   class Configuration
-    attr_accessor :api, :api_key
+    attr_accessor :api, :api_key, :crm_modules
 
     def initialize
       self.api_key = nil
       self.api = nil
+      self.crm_modules = nil
     end
   end
 
@@ -20,7 +21,7 @@ module RubyZoho
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
-    self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key)
+    self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
   end
 
 
@@ -110,9 +111,9 @@ module RubyZoho
 
     def self.update(object_attribute_hash)
       raise(RuntimeError, 'No ID found', object_attribute_hash) if object_attribute_hash[:id].nil?
-      id = h[:id]
-      h.delete(:id)
-      RubyZoho.configuration.api.update_record(Crm.module_name, id, h) if h[:id].nil?
+      id = object_attribute_hash[:id]
+      object_attribute_hash.delete(:id)
+      RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
     end
 
 
