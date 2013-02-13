@@ -44,6 +44,7 @@ describe ZohoApi do
   end
 
   it 'should attach a file to a contact record' do
+    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',

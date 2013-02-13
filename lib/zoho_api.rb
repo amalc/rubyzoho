@@ -15,7 +15,7 @@ module ZohoApi
 
     include HTTParty
 
-    debug_output $stderr
+    #debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -88,9 +88,9 @@ module ZohoApi
 
     def find_record_by_field(module_name, sc_field, condition, value)
       search_condition = '(' + sc_field + '|' + condition + '|' + value + ')'
-      r = self.class.get(create_url("#{module_name}", search_type),
+      r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
                          :query => {:newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                                    :selectColumns => 'All', :searchCondition => 'getSearchRecords',
+                                    :selectColumns => 'All', :searchCondition => search_condition,
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
