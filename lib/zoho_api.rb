@@ -141,6 +141,20 @@ module ZohoApi
       r
     end
 
+    def update_record(module_name, id, fields_values_hash)
+      x = REXML::Document.new
+      contacts = x.add_element module_name
+      row = contacts.add_element 'row', { 'no' => '1'}
+      fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      r = self.class.post(create_url(module_name, 'updateRecords'),
+          :query => { :newFormat => 1, :authtoken => @auth_token,
+                      :scope => 'crmapi', :id => id,
+                      :xmlData => x },
+          :headers => { 'Content-length' => '0' })
+      raise('Updating record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      r.response.code
+    end
+
   end
 
 end

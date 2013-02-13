@@ -105,4 +105,21 @@ describe ZohoApi do
     r.count.should be > 1
   end
 
+  it 'should update a contact' do
+    h = { :first_name => 'Robert',
+          :last_name => 'Smith',
+          :email => 'rsmith@smithereens.com',
+          :department => 'Waste Collection and Management',
+          :phone => '13452129087',
+          :mobile => '12341238790'
+    }
+    @zoho.add_record('Contacts', h)
+    contact = @zoho.find_records('Contacts', :email, '=', h[:email])
+    h_changed = { :email => 'robert.smith@smithereens.com' }
+    @zoho.update_record('Contacts', contact[0][:contactid], h_changed)
+    changed_contact = @zoho.find_records('Contacts', :email, '=', h_changed[:email])
+    changed_contact[0][:email].should eq(h_changed[:email])
+    @zoho.delete_record('Contacts', contact[0][:contactid])
+  end
+
 end
