@@ -25,7 +25,8 @@ describe ZohoApi do
     #params = YAML.load(File.open(config_file))
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
-    @zoho = ZohoApi::Crm.new('62cedfe9427caef8afb9ea3b5bf68154')
+    modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
+    @zoho = ZohoApi::Crm.new('62cedfe9427caef8afb9ea3b5bf68154', modules)
   end
 
   it 'should add a new contact' do
