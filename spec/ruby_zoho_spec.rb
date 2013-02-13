@@ -100,6 +100,7 @@ describe RubyZoho::Crm do
       :email => 'raj@portra.com')
     c.save
     r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    r.first.email.should eq('raj@portra.com')
     r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) }
   end
 
