@@ -24,6 +24,7 @@ describe ZohoApi do
     config_file = File.join(base_path, 'zoho_api_configuration.yaml')
     #params = YAML.load(File.open(config_file))
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
+    @sample_pdf = File.join(base_path, 'sample.pdf')
     @zoho = ZohoApi::Crm.new('62cedfe9427caef8afb9ea3b5bf68154')
   end
 
@@ -42,6 +43,24 @@ describe ZohoApi do
     contact.count.should eq(1)
   end
 
+  it 'should attach a file to a contact record' do
+    h = { :first_name => 'Robert',
+          :last_name => 'Smith',
+          :email => 'rsmith@smithereens.com',
+          :department => 'Waste Collection and Management',
+          :phone => '13452129087',
+          :mobile => '12341238790'
+    }
+    #@zoho.add_record('Contacts', h)
+    contact = @zoho.find_records('Contacts', :email, '=', h[:email])
+    pp contact[0][:contactid]
+    pp File.read(@sample_pdf).size
+    pp Base64.encode64(File.read(@sample_pdf)).size
+    @zoho.attach_file('Contacts', contact[0][:contactid],
+        File.read(@sample_pdf))
+    #@zoho.delete_record('Contacts', contact[0][:contactid])
+  end
+
   it 'should delete a contact record with id' do
     add_dummy_contact
     c = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
@@ -52,6 +71,16 @@ describe ZohoApi do
     add_dummy_contact
     r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
     r[0][:email].should eq('bob@smith.com')
+    delete_dummy_contact
+  end
+
+  it 'should find by module and id' do
+    add_dummy_contact
+    r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
+    r[0][:email].should eq('bob@smith.com')
+    id = r[0][:contactid]
+    c = @zoho.find_record_by_id('Contacts', id)
+    c[0][:contactid].should eq(id)
     delete_dummy_contact
   end
 

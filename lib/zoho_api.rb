@@ -15,7 +15,7 @@ module ZohoApi
 
     include HTTParty
 
-    #debug_output $stderr
+    debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -45,6 +45,20 @@ module ZohoApi
       row
     end
 
+    def attach_file(module_name, record_id, file_content)
+      pp module_name
+      pp record_id
+      pp file_content.size
+      r = self.class.post(create_url(module_name, 'uploadFile'),
+          :query => { :newFormat => 1, :authtoken => @auth_token,
+            :scope => 'crmapi',
+            :id => record_id, :content => Base64.encode64(file_content) },
+          :headers => { 'Content-length' => '0' })
+      pp r
+      raise('Adding record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      r.response.code
+    end
+
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
@@ -68,11 +82,25 @@ module ZohoApi
 
     def find_records(module_name, field, condition, value)
       sc_field = ApiUtils.symbol_to_string(field)
+      sc_field.rindex('id').nil? ? find_record_by_field(module_name, sc_field, condition, value) :
+          find_record_by_id(module_name, value)
+    end
+
+    def find_record_by_field(module_name, sc_field, condition, value)
       search_condition = '(' + sc_field + '|' + condition + '|' + value + ')'
-      r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
+      r = self.class.get(create_url("#{module_name}", search_type),
+                         :query => {:newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+                                    :selectColumns => 'All', :searchCondition => 'getSearchRecords',
+                                    :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
+      raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      to_hash(x)
+    end
+
+    def find_record_by_id(module_name, id)
+      r = self.class.get(create_url("#{module_name}", 'getRecordById'),
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                     :selectColumns => 'All', :searchCondition => search_condition,
-                     :fromIndex => 1, :toIndex =>  NUMBER_OF_RECORDS_TO_GET })
+                     :selectColumns => 'All', :id => id})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)

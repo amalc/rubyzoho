@@ -93,6 +93,24 @@ describe RubyZoho::Crm do
     r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
   end
 
+  it 'should find a contact by ID' do
+    contacts = RubyZoho::Crm::Contact.all
+    contacts.count.should be >= 1
+    pp contact_id = contacts.first.contactid
+    c = RubyZoho::Crm::Contact.find_by_contactid(contact_id)
+    pp c.first.contactid
+    c.first.should_not eq(nil)
+  end
+
+  it 'should find a lead by ID' do
+    leads = RubyZoho::Crm::Lead.all
+    leads.count.should be >= 1
+    pp lead_id = leads.first.leadid
+    l = RubyZoho::Crm::Lead.find_by_leadid(lead_id)
+    pp l
+    l.should_not eq(nil)
+  end
+
   it 'should save a contact record' do
     c = RubyZoho::Crm::Contact.new(
       :first_name => 'Raj',
