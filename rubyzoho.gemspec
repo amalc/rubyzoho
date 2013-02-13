@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
     "lib/zoho_api.rb",
     "rubyzoho-0.0.3.gem",
     "rubyzoho-0.0.4.gem",
+    "rubyzoho-0.1.0.gem",
     "rubyzoho.gemspec",
     "spec/api_utils_spec.rb",
     "spec/fixtures/sample.pdf",
