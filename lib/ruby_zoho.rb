@@ -108,6 +108,13 @@ module RubyZoho
       nil
     end
 
+    def self.update(object_attribute_hash)
+      raise(RuntimeError, 'No ID found', object_attribute_hash) if object_attribute_hash[:id].nil?
+      id = h[:id]
+      h.delete(:id)
+      RubyZoho.configuration.api.update_record(Crm.module_name, id, h) if h[:id].nil?
+    end
+
 
     class Account < RubyZoho::Crm
       include RubyZoho
@@ -128,6 +135,11 @@ module RubyZoho
         Crm.module_name = 'Accounts'
         super
       end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Accounts'
+        super
+      end
     end
 
 
@@ -142,6 +154,11 @@ module RubyZoho
       end
 
       def self.all
+        Crm.module_name = 'Contacts'
+        super
+      end
+
+      def self.method_missing(meth, *args, &block)
         Crm.module_name = 'Contacts'
         super
       end
@@ -172,6 +189,11 @@ module RubyZoho
         Crm.module_name = 'Leads'
         super
       end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Leads'
+        super
+      end
     end
 
     class Potential < RubyZoho::Crm
@@ -193,6 +215,11 @@ module RubyZoho
         Crm.module_name = 'Potentials'
         super
       end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Potentials'
+        super
+      end
     end
 
     class Quote < RubyZoho::Crm
@@ -211,6 +238,11 @@ module RubyZoho
       end
 
       def self.delete(id)
+        Crm.module_name = 'Quotes'
+        super
+      end
+
+      def self.method_missing(meth, *args, &block)
         Crm.module_name = 'Quotes'
         super
       end
