@@ -30,8 +30,8 @@ To get a list of supported attributes for a Zoho CRM contact:
     require 'ruby_zoho'
 
     c = RubyZoho::Crm::Contact.new
-    c.attr_writers  # => Give a list of updatable attributes
-    c.fields # => Hash of all fields
+    c.attr_writers  # => List of updatable attributes
+    c.fields # => Array of all fields
 
 Attributes are reflected from the current API instance of Zoho, dynamically on
 initialization of the API, when the RubyZoho.configure block is called. This
@@ -40,8 +40,8 @@ includes custom fields.
 Another example:
 
     l = RubyZoho::Crm::Lead.new
-    l.attr_writers  # => Give a list of updatable attributes
-    l.fields # => Hash of all fields
+    l.attr_writers  # => List of updatable attributes
+    l.fields # => Array of all fields
 
 To retrieve an existing record:
 
