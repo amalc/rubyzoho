@@ -139,7 +139,7 @@ Please open an issue on GitHub. Or better yet, send in a pull request.
 
 == Trademarks
 
-Zoho, the Zoho suite and related applications are trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
+Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
 
