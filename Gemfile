@@ -1,16 +1,18 @@
 source "http://rubygems.org"
-# Add dependencies required to use your gem here.
-# Example:
-#   gem "activesupport", ">= 2.3.5"
-
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
 
 gem 'httparty'
 gem 'roxml'
 
 
-group :development, :test do
+group :test do
+  gem 'cucumber'
+  gem 'rspec', ">= 2.12.0"
+  gem "shoulda", ">= 0"
+  gem 'xml-simple'
+  gem 'simplecov', :require => false, :group => :test
+end
+
+group :development do
   gem "bundler"
   gem 'cucumber'
   gem "jeweler", "~> 1.8.4"
