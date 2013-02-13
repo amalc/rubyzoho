@@ -26,7 +26,9 @@ describe ZohoApi do
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
-    @zoho = ZohoApi::Crm.new('62cedfe9427caef8afb9ea3b5bf68154', modules)
+    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+    #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+    @zoho = ZohoApi::Crm.new(api_key, modules)
   end
 
   it 'should add a new contact' do
