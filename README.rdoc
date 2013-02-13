@@ -80,6 +80,12 @@ Since the result is Enumerable:
     q.map { |m| m.last_name }
 works.
 
+To sort a result set:
+    r = RubyZoho::Crm::Contact.all
+    sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
+    pp sorted.collect { |c| c.last_name }
+
+
 To create a new record:
 
     c = RubyZoho::Crm::Contact.new(
