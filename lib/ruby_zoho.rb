@@ -21,6 +21,7 @@ module RubyZoho
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
+    self.configuration.crm_modules ||= ['Accounts', 'Contacts', 'Leads', 'Potentials']
     self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
   end
 
