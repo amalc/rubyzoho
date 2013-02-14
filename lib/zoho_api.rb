@@ -60,6 +60,12 @@ module ZohoApi
       r.response.code
     end
 
+    def check_for_errors(response)
+      return
+      raise(RuntimeError, 'Exceeded API calls.') unless response.body.to_s.index('You crossed your API search limit').nil?
+      response
+    end
+
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
@@ -70,6 +76,7 @@ module ZohoApi
           :scope => 'crmapi', :id => record_id },
         :headers => { 'Content-length' => '0' })
       raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      check_for_errors(r)
     end
 
     def fields(module_name)
@@ -94,6 +101,7 @@ module ZohoApi
                                     :selectColumns => 'All', :searchCondition => search_condition,
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
+      check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end
@@ -103,6 +111,7 @@ module ZohoApi
          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
                      :selectColumns => 'All', :id => id})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
+      check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end
@@ -119,6 +128,7 @@ module ZohoApi
         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
           :fromIndex => index, :toIndex => number_of_records || NUMBER_OF_RECORDS_TO_GET })
       return nil unless r.response.code == '200'
+      check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end
@@ -148,6 +158,7 @@ module ZohoApi
                       :scope => 'crmapi', :id => id,
                       :xmlData => x },
           :headers => { 'Content-length' => '0' })
+      check_for_errors(r)
       raise('Updating record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
       r.response.code
     end

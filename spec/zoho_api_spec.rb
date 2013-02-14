@@ -26,7 +26,8 @@ describe ZohoApi do
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
-    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+    api_key = '783539943dc16d7005b0f3b78367d5d2'
+    #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
     #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
     @zoho = ZohoApi::Crm.new(api_key, modules)
   end
@@ -47,7 +48,6 @@ describe ZohoApi do
   end
 
   it 'should attach a file to a contact record' do
-    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -109,6 +109,7 @@ describe ZohoApi do
   end
 
   it 'should update a contact' do
+    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
