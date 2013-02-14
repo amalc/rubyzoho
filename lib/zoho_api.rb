@@ -1,6 +1,6 @@
 $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 
-require 'httparty'
+require 'httmultiparty'
 require 'rexml/document'
 require 'ruby_zoho'
 require 'yaml'
@@ -13,9 +13,9 @@ module ZohoApi
   class Crm
     NUMBER_OF_RECORDS_TO_GET = 200
 
-    include HTTParty
+    include HTTMultiParty
 
-    #debug_output $stderr
+    debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -46,18 +46,31 @@ module ZohoApi
       row
     end
 
-    def attach_file(module_name, record_id, file_content)
+    def attach_file(module_name, record_id, file_path)
       pp module_name
       pp record_id
-      pp file_content.size
+      bytes = File.open(file_path, "rb") { |file| file.read }
+      byte_array = bytes.each_byte { |b| to_byte_array(b) }
+      pp bytes.size
+      pp byte_array.size
       r = self.class.post(create_url(module_name, 'uploadFile'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
             :scope => 'crmapi',
-            :id => record_id, :content => Base64.encode64(file_content) },
+            :id => record_id, :content => File.open(file_path) },
           :headers => { 'Content-length' => '0' })
-      pp r
-      raise('Adding record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
+      pp r.code
+      pp r.body
+      raise(RuntimeError, 'Attaching file failed.', r.body.to_s) unless r.response.code == '200'
+      r.code
+    end
+
+    def to_byte_array(num)
+      result = []
+      begin
+        result << (num & 0xff)
+        num >>= 8
+      end until (num == 0 || num == -1) && (result.last[7] == num[7])
+      result.reverse
     end
 
     def check_for_errors(response)

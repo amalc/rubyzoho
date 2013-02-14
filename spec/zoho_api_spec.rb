@@ -58,14 +58,12 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
-    #@zoho.add_record('Contacts', h)
-    contact = @zoho.find_records('Contacts', :email, '=', h[:email])
-    pp contact[0][:contactid]
-    pp File.read(@sample_pdf).size
-    pp Base64.encode64(File.read(@sample_pdf)).size
-    @zoho.attach_file('Contacts', contact[0][:contactid],
-        File.read(@sample_pdf))
-    #@zoho.delete_record('Contacts', contact[0][:contactid])
+    contacts = @zoho.find_records('Contacts', :email, '=', h[:email])
+    contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
+    @zoho.add_record('Contacts', h)
+    contacts = @zoho.find_records('Contacts', :email, '=', h[:email])
+    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf)
+    #@zoho.delete_record('Contacts', contacts[0][:contactid])
   end
 
   it 'should delete a contact record with id' do

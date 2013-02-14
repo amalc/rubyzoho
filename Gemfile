@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'httparty'
+gem 'httmultiparty'
 gem 'roxml'
 
 
