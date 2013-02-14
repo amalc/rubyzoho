@@ -40,14 +40,17 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
+    contacts = @zoho.find_records('Contacts', :email, '=', h[:email])
+    contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
     @zoho.add_record('Contacts', h)
-    contact = @zoho.find_records('Contacts', :email, '=', h[:email])
-    @zoho.delete_record('Contacts', contact[0][:contactid])
-    contact.should_not eq(nil)
-    contact.count.should eq(1)
+    contacts = @zoho.find_records('Contacts', :email, '=', h[:email])
+    @zoho.delete_record('Contacts', contacts[0][:contactid])
+    contacts.should_not eq(nil)
+    contacts.count.should eq(1)
   end
 
   it 'should attach a file to a contact record' do
+    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -109,7 +112,6 @@ describe ZohoApi do
   end
 
   it 'should update a contact' do
-    pending
     h = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',

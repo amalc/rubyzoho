@@ -30,6 +30,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should find a contact by email or last name' do
+    r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
     1.upto(3) do
       c = RubyZoho::Crm::Contact.new(
         :first_name => 'Bob',
