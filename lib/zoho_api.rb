@@ -2,6 +2,8 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 
 require 'httmultiparty'
 require 'rexml/document'
+require 'net/http/post/multipart'
+require 'mime/types'
 require 'ruby_zoho'
 require 'yaml'
 require 'api_utils'
@@ -15,7 +17,7 @@ module ZohoApi
 
     include HTTMultiParty
 
-    debug_output $stderr
+    #debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -47,12 +49,6 @@ module ZohoApi
     end
 
     def attach_file(module_name, record_id, file_path)
-      pp module_name
-      pp record_id
-      bytes = File.open(file_path, "rb") { |file| file.read }
-      byte_array = bytes.each_byte { |b| to_byte_array(b) }
-      pp bytes.size
-      pp byte_array.size
       r = self.class.post(create_url(module_name, 'uploadFile'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
             :scope => 'crmapi',
@@ -62,6 +58,24 @@ module ZohoApi
       pp r.body
       raise(RuntimeError, 'Attaching file failed.', r.body.to_s) unless r.response.code == '200'
       r.code
+    end
+
+    def add_file(module_name, record_id, file_path)
+      url = URI.parse(create_url(module_name, 'uploadFile'))
+      r = nil
+      pp record_id
+      mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
+      f = File.open(file_path)
+      req = Net::HTTP::Post::Multipart.new url.path,
+      { 'authtoken' => '@auth_token', 'scope' => 'crmapi',
+        'id' => record_id,
+        'content' => UploadIO.new(f, mime_type, File.basename(file_path)) }
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+      pp req.to_hash
+      r = http.start { |http| http.request(req) }
+      pp r.body.to_s
+      (r.nil? or r.body.nil? or r.body.empty?) ? nil : REXML::Document.new(r.body).to_s
     end
 
     def to_byte_array(num)
@@ -110,7 +124,7 @@ module ZohoApi
     def find_record_by_field(module_name, sc_field, condition, value)
       search_condition = '(' + sc_field + '|' + condition + '|' + value + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
-                         :query => {:newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+                         :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :selectColumns => 'All', :searchCondition => search_condition,
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
@@ -121,7 +135,7 @@ module ZohoApi
 
     def find_record_by_id(module_name, id)
       r = self.class.get(create_url("#{module_name}", 'getRecordById'),
-         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+         :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                      :selectColumns => 'All', :id => id})
       raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
       check_for_errors(r)
@@ -136,9 +150,21 @@ module ZohoApi
       module_fields
     end
 
+    def related_records(module_name, id)
+      r = self.class.get(create_url("#{module_name}", 'getRelatedRecords'),
+         :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+                     :parentModule => module_name, :id => id})
+      raise(RuntimeError, 'Bad query for related records', module_name) unless r.body.index('<error>').nil?
+      check_for_errors(r)
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      puts "====="
+      pp x.each { |i| i.to_s }
+      #pp to_hash(x)
+    end
+
     def some(module_name, index = 1, number_of_records = nil)
       r = self.class.get(create_url(module_name, 'getRecords'),
-        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
           :fromIndex => index, :toIndex => number_of_records || NUMBER_OF_RECORDS_TO_GET })
       return nil unless r.response.code == '200'
       check_for_errors(r)

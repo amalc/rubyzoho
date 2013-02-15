@@ -40,6 +40,7 @@ module RubyZoho
       object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
     end
 
+
     def attr_writers
       self.methods.grep(/\w=$/)
     end
@@ -62,6 +63,7 @@ module RubyZoho
 
     def self.create_setter(klass, *names)
       names.each do |name|
+        pp name
         klass.send(:define_method, "#{name}=") { |val| instance_variable_set("@#{name}", val) }
       end
     end
@@ -101,11 +103,13 @@ module RubyZoho
     end
 
     def self.run_find_by_method(attrs, *args, &block)
+      pp __method__
       attrs = attrs.split('_and_')
       conditions = Array.new(args.size, '=')
       h = RubyZoho.configuration.api.find_records(
           Crm.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
       )
+      pp h
       return h.collect { |r| new(r) } unless h.nil?
       nil
     end
@@ -161,6 +165,9 @@ module RubyZoho
       end
 
       def self.method_missing(meth, *args, &block)
+        pp __method__
+        pp meth
+        pp args
         Crm.module_name = 'Contacts'
         super
       end
