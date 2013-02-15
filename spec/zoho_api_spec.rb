@@ -25,7 +25,7 @@ describe ZohoApi do
     #params = YAML.load(File.open(config_file))
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
-    modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
+    modules = ['Accounts', 'Contacts', 'Leads', 'Potentials']
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
     #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
     api_key = '62cedfe9427caef8afb9ea3b5bf68154'
@@ -82,15 +82,13 @@ describe ZohoApi do
 
   it 'should get a list of fields for a module' do
     r = @zoho.fields('Contacts')
-    r.count.should be >= 43
+    r.count.should be >= 39
     r = @zoho.fields('Leads')
-    r.count.should be >= 34
-    r = @zoho.fields('Quotes')
-    r.count.should be >= 33
-    r = @zoho.fields('SalesOrders')
-    r.count.should >= 45
-    r = @zoho.fields('Invoices')
-    r.count.should >= 41
+    r.count.should be >= 26
+    r = @zoho.fields('Potentials')
+    r.count.should be >= 17
+    r = @zoho.fields('Accounts')
+    r.count.should >= 34
   end
 
   it 'should retrieve records by module name' do

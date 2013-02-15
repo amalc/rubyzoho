@@ -17,6 +17,8 @@ module ZohoApi
 
     include HTTMultiParty
 
+    @@module_fields = {}
+
     #debug_output $stderr
 
     attr_reader :auth_token, :module_fields
@@ -107,8 +109,18 @@ module ZohoApi
     end
 
     def fields(module_name)
-      record = first(module_name)
-      record[0].keys
+      return @@module_fields[ApiUtils.string_to_symbol(module_name)] unless
+          @@module_fields[ApiUtils.string_to_symbol(module_name)].nil?
+      r = self.class.post(create_url(module_name, 'getFields'),
+          :query => { :authtoken => @auth_token, :scope => 'crmapi' },
+          :headers => { 'Content-length' => '0' })
+      @@module_fields[ApiUtils.string_to_symbol(module_name)] = []
+      x = REXML::Document.new(r.body)
+      REXML::XPath.each(x, "//@dv") { |f|
+        @@module_fields[ApiUtils.string_to_symbol(module_name)] << ApiUtils.string_to_symbol(f.to_s) }
+      raise('Getting fields failed', RuntimeError, module_name) unless r.response.code == '200'
+      check_for_errors(r)
+      @@module_fields
     end
 
     def first(module_name)
