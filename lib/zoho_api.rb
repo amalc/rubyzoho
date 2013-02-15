@@ -116,7 +116,7 @@ module ZohoApi
           :headers => { 'Content-length' => '0' })
       @@module_fields[ApiUtils.string_to_symbol(module_name)] = []
       x = REXML::Document.new(r.body)
-      REXML::XPath.each(x, "//@dv") { |f|
+      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") { |f|
         @@module_fields[ApiUtils.string_to_symbol(module_name)] << ApiUtils.string_to_symbol(f.to_s) }
       raise('Getting fields failed', RuntimeError, module_name) unless r.response.code == '200'
       check_for_errors(r)
