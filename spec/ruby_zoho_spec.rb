@@ -39,14 +39,12 @@ describe RubyZoho::Crm do
         :email => 'bob@smith.com')
       c.save
     end
-  r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
+    r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
     r.should_not eq(nil)
     r.count.should eq(3)
     r.each { |m| m.email.should eq('bob@smith.com') }
     r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     r.should_not eq(nil)
-    r.first.should_not eq(nil)
-    r.last.should_not eq(nil)
     r.map { |c| c.last_name }.count.should eq(3)
     r.first.last_name.should eq('Smithereens')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) }
@@ -70,12 +68,12 @@ describe RubyZoho::Crm do
 
   it 'should get a list of attr_writers for potentials' do
     c = RubyZoho::Crm::Potential.new
-    c.attr_writers.count.should be >= 22
+    c.attr_writers.count.should be >= 14
   end
 
   it 'should get a list of attr_writers for quotes' do
     c = RubyZoho::Crm::Quote.new
-    c.attr_writers.count.should be >= 28
+    c.attr_writers.count.should be >= 18
   end
 
   it 'should get a list of accounts' do

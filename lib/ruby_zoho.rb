@@ -37,7 +37,12 @@ module RubyZoho
       @fields = RubyZoho.configuration.api.module_fields[
           ApiUtils.string_to_symbol(Crm.module_name)]
       RubyZoho::Crm.create_accessor(self.class, @fields)
-      object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+      begin
+        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+      rescue NoMethodError => e
+        m = e.message.slice(/`[a-z]*id='/)  # Get method name with id
+        RubyZoho::Crm.create_accessor(self.class, [m.slice(/[a-z]*=/).chop]) unless m.nil?
+      end
     end
 
 
@@ -63,7 +68,6 @@ module RubyZoho
 
     def self.create_setter(klass, *names)
       names.each do |name|
-        pp name
         klass.send(:define_method, "#{name}=") { |val| instance_variable_set("@#{name}", val) }
       end
     end
@@ -103,19 +107,17 @@ module RubyZoho
     end
 
     def self.run_find_by_method(attrs, *args, &block)
-      pp __method__
       attrs = attrs.split('_and_')
       conditions = Array.new(args.size, '=')
       h = RubyZoho.configuration.api.find_records(
           Crm.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
       )
-      pp h
       return h.collect { |r| new(r) } unless h.nil?
       nil
     end
 
     def self.update(object_attribute_hash)
-      raise(RuntimeError, 'No ID found', object_attribute_hash) if object_attribute_hash[:id].nil?
+      raise(RuntimeError, 'No ID found', object_attribute_hash.to_s) if object_attribute_hash[:id].nil?
       id = object_attribute_hash[:id]
       object_attribute_hash.delete(:id)
       RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
@@ -165,9 +167,6 @@ module RubyZoho
       end
 
       def self.method_missing(meth, *args, &block)
-        pp __method__
-        pp meth
-        pp args
         Crm.module_name = 'Contacts'
         super
       end

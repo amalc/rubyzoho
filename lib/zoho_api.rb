@@ -149,17 +149,15 @@ module ZohoApi
       r = self.class.get(create_url("#{module_name}", 'getRecordById'),
          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                      :selectColumns => 'All', :id => id})
-      raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
+      raise(RuntimeError, 'Bad query', "#{module_name} #{id}") unless r.body.index('<error>').nil?
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
     end
 
     def reflect_module_fields
-      module_names = @modules
-      module_fields = {}
-      module_names.each { |n| module_fields.merge!({ ApiUtils.string_to_symbol(n) => fields(n) }) }
-      module_fields
+      @modules.each { |m| fields(m) }
+      @@module_fields
     end
 
     def related_records(module_name, id)
