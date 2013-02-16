@@ -90,9 +90,12 @@ module ZohoApi
     end
 
     def check_for_errors(response)
-      return
-      raise(RuntimeError, 'Exceeded API calls.') unless response.body.to_s.index('You crossed your API search limit').nil?
-      response
+      x = REXML::Document.new(response.body)
+      code =  REXML::XPath.first(x, '//code')
+      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless
+          code.nil? || code.text == '4422'
+      return code.text unless code.nil?
+      nil
     end
 
     def create_url(module_name, api_call)
@@ -142,7 +145,6 @@ module ZohoApi
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :selectColumns => 'All', :searchCondition => search_condition,
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
-      raise(RuntimeError, 'Bad query', "#{sc_field} #{condition} #{value}") unless r.body.index('<error>').nil?
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x)
@@ -167,15 +169,17 @@ module ZohoApi
       @@module_fields
     end
 
-    def related_records(module_name, id)
-      r = self.class.get(create_url("#{module_name}", 'getRelatedRecords'),
+    def related_records(module_name, related_list, id)
+      r = self.class.get(create_url("#{related_list}", 'getRelatedRecords'),
          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                      :parentModule => module_name, :id => id})
       raise(RuntimeError, 'Bad query for related records', module_name) unless r.body.index('<error>').nil?
-      check_for_errors(r)
+
+      pp r.body
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       puts "====="
-      pp x.each { |i| i.to_s }
+      pp check_for_errors(r)
+      return nil unless check_for_errors(r).nil?
     end
 
     def some(module_name, index = 1, number_of_records = nil)

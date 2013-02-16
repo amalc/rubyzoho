@@ -24,8 +24,8 @@ your daily allowance.
 
 
 == Use
-RubyZoho attempts to follow the ActiveRecord lifecycle, i.e. new, save and delete
-at this point.
+RubyZoho attempts to follow the ActiveRecord lifecycle, i.e. new, save update and delete.
+See examples below.
 
 To get a list of supported attributes for a Zoho CRM contact:
 

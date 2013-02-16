@@ -37,8 +37,8 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
-    contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-    contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
+    #contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+    #contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
   end
 
   it 'should add a new contact' do
@@ -99,11 +99,9 @@ describe ZohoApi do
   end
 
   it 'should return related records by module and id' do
-    pending
-    r = @zoho.some('Contacts')
-    pp r.first
-    related = @zoho.related_records('Contacts', r.first[:contactid])
-    pp related
+    #pending
+    r = @zoho.some('Potentials').first
+    related = @zoho.related_records('Contacts', 'Potentials', r[:potentialid])
   end
 
   it 'should update a contact' do
