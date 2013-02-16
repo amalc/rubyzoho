@@ -25,7 +25,7 @@ Please be aware that Zoho limits API calls. So running tests repeatedly will qui
 your daily allowance.
 
 === Ruby
-Make sure the following block is executed prior to making an calls to the gem.
+Make sure the following block is executed prior to making calls to the gem.
 
     require 'ruby_zoho'
 
