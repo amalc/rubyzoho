@@ -9,7 +9,9 @@ ActiveRecord lifecycle but without ActiveRecord.
     gem install rubyzoho
 
 == Configure
-Put the following in an initializer (e.g. zoho.rb):
+
+=== Rails
+Put the following in an initializer (e.g. +<RAILS_ROOT>/config/initializers/zoho.rb+):
 
     require 'ruby_zoho'
 
