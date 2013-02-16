@@ -15,10 +15,10 @@ describe RubyZoho::Crm do
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
     end
-    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -139,20 +139,23 @@ describe RubyZoho::Crm do
       :email => 'raj@portra.com')
     l.save
     r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
+    r.should_not eq(nil)
+    r.first.email.should eq(l.email)
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
   end
 
   it 'should save a potential record' do
-    potentials = RubyZoho::Crm::Potential.all
+    accounts = RubyZoho::Crm::Account.all
     p = RubyZoho::Crm::Potential.new(
         :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
-        :accountid => potentials[0].accountid,
-        :account_name => potentials[0].account_name,
+        :accountid => accounts.first.accountid,
+        :account_name => accounts.first.account_name,
         :closing_date => '1/1/2014',
         :type => 'New Business',
         :stage => 'Needs Analysis')
     p.save
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
+    r.first.potential_name.should eq('A very big potential INDEED!!!!!!!!!!!!!')
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
   end
 
