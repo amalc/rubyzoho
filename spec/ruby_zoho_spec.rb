@@ -62,7 +62,6 @@ describe RubyZoho::Crm do
 
   it 'should get a list of attr_writers for leads' do
     c = RubyZoho::Crm::Lead.new
-    pp c.attr_writers
     c.attr_writers.count.should be >= 16
   end
 

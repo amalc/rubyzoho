@@ -176,7 +176,6 @@ module ZohoApi
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       puts "====="
       pp x.each { |i| i.to_s }
-      #pp to_hash(x)
     end
 
     def some(module_name, index = 1, number_of_records = nil)
