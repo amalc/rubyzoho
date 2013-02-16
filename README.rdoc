@@ -24,6 +24,18 @@ Put the following in an initializer (e.g. <tt><RAILS_ROOT>/config/initializers/z
 Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
 your daily allowance.
 
+=== Ruby
+Make sure the following block is executed prior to making an calls to the gem.
+
+    require 'ruby_zoho'
+
+    RubyZoho.configure do |config|
+      config.api_key = '<< API Key from Zoho>>'
+      # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
+      # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got
+    end
+
+
 
 == Use
 RubyZoho attempts to follow the ActiveRecord lifecycle, i.e. new, save, update and delete.
