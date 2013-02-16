@@ -99,6 +99,7 @@ describe ZohoApi do
   end
 
   it 'should return related records by module and id' do
+    pending
     r = @zoho.some('Contacts')
     pp r.first
     related = @zoho.related_records('Contacts', r.first[:contactid])

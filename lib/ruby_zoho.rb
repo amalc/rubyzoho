@@ -41,7 +41,8 @@ module RubyZoho
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       rescue NoMethodError => e
         m = e.message.slice(/`[a-z]*id='/)  # Get method name with id
-        RubyZoho::Crm.create_accessor(self.class, [m.slice(/[a-z]*=/).chop]) unless m.nil?
+        RubyZoho::Crm.create_accessor(self.class,
+            [ApiUtils.string_to_symbol(m.slice(/[a-z]*=/).chop)]) unless m.nil?
       end
     end
 
@@ -54,10 +55,15 @@ module RubyZoho
       names.each do |name|
         n = name
         n = name.to_s if name.class == Symbol
+        raise(RuntimeError, "Bad field name: #{name}") unless method_name?(name)
         create_getter(klass, n)
         create_setter(klass, n)
       end
       names
+    end
+
+    def self.method_name?(n)
+      return /[@$"]/ !~ n.inspect
     end
 
     def self.create_getter(klass, *names)
@@ -80,6 +86,7 @@ module RubyZoho
     def save
       h = {}
       @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
+      h.delete_if { |k, v| v.nil? }
       RubyZoho.configuration.api.add_record(Crm.module_name, h)
     end
 

@@ -15,10 +15,10 @@ describe RubyZoho::Crm do
       #config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
     end
-    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -172,6 +172,13 @@ describe RubyZoho::Crm do
     r.first.leadid.should eq(r_changed.first.leadid)
     r_changed.should_not eq(nil)
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
+  end
+
+  it 'should validate a field name' do
+    good_names = ['This is OK', 'OK_to_use']
+    bad_names = ['This % is not', 'Bad()']
+    good_names.map { |f| RubyZoho::Crm.method_name?(ApiUtils.string_to_symbol(f)).should_not eq(false)}
+    bad_names.map { |f| RubyZoho::Crm.method_name?(ApiUtils.string_to_symbol(f)).should eq(false)}
   end
 
 end
