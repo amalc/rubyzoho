@@ -37,13 +37,17 @@ module RubyZoho
       @fields = RubyZoho.configuration.api.module_fields[
           ApiUtils.string_to_symbol(Crm.module_name)]
       RubyZoho::Crm.create_accessor(self.class, @fields)
+      retry_counter = -1
       begin
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       rescue NoMethodError => e
         m = e.message.slice(/`[a-z]*id='/)  # Get method name with id
         RubyZoho::Crm.create_accessor(self.class,
             [ApiUtils.string_to_symbol(m.slice(/[a-z]*=/).chop)]) unless m.nil?
+        retry_counter += 1
+        retry if retry_counter <= 0
       end
+      self
     end
 
 

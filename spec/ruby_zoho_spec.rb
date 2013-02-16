@@ -11,8 +11,8 @@ describe RubyZoho::Crm do
     #params = YAML.load(File.open(config_file))
     RubyZoho.configure do |config|
       #config.api_key = params['auth_token']
-      config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-      #config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+      #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+      config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
