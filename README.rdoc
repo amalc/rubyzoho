@@ -11,7 +11,7 @@ ActiveRecord lifecycle but without ActiveRecord.
 == Configure
 
 === Rails
-Put the following in an initializer (e.g. +<RAILS_ROOT>/config/initializers/zoho.rb+):
+Put the following in an initializer (e.g. <tt><RAILS_ROOT>/config/initializers/zoho.rb</tt>):
 
     require 'ruby_zoho'
 
