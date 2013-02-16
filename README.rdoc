@@ -21,9 +21,6 @@ Put the following in an initializer (e.g. <tt><RAILS_ROOT>/config/initializers/z
       # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got
     end
 
-Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
-your daily allowance.
-
 === Ruby
 Make sure the following block is executed prior to making calls to the gem.
 
@@ -34,6 +31,9 @@ Make sure the following block is executed prior to making calls to the gem.
       # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
       # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got
     end
+
+Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
+your daily allowance.
 
 
 
