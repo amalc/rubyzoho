@@ -54,3 +54,6 @@ pkg
 
 # RubyZoho configuration file
 zoho_api_configuration.yaml
+
+# For gem
+Gemfile.lock
