@@ -117,16 +117,8 @@ module ZohoApi
       r = self.class.post(create_url(module_name, 'getFields'),
           :query => { :authtoken => @auth_token, :scope => 'crmapi' },
           :headers => { 'Content-length' => '0' })
-      @@module_fields[mod_name] = []
-      x = REXML::Document.new(r.body)
-      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
-        field = ApiUtils.string_to_symbol(f.to_s)
-        @@module_fields[mod_name] << field if method_name?(field)
-      end
-      raise('Getting fields failed', RuntimeError, module_name) unless r.response.code == '200'
       check_for_errors(r)
-      @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
-      @@module_fields
+      update_module_fields(mod_name, module_name, r)
     end
 
     def first(module_name)
@@ -169,14 +161,13 @@ module ZohoApi
       @@module_fields
     end
 
-    def related_records(module_name, related_list, id)
-      r = self.class.get(create_url("#{related_list}", 'getRelatedRecords'),
+    def related_records(parent_module, parent_record_id, related_module)
+      r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'),
          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
-                     :parentModule => module_name, :id => id})
-      raise(RuntimeError, 'Bad query for related records', module_name) unless r.body.index('<error>').nil?
+                     :parentModule => parent_module, :id => parent_record_id})
 
       pp r.body
-      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
       puts "====="
       pp check_for_errors(r)
       return nil unless check_for_errors(r).nil?
@@ -205,6 +196,18 @@ module ZohoApi
       end
       return nil if r == []
       r
+    end
+
+    def update_module_fields(mod_name, module_name, r)
+      @@module_fields[mod_name] = []
+      x = REXML::Document.new(r.body)
+      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
+        field = ApiUtils.string_to_symbol(f.to_s)
+        @@module_fields[mod_name] << field if method_name?(field)
+      end
+      @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
+      return @@module_fields[mod_name] unless @@module_fields.nil?
+      nil
     end
 
     def update_record(module_name, id, fields_values_hash)
