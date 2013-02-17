@@ -38,8 +38,7 @@ module ZohoApi
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
           :headers => { 'Content-length' => '0' })
-      raise('Adding record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
+      check_for_errors(r)
     end
 
     def add_field(row, field, value)
@@ -90,12 +89,13 @@ module ZohoApi
     end
 
     def check_for_errors(response)
+      raise(RuntimeError, "Web service call failed with #{response.code}") unless response.code == 200
       x = REXML::Document.new(response.body)
       code =  REXML::XPath.first(x, '//code')
       raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless
           code.nil? || code.text == '4422'
       return code.text unless code.nil?
-      nil
+      response.code
     end
 
     def create_url(module_name, api_call)
@@ -223,6 +223,26 @@ module ZohoApi
       check_for_errors(r)
       raise('Updating record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
       r.response.code
+    end
+
+    def users(user_type)
+      r = self.class.get(create_url('Users', 'getUsers'),
+          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+              :type => user_type })
+      check_for_errors(r)
+      x = REXML::Document.new(r.body).elements.to_a("/users")
+      result = []
+      x.each do |e|
+        e.elements.to_a.each do |n|
+          record = {}
+          record.merge!( { :user_name => n.text })
+          n.attributes.each_pair do |k, v|
+            record.merge!({ k.to_s.to_sym => v.to_string.match(/'(.*)'/).to_s.gsub("'", '') })
+          end
+          result << record
+        end
+      end
+      result
     end
 
   end

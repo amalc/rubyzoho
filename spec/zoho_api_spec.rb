@@ -27,8 +27,8 @@ describe ZohoApi do
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Leads', 'Potentials']
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
-    #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-    api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+    #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
     @zoho = ZohoApi::Crm.new(api_key, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
@@ -99,9 +99,32 @@ describe ZohoApi do
   end
 
   it 'should return related records by module and id' do
-    #pending
-    r = @zoho.some('Potentials').first
-    related = @zoho.related_records('Contacts', 'Potentials', r[:potentialid])
+    pending
+    r = @zoho.some('Accounts').first
+    pp r
+    related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
+  end
+
+  it 'should return events' do
+    r = @zoho.some('Events').first
+    r.should_not eq(nil)
+  end
+
+  it 'should return users' do
+    r = @zoho.users('AllUsers')
+    pp r
+    r.should_not eq(nil)
+  end
+
+  it 'should do a full CRUD lifecycle on tasks' do
+    mod_name = 'Tasks'
+    fields = @zoho.fields(mod_name)
+    fields.count >= 10
+    fields.index(:task_owner).should_not eq(nil)
+    @zoho.add_record(mod_name, {:task_owner => 'Task Owner', :subject => 'Test Task', :due_date => '1/1/2100'})
+    r = @zoho.some(mod_name).first
+    pp r
+    r.should_not eq(nil)
   end
 
   it 'should update a contact' do
