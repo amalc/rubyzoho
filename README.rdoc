@@ -1,4 +1,4 @@
-{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho]
 
 = rubyzoho
 

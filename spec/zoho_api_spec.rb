@@ -27,8 +27,8 @@ describe ZohoApi do
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Leads', 'Potentials']
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
-    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-    #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+    #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+    api_key = '62cedfe9427caef8afb9ea3b5bf68154'
     @zoho = ZohoApi::Crm.new(api_key, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
@@ -112,7 +112,6 @@ describe ZohoApi do
 
   it 'should return users' do
     r = @zoho.users('AllUsers')
-    pp r
     r.should_not eq(nil)
   end
 
