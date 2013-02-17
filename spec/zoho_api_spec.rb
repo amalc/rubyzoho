@@ -25,7 +25,7 @@ describe ZohoApi do
     #params = YAML.load(File.open(config_file))
     #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
-    modules = ['Accounts', 'Contacts', 'Leads', 'Potentials']
+    modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
     #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
     api_key = '62cedfe9427caef8afb9ea3b5bf68154'
@@ -81,14 +81,25 @@ describe ZohoApi do
   end
 
   it 'should get a list of fields for a module' do
+    r = @zoho.fields('Accounts')
+    r.count.should >= 30
     r = @zoho.fields('Contacts')
     r.count.should be >= 35
+    r = @zoho.fields('Events')
+    r.count.should >= 10
     r = @zoho.fields('Leads')
     r.count.should be >= 23
     r = @zoho.fields('Potentials')
     r.count.should be >= 15
-    r = @zoho.fields('Accounts')
-    r.count.should >= 30
+    r = @zoho.fields('Tasks')
+    r.count.should >= 10
+    r = @zoho.fields('Users')
+    r.count.should >= 7
+  end
+
+  it 'should get a list of user fields' do
+    r = @zoho.user_fields
+    r.count.should be >= 7
   end
 
   it 'should retrieve records by module name' do
@@ -111,11 +122,12 @@ describe ZohoApi do
   end
 
   it 'should return users' do
-    r = @zoho.users('AllUsers')
+    r = @zoho.users
     r.should_not eq(nil)
   end
 
   it 'should do a full CRUD lifecycle on tasks' do
+    pending
     mod_name = 'Tasks'
     fields = @zoho.fields(mod_name)
     fields.count >= 10

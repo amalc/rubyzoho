@@ -18,6 +18,7 @@ module ZohoApi
     include HTTMultiParty
 
     @@module_fields = {}
+    @@users = []
 
     #debug_output $stderr
 
@@ -93,7 +94,7 @@ module ZohoApi
       x = REXML::Document.new(response.body)
       code =  REXML::XPath.first(x, '//code')
       raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless
-          code.nil? || code.text == '4422'
+          code.nil? || ['4422', '5000'].index(code.text)
       return code.text unless code.nil?
       response.code
     end
@@ -112,6 +113,7 @@ module ZohoApi
     end
 
     def fields(module_name)
+      return user_fields if module_name == 'Users'
       mod_name = ApiUtils.string_to_symbol(module_name)
       return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
       r = self.class.post(create_url(module_name, 'getFields'),
@@ -225,10 +227,15 @@ module ZohoApi
       r.response.code
     end
 
-    def users(user_type)
+    def user_fields
+      users[0].keys
+    end
+
+    def users(user_type = 'AllUsers')
+      return @@users unless @@users == [] || user_type == 'Refresh'
       r = self.class.get(create_url('Users', 'getUsers'),
           :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
-              :type => user_type })
+              :type => 'AllUsers' })
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/users")
       result = []
@@ -237,12 +244,12 @@ module ZohoApi
           record = {}
           record.merge!( { :user_name => n.text })
           n.attributes.each_pair do |k, v|
-            record.merge!({ k.to_s.to_sym => v.to_string.match(/'(.*)'/).to_s.gsub("'", '') })
+            record.merge!({ k.to_s.to_sym => v.to_string.match(/'(.*?)'/).to_s.gsub("'", '') })
           end
           result << record
         end
       end
-      result
+      @@users = result
     end
 
   end
