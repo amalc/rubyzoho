@@ -1,4 +1,5 @@
 {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
+
 {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho]
 
 = rubyzoho
@@ -19,7 +20,8 @@ Put the following in an initializer (e.g. <tt><RAILS_ROOT>/config/initializers/z
     RubyZoho.configure do |config|
       config.api_key = '<< API Key from Zoho>>'
       # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
-      # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got
+      # config.crm_modules = ['Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got, adds to free edition modules
+      # Currently only Quotes are suported
     end
 
 === Ruby
@@ -67,8 +69,8 @@ To retrieve an existing record:
 Returns one or more records matching the query. The find_by_<attribute> follows
 ActiveRecord style reflections, so if the attribute is present in the API, it can
 be queried. There is currently a single attribute limitation imposed by the Zoho 
-API. Note, what is returned is an Array class. Use subscripts at this point to access
-or iterate through the returned set of records.
+API. Note, what is returned is an Array class which is also Enumerable. Use +.each+,
++.map+, +.first+, +.last+, etc to navigate through the result set.
 
 Equality is the only match currently supported.
 
@@ -143,13 +145,16 @@ To update a record:
 Objects currently supported are:
     RubyZoho::Crm::Account
     RubyZoho::Crm::Contact
+    RubyZoho::Crm::Event
     RubyZoho::Crm::Lead
     RubyZoho::Crm::Potential
+    RubyZoho::Crm::Task
     RubyZoho::Crm::Quote
+    RubyZoho::Crm::User
 
 
 ==Bugs and Enhancments
-Please open an issue on GitHub. Or better yet, send in a pull request.
+Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
 ---
 
