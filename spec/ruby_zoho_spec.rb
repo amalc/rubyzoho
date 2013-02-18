@@ -14,7 +14,7 @@ describe RubyZoho::Crm do
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = %w(Quotes)
-      config.cache_fields = true
+      config.cache_fields = false
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -95,7 +95,7 @@ describe RubyZoho::Crm do
 
   it 'should get a list of attr_writers for quotes' do
     c = RubyZoho::Crm::Quote.new
-    c.attr_writers.count.should be >= 18
+    c.attr_writers.count.should be >= 18 unless c.nil?
   end
 
   it 'should get a list of accounts' do
@@ -168,7 +168,7 @@ describe RubyZoho::Crm do
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
   end
 
-  it 'should save a potential record' do
+  it 'should save and retrieve a potential record' do
     accounts = RubyZoho::Crm::Account.all
     p = RubyZoho::Crm::Potential.new(
         :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
@@ -182,6 +182,8 @@ describe RubyZoho::Crm do
     r.first.potential_name.should eq('A very big potential INDEED!!!!!!!!!!!!!')
     potential = RubyZoho::Crm::Potential.find_by_potentialid(r.first.potentialid)
     potential.first.potentialid.should eq(r.first.potentialid)
+    #p_by_account_id = RubyZoho::Crm::Potential.find_by_accountid(r.first.accountid)
+    #p_by_account_id.first.potentialid.should eq(r.first.accountid)
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
   end
 
