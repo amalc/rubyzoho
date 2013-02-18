@@ -164,7 +164,7 @@ or where the Zoho API sends back an explicit error code which isn't in the set
 
     ['4422', '5000']
 
-a RuntimeError exception is raised with the Zoho API message.
+a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
 
 == Bugs and Enhancments
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
