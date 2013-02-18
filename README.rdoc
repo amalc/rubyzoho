@@ -5,7 +5,7 @@
 = rubyzoho
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
-ActiveRecord lifecycle but without ActiveRecord.
+ActiveRecord lifecycle, but without ActiveRecord. Current focus is on Zoho CRM.
 
 == Install
     gem install rubyzoho
