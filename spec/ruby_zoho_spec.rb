@@ -14,6 +14,7 @@ describe RubyZoho::Crm do
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = %w(Quotes)
+      config.cache_fields = true
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -189,15 +190,14 @@ describe RubyZoho::Crm do
   end
 
   it 'should save an event record' do
-    pending
-    accounts = RubyZoho::Crm::Account.all
-    pp a = accounts.first
-    events = RubyZoho::Crm::Event.all
-    pp ev = events.first
-    RubyZoho::Crm::Event.update(
-        :id => ev.activityid,
-        :subject => "Hello Dolly #{Time.now}.to_s"
-    )
+    #accounts = RubyZoho::Crm::Account.all
+    #pp a = accounts.first
+    #events = RubyZoho::Crm::Event.all
+    #pp ev = events.first
+    #RubyZoho::Crm::Event.update(
+    #    :id => ev.activityid,
+    #    :subject => "Hello Dolly #{Time.now}.to_s"
+    #)
     pp e = RubyZoho::Crm::Event.new(
         :event_owner =>  'Wayne Giles',
         :smownerid => '748054000000056023',

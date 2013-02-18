@@ -3,6 +3,7 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 require 'spec_helper'
 require 'zoho_api'
 require 'xmlsimple'
+require 'yaml'
 
 describe ZohoApi do
 
@@ -18,6 +19,17 @@ describe ZohoApi do
     @zoho.delete_record('Contacts', c[0][:contactid]) unless c == []
   end
 
+  def init_api(api_key, base_path, modules)
+    if File.exists?(File.join(base_path, 'fields.snapshot'))
+      fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
+      zoho = ZohoApi::Crm.new(api_key, modules, fields)
+    else
+      zoho = ZohoApi::Crm.new(api_key, modules)
+      fields = zoho.module_fields
+      File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) }
+    end
+    zoho
+  end
 
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
@@ -29,7 +41,7 @@ describe ZohoApi do
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
     #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
     api_key = '62cedfe9427caef8afb9ea3b5bf68154'
-    @zoho = ZohoApi::Crm.new(api_key, modules)
+    @zoho = init_api(api_key, base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -47,6 +59,25 @@ describe ZohoApi do
     @zoho.delete_record('Contacts', contacts[0][:contactid])
     contacts.should_not eq(nil)
     contacts.count.should eq(1)
+  end
+  
+  it 'should add a new event' do
+    h = { :event_owner => 'Wayne Giles',
+          :smownerid => '748054000000056023',
+          :start_datetime => '2013-02-16 16:00:00',
+          :end_datetime => '2014-02-16 16:00:00',
+          :subject => 'Test Event',
+          :related_to => 'Potential One',
+          :relatedtoid => '748054000000123057',
+          :semodule => 'Potentials',
+          :contact_name => 'Wayne Smith',
+          :contactid => '748054000000097043' }
+    @zoho.add_record('Events', h)
+    events = @zoho.some('Events')
+    pp events
+    #@zoho.delete_record('Contacts', contacts[0][:contactid])
+    events.should_not eq(nil)
+    events.count.should eq(1)
   end
 
   it 'should attach a file to a contact record' do

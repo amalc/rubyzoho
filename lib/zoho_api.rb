@@ -24,10 +24,10 @@ module ZohoApi
 
     attr_reader :auth_token, :module_fields
 
-    def initialize(auth_token, modules)
+    def initialize(auth_token, modules, fields = nil)
       @auth_token = auth_token
       @modules = %w(Accounts Contacts Events Leads Potentials Tasks Users).concat(modules).uniq
-      @module_fields = reflect_module_fields
+      @module_fields = fields.nil? ? reflect_module_fields : fields
     end
 
     def add_record(module_name, fields_values_hash)
@@ -35,6 +35,7 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      pp x.to_s
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },

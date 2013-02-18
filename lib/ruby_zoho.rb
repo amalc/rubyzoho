@@ -5,11 +5,12 @@ require 'api_utils'
 module RubyZoho
 
   class Configuration
-    attr_accessor :api, :api_key, :crm_modules
+    attr_accessor :api, :api_key, :cache_fields, :crm_modules
 
     def initialize
       self.api_key = nil
       self.api = nil
+      self.cache_fields = false
       self.crm_modules = nil
     end
   end
@@ -24,11 +25,23 @@ module RubyZoho
     self.configuration.crm_modules ||= []
     self.configuration.crm_modules = %w[Accounts Calls Contacts Events Leads Potentials Tasks].concat(
         self.configuration.crm_modules).uniq
-    self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
+    self.configuration.api = init_api(self.configuration.api_key,
+        self.configuration.crm_modules, self.configuration.cache_fields)
     RubyZoho::Crm.setup_classes()
   end
 
-
+  def self.init_api(api_key, modules, cache_fields)
+    base_path = File.join(File.dirname(__FILE__), '..', 'spec', 'fixtures')
+    if File.exists?(File.join(base_path, 'fields.snapshot')) && cache_fields == true
+      fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
+      zoho = ZohoApi::Crm.new(api_key, modules, fields)
+    else
+      zoho = ZohoApi::Crm.new(api_key, modules)
+      fields = zoho.module_fields
+      File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) }
+    end
+    zoho
+  end
 
   class Crm
 
@@ -54,6 +67,7 @@ module RubyZoho
         retry_counter -= 1
         retry if retry_counter > 0
       end
+      throw :stop if self.class == RubyZoho::Crm::Event
       self
     end
 
