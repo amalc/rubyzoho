@@ -62,6 +62,7 @@ describe ZohoApi do
   end
   
   it 'should add a new event' do
+    pending
     h = { :event_owner => 'Wayne Giles',
           :smownerid => '748054000000056023',
           :start_datetime => '2013-02-16 16:00:00',
@@ -109,6 +110,25 @@ describe ZohoApi do
     c = @zoho.find_record_by_id('Contacts', id)
     c[0][:contactid].should eq(id)
     delete_dummy_contact
+  end
+
+  it 'should find by potential and id' do
+    accounts = @zoho.some('Accounts')
+    p = {
+        :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
+        :accountid => accounts.first[:accountid],
+        :account_name => accounts.first[:account_name],
+        :closing_date => '1/1/2014',
+        :type => 'New Business',
+        :stage => 'Needs Analysis'
+    }
+    potentials = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+    potentials.map { |r| @zoho.delete_record('Potentials', r[:potentialid])} unless potentials.nil?
+    @zoho.add_record('Potentials', p)
+    p = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+    p.should_not eq(nil)
+    @zoho.find_record_by_id('Potentials', p.first[:potentialid])
+    p.first[:potentialid].should eq(p.first[:potentialid])
   end
 
   it 'should get a list of fields for a module' do
@@ -165,6 +185,14 @@ describe ZohoApi do
   it 'should return users' do
     r = @zoho.users
     r.should_not eq(nil)
+  end
+
+  it 'should test for a primary key' do
+    @zoho.primary_key?('Accounts', 'accountid').should eq(true)
+    @zoho.primary_key?('Accounts', 'potentialid').should eq(false)
+    @zoho.primary_key?('Accounts', 'Potential Name').should eq(false)
+    @zoho.primary_key?('Accounts', 'Account Name').should eq(false)
+    @zoho.primary_key?('Accounts', 'account_name').should eq(false)
   end
 
   it 'should do a full CRUD lifecycle on tasks' do
