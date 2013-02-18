@@ -143,7 +143,7 @@ To add a contact to an existing account:
 To update a record:
     l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
     RubyZoho::Crm::Lead.update(
-        :leadid => l.first.leadid,
+        :id => l.first.leadid,
         :email => 'changed_email@domain.com'
     )
 
