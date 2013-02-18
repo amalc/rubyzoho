@@ -37,7 +37,7 @@ Make sure the following block is executed prior to making calls to the gem.
     end
 
 Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
-your daily allowance.
+your daily allowance. See below for some optimizations during development and testing.
 
 
 
@@ -165,6 +165,16 @@ or where the Zoho API sends back an explicit error code which <b>isn't</b> in th
     ['4422', '5000']
 
 a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
+
+== Optimizations for Development and Testing
+Set <tt>config.cache_fields = true</tt> in the configuration block to cache fields lists
+during development and testing and reduce total API calls during start up. Defaults to false. We <b>do not</b> recommend use of this
+in production.
+
+    RubyZoho.configure do |config|
+      # Other stuff for initialization
+      config.cache_fields = true
+    end
 
 == Bugs and Enhancments
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
