@@ -156,12 +156,6 @@ describe RubyZoho::Crm do
     r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) }
   end
 
-  it 'should sort contact records' do
-    r = RubyZoho::Crm::Contact.all
-    sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
-    sorted.collect { |c| c.last_name }.should_not eq(nil)
-  end
-
   it 'should save a lead record' do
     l = RubyZoho::Crm::Lead.new(
       :first_name => 'Raj',
@@ -186,10 +180,13 @@ describe RubyZoho::Crm do
     p.save
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
     r.first.potential_name.should eq('A very big potential INDEED!!!!!!!!!!!!!')
+    potential = RubyZoho::Crm::Potential.find_by_potentialid(r.first.potentialid)
+    potential.first.potentialid.should eq(r.first.potentialid)
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
   end
 
   it 'should save an event record' do
+    pending
     #accounts = RubyZoho::Crm::Account.all
     #pp a = accounts.first
     #events = RubyZoho::Crm::Event.all
@@ -211,6 +208,12 @@ describe RubyZoho::Crm do
         :contactid => "748054000000097043"
     )
     e.save
+  end
+
+  it 'should sort contact records' do
+    r = RubyZoho::Crm::Contact.all
+    sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
+    sorted.collect { |c| c.last_name }.should_not eq(nil)
   end
 
   it 'should update a lead record' do
