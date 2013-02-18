@@ -196,15 +196,14 @@ describe ZohoApi do
   end
 
   it 'should do a full CRUD lifecycle on tasks' do
-    pending
     mod_name = 'Tasks'
     fields = @zoho.fields(mod_name)
     fields.count >= 10
     fields.index(:task_owner).should_not eq(nil)
-    @zoho.add_record(mod_name, {:task_owner => 'Task Owner', :subject => 'Test Task', :due_date => '1/1/2100'})
-    r = @zoho.some(mod_name).first
-    pp r
+    @zoho.add_record(mod_name, {:task_owner => 'Task Owner', :subject => 'Test Task', :due_date => '2100/1/1'})
+    r = @zoho.find_record_by_field('Tasks', 'Subject', '=', 'Test Task')
     r.should_not eq(nil)
+    r.map { |t| @zoho.delete_record('Tasks', t[:activityid]) }
   end
 
   it 'should update a contact' do
