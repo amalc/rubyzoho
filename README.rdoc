@@ -158,8 +158,15 @@ Objects currently supported are:
     RubyZoho::Crm::Quote
     RubyZoho::Crm::User
 
+== Error Handling
+Errors, i.e. situations where the Zoho API either returns an http code something other than 200
+or where the Zoho API sends back an explicit error code which isn't in the set
 
-==Bugs and Enhancments
+    ['4422', '5000']
+
+a RuntimeError exception is raised with the Zoho API message.
+
+== Bugs and Enhancments
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
 ---
