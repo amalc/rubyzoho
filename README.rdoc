@@ -181,7 +181,7 @@ write access to its own directory for this to work.
 
     id·i·o·syn·cra·sy ( d - -s ng kr -s ). n. pl. id·i·o·syn·cra·sies.
     1. A structural or behavioral characteristic peculiar to an individual or group.
-www.freedictionary.com
+www.freedictionary.com/idiosyncrasy
 
 == Bugs and Enhancements
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
