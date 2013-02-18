@@ -180,12 +180,12 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
+---
+
 == Trademarks
 
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
-
----
 
 == Copyright
 
