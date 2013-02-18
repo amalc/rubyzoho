@@ -1,5 +1,17 @@
+---
 language: ruby
 rvm:
-  - 1.9.3
-  # - jruby-19mode # JRuby in 1.9 mode
-  # - rbx-19mode
+- 1.9.3
+- jruby
+
+matrix:
+  allow-failures:
+    - rvm: jruby
+
+env:
+  global:
+  - secure: ! 'E2ZilvytrU4gPdPZna7EMJmrDHQPfjo7KLnY4geip1coSrmISaf3VhKlGMDY
+
+      NubPbNdM6K98F98hQfMszGjt7YJz8y5dJrpwT4847ZL9k0FLN8XsjdxW7gH4
+
+      Dqocd1v5HY2gK60quwr0YPza10bgw6XseYXlrMtVgpTFOYv5HTg='
