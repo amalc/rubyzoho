@@ -140,7 +140,7 @@ To add a contact to an existing account:
     )
     c.save
 
-To update a record:
+To update a record (<b>Note, that the attribute is :id</b>):
     l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
     RubyZoho::Crm::Lead.update(
         :id => l.first.leadid,
