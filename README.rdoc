@@ -167,9 +167,9 @@ or where the Zoho API sends back an explicit error code which <b>isn't</b> in th
 a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
 
 == Optimizations for Development and Testing
-Set <tt>config.cache_fields = true</tt> in the configuration block to cache fields lists
-during development and testing and reduce total API calls during start up. Defaults to false. We <b>do not</b> recommend use of this
-in production.
+Set <tt>config.cache_fields = true</tt> in the configuration block to cache module field lists
+during development and testing to reduce total API calls during start up. Defaults to false.
+We <b>do not</b> recommend use of this in production.
 
     RubyZoho.configure do |config|
       # Other stuff for initialization
