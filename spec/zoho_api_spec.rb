@@ -121,6 +121,11 @@ describe ZohoApi do
     r.should_not eq(nil)
   end
 
+  it 'should return tasks' do
+    r = @zoho.some('Tasks').first
+    r.should_not eq(nil)
+  end
+
   it 'should return users' do
     r = @zoho.users
     r.should_not eq(nil)
