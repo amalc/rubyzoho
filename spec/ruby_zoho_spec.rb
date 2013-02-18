@@ -103,6 +103,12 @@ describe RubyZoho::Crm do
     r.map { |r| r.class.should eq(RubyZoho::Crm::Account) }
   end
 
+  it 'should get a list of calls' do
+    r = RubyZoho::Crm::Call.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Call) }
+  end
+
   it 'should get a list of contacts' do
     r = RubyZoho::Crm::Contact.all
     r.count.should be > 1
@@ -180,6 +186,31 @@ describe RubyZoho::Crm do
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
     r.first.potential_name.should eq('A very big potential INDEED!!!!!!!!!!!!!')
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
+  end
+
+  it 'should save an event record' do
+    pending
+    accounts = RubyZoho::Crm::Account.all
+    pp a = accounts.first
+    events = RubyZoho::Crm::Event.all
+    pp ev = events.first
+    RubyZoho::Crm::Event.update(
+        :id => ev.activityid,
+        :subject => "Hello Dolly #{Time.now}.to_s"
+    )
+    pp e = RubyZoho::Crm::Event.new(
+        :event_owner =>  'Wayne Giles',
+        :smownerid => '748054000000056023',
+        :start_datetime => '2013-02-16 16:00:00',
+        :end_datetime => '2014-02-16 16:00:00',
+        :subject => 'Test Event',
+        :related_to => "Potential One",
+        :relatedtoid => '748054000000123057',
+        :semodule => "Potentials",
+        :contact_name => "Wayne Smith",
+        :contactid => "748054000000097043"
+    )
+    e.save
   end
 
   it 'should update a lead record' do

@@ -22,7 +22,7 @@ module RubyZoho
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
     self.configuration.crm_modules ||= []
-    self.configuration.crm_modules = %w[Accounts Contacts Events Leads Potentials Tasks].concat(
+    self.configuration.crm_modules = %w[Accounts Calls Contacts Events Leads Potentials Tasks].concat(
         self.configuration.crm_modules).uniq
     self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
     RubyZoho::Crm.setup_classes()
@@ -47,6 +47,8 @@ module RubyZoho
         m = e.message.slice(/`(.*?)=/)
         unless m.nil?
           m.gsub!('`', '')
+          m.gsub!('(', '')
+          m.gsub!(')', '')
           RubyZoho::Crm.create_accessor(self.class, [m.chop])
         end
         retry_counter -= 1
