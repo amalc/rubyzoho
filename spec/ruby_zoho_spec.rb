@@ -13,12 +13,12 @@ describe RubyZoho::Crm do
       #config.api_key = params['auth_token']
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
-      config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials', 'Quotes']
+      config.crm_modules = %w(Quotes)
     end
-    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -48,6 +48,28 @@ describe RubyZoho::Crm do
     r.map { |c| c.last_name }.count.should eq(3)
     r.first.last_name.should eq('Smithereens')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) }
+  end
+
+  it 'should find a contact by ID' do
+    contacts = RubyZoho::Crm::Contact.all
+    contact_id = contacts.first.contactid
+    c = RubyZoho::Crm::Contact.find_by_contactid(contact_id)
+    c.first.contactid.should eq(contact_id)
+    c.first.last_name.should eq(contacts.first.last_name)
+    c.first.email.should eq(contacts.first.email)
+  end
+
+  it 'should find a lead by ID' do
+    leads = RubyZoho::Crm::Lead.all
+    lead_id = leads.first.leadid
+    l = RubyZoho::Crm::Lead.find_by_leadid(lead_id)
+    l.first.leadid.should eq(lead_id)
+  end
+
+  it 'should find a user by email address' do
+    users = RubyZoho::Crm::User.all
+    r = RubyZoho::Crm::User.find_by_email(users.first.email)
+    r.first.email.should eq(users.first.email)
   end
 
   it 'should get a list of attr_writers for accounts' do
@@ -87,6 +109,12 @@ describe RubyZoho::Crm do
     r.map { |r| r.class.should eq(RubyZoho::Crm::Contact) }
   end
 
+  it 'should get a list of events' do
+    r = RubyZoho::Crm::Event.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Event) }
+  end
+
   it 'should get a list of potentials' do
     r = RubyZoho::Crm::Potential.all
     r.count.should be > 1
@@ -99,20 +127,15 @@ describe RubyZoho::Crm do
     r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
   end
 
-  it 'should find a contact by ID' do
-    contacts = RubyZoho::Crm::Contact.all
-    contact_id = contacts.first.contactid
-    c = RubyZoho::Crm::Contact.find_by_contactid(contact_id)
-    c.first.contactid.should eq(contact_id)
-    c.first.last_name.should eq(contacts.first.last_name)
-    c.first.email.should eq(contacts.first.email)
+  it 'should get a list of tasks' do
+    r = RubyZoho::Crm::Task.all
+    r.count.should be > 1
+    r.map { |r| r.class.should eq(RubyZoho::Crm::Task) }
   end
 
-  it 'should find a lead by ID' do
-    leads = RubyZoho::Crm::Lead.all
-    lead_id = leads.first.leadid
-    l = RubyZoho::Crm::Lead.find_by_leadid(lead_id)
-    l.first.leadid.should eq(lead_id)
+  it 'should get a list of users' do
+    r = RubyZoho::Crm::User.all
+    r.count.should be >= 1
   end
 
   it 'should save a contact record' do

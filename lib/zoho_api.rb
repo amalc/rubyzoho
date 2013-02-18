@@ -26,7 +26,7 @@ module ZohoApi
 
     def initialize(auth_token, modules)
       @auth_token = auth_token
-      @modules = modules
+      @modules = %w(Accounts Contacts Events Leads Potentials Tasks Users).concat(modules).uniq
       @module_fields = reflect_module_fields
     end
 
@@ -228,7 +228,7 @@ module ZohoApi
     end
 
     def user_fields
-      users[0].keys
+      @@module_fields[:users] = users[0].keys
     end
 
     def users(user_type = 'AllUsers')

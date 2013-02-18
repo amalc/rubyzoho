@@ -21,7 +21,7 @@ module RubyZoho
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
-    self.configuration.crm_modules ||= ['Accounts', 'Contacts', 'Leads', 'Potentials']
+    self.configuration.crm_modules ||= []
     self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
   end
 
@@ -37,15 +37,17 @@ module RubyZoho
       @fields = RubyZoho.configuration.api.module_fields[
           ApiUtils.string_to_symbol(Crm.module_name)]
       RubyZoho::Crm.create_accessor(self.class, @fields)
-      retry_counter = -1
+      retry_counter = object_attribute_hash.count
       begin
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
       rescue NoMethodError => e
-        m = e.message.slice(/`[a-z]*id='/)  # Get method name with id
-        RubyZoho::Crm.create_accessor(self.class,
-            [ApiUtils.string_to_symbol(m.slice(/[a-z]*=/).chop)]) unless m.nil?
-        retry_counter += 1
-        retry if retry_counter <= 0
+        m = e.message.slice(/`(.*?)=/)
+        unless m.nil?
+          m.gsub!('`', '')
+          RubyZoho::Crm.create_accessor(self.class, [m.chop])
+        end
+        retry_counter -= 1
+        retry if retry_counter > 0
       end
       self
     end
@@ -67,7 +69,8 @@ module RubyZoho
     end
 
     def self.method_name?(n)
-      return /[@$"]/ !~ n.inspect
+      name = n.class == String ? ApiUtils.string_to_symbol(n) : n
+      return /[@$"]/ !~ name.inspect
     end
 
     def self.create_getter(klass, *names)
@@ -189,6 +192,32 @@ module RubyZoho
     end
 
 
+    class Event < RubyZoho::Crm
+      include RubyZoho
+      attr_reader :fields
+      Crm.module_name = 'Events'
+
+      def initialize(object_attribute_hash = {})
+        Crm.module_name = 'Events'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Events'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Events'
+        super
+      end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Events'
+        super
+      end
+    end
+
     class Lead < RubyZoho::Crm
       include RubyZoho
       attr_reader :fields
@@ -241,6 +270,32 @@ module RubyZoho
       end
     end
 
+    class Task < RubyZoho::Crm
+      include RubyZoho
+      attr_reader :fields
+      Crm.module_name = 'Tasks'
+
+      def initialize(object_attribute_hash = {})
+        Crm.module_name = 'Tasks'
+        super
+      end
+
+      def self.all
+        Crm.module_name = 'Tasks'
+        super
+      end
+
+      def self.delete(id)
+        Crm.module_name = 'Tasks'
+        super
+      end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Tasks'
+        super
+      end
+    end
+
     class Quote < RubyZoho::Crm
       include RubyZoho
       attr_reader :fields
@@ -263,6 +318,37 @@ module RubyZoho
 
       def self.method_missing(meth, *args, &block)
         Crm.module_name = 'Quotes'
+        super
+      end
+    end
+
+    class User < RubyZoho::Crm
+      def initialize(object_attribute_hash = {})
+        Crm.module_name = 'Users'
+        super
+      end
+
+      def self.delete(id)
+        raise 'Cannot delete users through API'
+      end
+
+      def save
+        raise 'Cannot delete users through API'
+      end
+
+      def self.all
+        result = RubyZoho.configuration.api.users('AllUsers')
+        result.collect { |r| new(r) }
+      end
+
+      def self.find_by_email(email)
+        r = []
+        self.all.index { |u| r << u if u.email == email }
+        r
+      end
+
+      def self.method_missing(meth, *args, &block)
+        Crm.module_name = 'Users'
         super
       end
     end
