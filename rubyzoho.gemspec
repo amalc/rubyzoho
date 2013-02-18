@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rubyzoho"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["amalc"]
-  s.date = "2013-02-16"
+  s.date = "2013-02-18"
   s.description = ""
   s.email = ""
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/api_utils.rb",
     "lib/ruby_zoho.rb",
     "lib/zoho_api.rb",
+    "rubyzoho-0.1.1.gem",
     "rubyzoho.gemspec",
     "spec/api_utils_spec.rb",
     "spec/fixtures/sample.pdf",
