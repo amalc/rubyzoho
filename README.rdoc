@@ -178,13 +178,13 @@ write access to its own directory for this to work.
     end
 
 == Idiosyncractic Behavior
-    From freedicitonary.com
+    From freedictionary.com
     id·i·o·syn·cra·sy ( d - -s ng kr -s ). n. pl. id·i·o·syn·cra·sies.
     1. A structural or behavioral characteristic peculiar to an individual or group.
 
 The Zoho API is definitely opinionated. And we have yet to be able plumb the depths of its
 views. If it behaves unexpectedly, try the Zoho forums before opening an issue here. It
-just may be the way the API works.
+just may be the way the API works...
 
 == Bugs and Enhancements
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
