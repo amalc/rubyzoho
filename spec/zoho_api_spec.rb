@@ -116,6 +116,11 @@ describe ZohoApi do
     related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
   end
 
+  it 'should return calls' do
+    r = @zoho.some('Calls').first
+    r.should_not eq(nil)
+  end
+
   it 'should return events' do
     r = @zoho.some('Events').first
     r.should_not eq(nil)
