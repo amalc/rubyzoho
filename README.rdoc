@@ -81,6 +81,11 @@ To get a list of all accounts:
       pp account.account_name
     end
 
+Or for all task subjects:
+
+    t = RubyZoho::Crm::Task.all
+    pp t.collect { |task| task.subject }
+
 Or for all quotes:
 
     q = RubyZoho::Crm::Quote.all
