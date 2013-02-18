@@ -169,8 +169,6 @@ a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
 == Bugs and Enhancments
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
----
-
 == Contributing to rubyzoho
 
 * Pull requests with unit tests or specs and a version branch are welcomed.
@@ -187,6 +185,7 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
+---
 
 == Copyright
 
