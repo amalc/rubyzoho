@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'httmultiparty', '>= 0.3.8'
 gem 'roxml', '>= 3.3.1'
-
+gem 'multipart-post'
 
 group :test do
   gem 'rspec', '>= 2.12.0'
