@@ -55,3 +55,4 @@ zoho_api_configuration.yaml
 
 # For gem
 Gemfile.lock
+fields.snapshot
