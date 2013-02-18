@@ -1,5 +1,6 @@
 require 'zoho_api'
 require 'api_utils'
+require 'yaml'
 
 
 module RubyZoho
@@ -38,7 +39,7 @@ module RubyZoho
     else
       zoho = ZohoApi::Crm.new(api_key, modules)
       fields = zoho.module_fields
-      File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) }
+      File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) } if cache_fields == true
     end
     zoho
   end
@@ -67,7 +68,6 @@ module RubyZoho
         retry_counter -= 1
         retry if retry_counter > 0
       end
-      throw :stop if self.class == RubyZoho::Crm::Event
       self
     end
 
