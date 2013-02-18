@@ -35,7 +35,7 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-      pp x.to_s
+      #pp x.to_s
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
@@ -57,8 +57,6 @@ module ZohoApi
             :scope => 'crmapi',
             :id => record_id, :content => File.open(file_path) },
           :headers => { 'Content-length' => '0' })
-      pp r.code
-      pp r.body
       raise(RuntimeError, 'Attaching file failed.', r.body.to_s) unless r.response.code == '200'
       r.code
     end
@@ -66,7 +64,6 @@ module ZohoApi
     def add_file(module_name, record_id, file_path)
       url = URI.parse(create_url(module_name, 'uploadFile'))
       r = nil
-      pp record_id
       mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
       f = File.open(file_path)
       req = Net::HTTP::Post::Multipart.new url.path,
@@ -75,9 +72,7 @@ module ZohoApi
         'content' => UploadIO.new(f, mime_type, File.basename(file_path)) }
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
-      pp req.to_hash
       r = http.start { |http| http.request(req) }
-      pp r.body.to_s
       (r.nil? or r.body.nil? or r.body.empty?) ? nil : REXML::Document.new(r.body).to_s
     end
 
@@ -130,12 +125,17 @@ module ZohoApi
 
     def find_records(module_name, field, condition, value)
       sc_field = ApiUtils.symbol_to_string(field)
-      sc_field.rindex('id').nil? ? find_record_by_field(module_name, sc_field, condition, value) :
+      primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
           find_record_by_id(module_name, value)
     end
 
+    def primary_key?(module_name, field_name)
+      field_name.downcase.gsub('id', '') == module_name.chop.downcase
+    end
+
     def find_record_by_field(module_name, sc_field, condition, value)
-      search_condition = '(' + sc_field + '|' + condition + '|' + value + ')'
+      field = sc_field.rindex('id') ? sc_field.downcase : sc_field
+      search_condition = '(' + field + '|' + condition + '|' + value + ')'
       r = self.class.get(create_url("#{module_name}", 'getSearchRecords'),
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :selectColumns => 'All', :searchCondition => search_condition,
@@ -169,11 +169,8 @@ module ZohoApi
          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                      :parentModule => parent_module, :id => parent_record_id})
 
-      pp r.body
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
-      puts "====="
-      pp check_for_errors(r)
-      return nil unless check_for_errors(r).nil?
+      check_for_errors(r)
     end
 
     def some(module_name, index = 1, number_of_records = nil)
