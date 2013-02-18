@@ -22,7 +22,10 @@ module RubyZoho
     self.configuration ||= Configuration.new
     yield(configuration) if block_given?
     self.configuration.crm_modules ||= []
+    self.configuration.crm_modules = %w[Accounts Contacts Events Leads Potentials Tasks].concat(
+        self.configuration.crm_modules).uniq
     self.configuration.api = ZohoApi::Crm.new(self.configuration.api_key, self.configuration.crm_modules)
+    RubyZoho::Crm.setup_classes()
   end
 
 
@@ -51,7 +54,6 @@ module RubyZoho
       end
       self
     end
-
 
     def attr_writers
       self.methods.grep(/\w=$/)
@@ -137,192 +139,199 @@ module RubyZoho
       RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
     end
 
+    def self.setup_classes
+      RubyZoho.configuration.crm_modules.each do |module_name|
+        klass_name = module_name.chop
+        c = Class.new(RubyZoho::Crm) do
+          include RubyZoho
+          attr_reader :fields
 
-    class Account < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Accounts'
+          def initialize(object_attribute_hash = {})
+            klass = self.class.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
 
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Accounts'
-        super
-      end
+          def self.all
+            klass = self.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
 
-      def self.all
-        Crm.module_name = 'Accounts'
-        super
-      end
+          def self.delete(id)
+            klass = self.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
 
-      def self.delete(id)
-        Crm.module_name = 'Accounts'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Accounts'
-        super
-      end
-    end
-
-
-    class Contact < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Contacts'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Contacts'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Contacts'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Contacts'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Contacts'
-        super
+          def self.method_missing(meth, *args, &block)
+            klass = self.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
+        end
+        const_set(klass_name, c)
       end
     end
 
+    #class Contact < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Contacts'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Contacts'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Contacts'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Contacts'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Contacts'
+    #    super
+    #  end
+    #end
+    #
+    #
+    #class Event < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Events'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Events'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Events'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Events'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Events'
+    #    super
+    #  end
+    #end
+    #
+    #class Lead < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Leads'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Leads'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Leads'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Leads'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Leads'
+    #    super
+    #  end
+    #end
+    #
+    #class Potential < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Potentials'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Potentials'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Potentials'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Potentials'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Potentials'
+    #    super
+    #  end
+    #end
+    #
+    #class Task < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Tasks'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Tasks'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Tasks'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Tasks'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Tasks'
+    #    super
+    #  end
+    #end
+    #
+    #class Quote < RubyZoho::Crm
+    #  include RubyZoho
+    #  attr_reader :fields
+    #  Crm.module_name = 'Quotes'
+    #
+    #  def initialize(object_attribute_hash = {})
+    #    Crm.module_name = 'Quotes'
+    #    super
+    #  end
+    #
+    #  def self.all
+    #    Crm.module_name = 'Quotes'
+    #    super
+    #  end
+    #
+    #  def self.delete(id)
+    #    Crm.module_name = 'Quotes'
+    #    super
+    #  end
+    #
+    #  def self.method_missing(meth, *args, &block)
+    #    Crm.module_name = 'Quotes'
+    #    super
+    #  end
+    #end
 
-    class Event < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Events'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Events'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Events'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Events'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Events'
-        super
-      end
-    end
-
-    class Lead < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Leads'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Leads'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Leads'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Leads'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Leads'
-        super
-      end
-    end
-
-    class Potential < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Potentials'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Potentials'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Potentials'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Potentials'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Potentials'
-        super
-      end
-    end
-
-    class Task < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Tasks'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Tasks'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Tasks'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Tasks'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Tasks'
-        super
-      end
-    end
-
-    class Quote < RubyZoho::Crm
-      include RubyZoho
-      attr_reader :fields
-      Crm.module_name = 'Quotes'
-
-      def initialize(object_attribute_hash = {})
-        Crm.module_name = 'Quotes'
-        super
-      end
-
-      def self.all
-        Crm.module_name = 'Quotes'
-        super
-      end
-
-      def self.delete(id)
-        Crm.module_name = 'Quotes'
-        super
-      end
-
-      def self.method_missing(meth, *args, &block)
-        Crm.module_name = 'Quotes'
-        super
-      end
-    end
-
-    class User < RubyZoho::Crm
+    c = Class.new(RubyZoho::Crm) do
       def initialize(object_attribute_hash = {})
         Crm.module_name = 'Users'
         super
@@ -353,6 +362,7 @@ module RubyZoho
       end
     end
 
-  end
+    Kernel.const_set 'User', c
 
+  end
 end
