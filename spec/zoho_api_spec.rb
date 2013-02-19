@@ -39,8 +39,8 @@ describe ZohoApi do
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
     #api_key = '783539943dc16d7005b0f3b78367d5d2'
-    #api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-    api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
+    #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
     @zoho = init_api(api_key, base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
@@ -49,8 +49,8 @@ describe ZohoApi do
           :phone => '13452129087',
           :mobile => '12341238790'
     }
-    #contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-    #contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
+    contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+    contacts.each { |c| @zoho.delete_record('Contacts', c[:contactid]) } unless contacts.nil?
   end
 
   it 'should add a new contact' do

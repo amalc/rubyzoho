@@ -14,7 +14,7 @@ describe RubyZoho::Crm do
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = %w(Quotes)
-      config.cache_fields = true
+      config.cache_fields = false
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -183,7 +183,7 @@ describe RubyZoho::Crm do
         :type => 'New Business',
         :stage => 'Needs Analysis'}
     r = RubyZoho::Crm::Potential.find_by_potential_name(h[:potential_name])
-    r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
+    r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) } unless r.nil?
     p = RubyZoho::Crm::Potential.new(h)
     p.save
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
@@ -191,7 +191,8 @@ describe RubyZoho::Crm do
     potential = RubyZoho::Crm::Potential.find_by_potentialid(r.first.potentialid)
     potential.first.potentialid.should eq(r.first.potentialid)
     p_by_account_id = RubyZoho::Crm::Potential.find_by_accountid(accounts.first.accountid)
-    p_by_account_id.first.potentialid.should eq(r.first.potentialid)
+    p_found = p_by_account_id.map { |pn| pn if pn.potential_name == h[:potential_name]}.compact
+    p_found.first.potentialid.should eq(r.first.potentialid)
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
   end
 
