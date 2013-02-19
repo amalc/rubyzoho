@@ -46,7 +46,7 @@ module ZohoApi
     def add_field(row, field, value)
       r = (REXML::Element.new 'FL')
       r.attributes['val'] = field
-      r.add_text(value)
+      r.add_text(value.to_s)
       row.elements << r
       row
     end

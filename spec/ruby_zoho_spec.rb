@@ -14,7 +14,7 @@ describe RubyZoho::Crm do
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = %w(Quotes)
-      config.cache_fields = false
+      config.cache_fields = true
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -171,6 +171,21 @@ describe RubyZoho::Crm do
     r.should_not eq(nil)
     r.first.email.should eq(l.email)
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
+  end
+
+  it 'should save and retrieve an account record with a custon field' do
+    accounts = RubyZoho::Crm::Account.all
+    a = accounts.first
+    if defined?(a.par_ltd)
+      RubyZoho::Crm::Lead.update(
+          :id => a.accountid,
+          :par_ltd => '1000000',
+          :par_ytd => '1000000',
+          :account_name => a.account_name + "  #{Time.now}"
+      )
+      a2 = RubyZoho::Crm::Account.find_by_accountid(a.accountid)
+      a2.first.par_ltd.should eq('1000000')
+    end
   end
 
   it 'should save and retrieve a potential record' do
