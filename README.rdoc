@@ -186,6 +186,10 @@ The Zoho API is definitely opinionated. And we have yet to be able plumb the dep
 views. If it behaves unexpectedly, try the Zoho forums before opening an issue here. It
 just may be the way the API works...
 
+An example of this is retrieving related records. You would think that since a Task can
+be related to an Account or a Potential etc. that you should be able to retrieve it by
+either the related \module's record id, which is stored with the Task. But no, can't be done.
+
 == Bugs and Enhancements
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
