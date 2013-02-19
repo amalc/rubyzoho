@@ -14,7 +14,7 @@ describe RubyZoho::Crm do
       #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
       config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
       config.crm_modules = %w(Quotes)
-      config.cache_fields = false
+      config.cache_fields = true
     end
     #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
@@ -90,6 +90,11 @@ describe RubyZoho::Crm do
 
   it 'should get a list of attr_writers for potentials' do
     c = RubyZoho::Crm::Potential.new
+    c.attr_writers.count.should be >= 14
+  end
+
+  it 'should get a list of attr_writers for tasks' do
+    c = RubyZoho::Crm::Task.new
     c.attr_writers.count.should be >= 14
   end
 
@@ -170,21 +175,44 @@ describe RubyZoho::Crm do
 
   it 'should save and retrieve a potential record' do
     accounts = RubyZoho::Crm::Account.all
-    p = RubyZoho::Crm::Potential.new(
+    h = {
         :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
         :accountid => accounts.first.accountid,
         :account_name => accounts.first.account_name,
         :closing_date => '1/1/2014',
         :type => 'New Business',
-        :stage => 'Needs Analysis')
+        :stage => 'Needs Analysis'}
+    r = RubyZoho::Crm::Potential.find_by_potential_name(h[:potential_name])
+    r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
+    p = RubyZoho::Crm::Potential.new(h)
     p.save
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
-    r.first.potential_name.should eq('A very big potential INDEED!!!!!!!!!!!!!')
+    r.first.potential_name.should eq(h[:potential_name])
     potential = RubyZoho::Crm::Potential.find_by_potentialid(r.first.potentialid)
     potential.first.potentialid.should eq(r.first.potentialid)
-    #p_by_account_id = RubyZoho::Crm::Potential.find_by_accountid(r.first.accountid)
-    #p_by_account_id.first.potentialid.should eq(r.first.accountid)
+    p_by_account_id = RubyZoho::Crm::Potential.find_by_accountid(accounts.first.accountid)
+    p_by_account_id.first.potentialid.should eq(r.first.potentialid)
     r.each { |c|  RubyZoho::Crm::Potential.delete(c.potentialid) }
+  end
+
+  it 'should save and retrieve a task record' do
+    accounts = RubyZoho::Crm::Account.all
+    h = {
+        :subject => 'Test Task',
+        :due_date => Date.today.to_s + '23:59',
+        :semodule => 'Accounts',
+        :relatedtoid => accounts.first.accountid,
+        :related_to => accounts.first.account_name,
+        :priority => 'Low' }
+    r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
+    r.each { |t|  RubyZoho::Crm::Task.delete(t.activityid) } unless r.nil?
+    t = RubyZoho::Crm::Task.new(h)
+    t.save
+    r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
+    r.first.subject.should eq(h[:subject])
+    tasks = RubyZoho::Crm::Task.find_by_activityid(r.first.activityid)
+    tasks.first.activityid.should eq(r.first.activityid)
+    r.each { |c|  RubyZoho::Crm::Task.delete(c.activityid) }
   end
 
   it 'should save an event record' do

@@ -112,7 +112,7 @@ describe ZohoApi do
     delete_dummy_contact
   end
 
-  it 'should find by potential and id' do
+  it 'should find by a potential by name,  id and related id' do
     accounts = @zoho.some('Accounts')
     p = {
         :potential_name => 'A very big potential INDEED!!!!!!!!!!!!!',
@@ -124,11 +124,19 @@ describe ZohoApi do
     }
     potentials = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
     potentials.map { |r| @zoho.delete_record('Potentials', r[:potentialid])} unless potentials.nil?
+
     @zoho.add_record('Potentials', p)
-    p = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
-    p.should_not eq(nil)
-    @zoho.find_record_by_id('Potentials', p.first[:potentialid])
-    p.first[:potentialid].should eq(p.first[:potentialid])
+    p1 = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+    p1.should_not eq(nil)
+
+    p2 = @zoho.find_records('Potentials', :potentialid, '=', p1.first[:potentialid])
+    p2.first[:potentialid].should eq(p1.first[:potentialid])
+
+    p_related = @zoho.find_records('Potentials', :accountid, '=', p[:accountid])
+    p_related.first[:accountid].should eq(p[:accountid])
+
+    potentials = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+    potentials.map { |r| @zoho.delete_record('Potentials', r[:potentialid])} unless potentials.nil?
   end
 
   it 'should get a list of fields for a module' do
@@ -193,6 +201,17 @@ describe ZohoApi do
     @zoho.primary_key?('Accounts', 'Potential Name').should eq(false)
     @zoho.primary_key?('Accounts', 'Account Name').should eq(false)
     @zoho.primary_key?('Accounts', 'account_name').should eq(false)
+  end
+
+  it 'should test for a related id' do
+    @zoho.related_id?('Potentials', 'Account Name').should eq(false)
+    @zoho.related_id?('Potentials', 'Accountid').should eq(true)
+  end
+
+  it 'should test for a valid related field' do
+    @zoho.valid_related?('Accounts', 'accountid').should_not eq(nil)
+    @zoho.valid_related?('Notes', 'notesid').should_not eq(nil)
+    @zoho.valid_related?('Accounts', 'email').should eq(nil)
   end
 
   it 'should do a full CRUD lifecycle on tasks' do

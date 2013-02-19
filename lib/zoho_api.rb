@@ -125,12 +125,9 @@ module ZohoApi
 
     def find_records(module_name, field, condition, value)
       sc_field = ApiUtils.symbol_to_string(field)
+      return find_record_by_related_id(module_name, sc_field, value) if related_id?(module_name, sc_field)
       primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
           find_record_by_id(module_name, value)
-    end
-
-    def primary_key?(module_name, field_name)
-      field_name.downcase.gsub('id', '') == module_name.chop.downcase
     end
 
     def find_record_by_field(module_name, sc_field, condition, value)
@@ -155,8 +152,55 @@ module ZohoApi
       to_hash(x)
     end
 
+    def find_record_by_related_id(module_name, sc_field, value)
+      raise(RuntimeError, "[RubyZoho] Not a valid query field #{sc_field} for module #{module_name}") unless
+          valid_related?(module_name, sc_field)
+      field = sc_field.downcase
+      r = self.class.get(create_url("#{module_name}", 'getSearchRecordsByPDC'),
+         :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+             :selectColumns => 'All', :version => 2, :searchColumn => field,
+             :searchValue => value})
+      check_for_errors(r)
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
+      to_hash(x)
+    end
+
+    def valid_related?(module_name, field)
+      valid_relationships = {
+          'Leads' => %w(email),
+          'Accounts' => %w(accountid accountname),
+          'Contacts' => %w(contactid accountid vendorid email),
+          'Potentials' => %w(potentialid accountid campaignid contactid potentialname),
+          'Campaigns' => %w(campaignid campaignname),
+          'Cases' => %w(caseid productid accountid potentialid),
+          'Solutions' => %w(solutionid productid),
+          'Products' => %w(productid vendorid productname),
+          'Purchase Order' => %w(purchaseorderid contactid vendorid),
+          'Quotes' => %w(quoteid potentialid accountid contactid),
+          'Sales Orders' => %w(salesorderid potentialid accountid contactid quoteid),
+          'Invoices' => %w(invoiceid accountid salesorderid contactid),
+          'Vendors' => %w(vendorid vendorname),
+          'Tasks' => %w(taskid),
+          'Events' => %w(eventid),
+          'Notes' => %w(notesid)
+      }
+      valid_relationships[module_name].index(field.downcase)
+    end
+
+    def related_id?(module_name, field_name)
+      field = field_name.to_s
+      return false if field.rindex('id').nil?
+      return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
+      field.downcase.gsub('id', '') != module_name.chop.downcase
+    end
+
     def method_name?(n)
       return /[@$"]/ !~ n.inspect
+    end
+
+    def primary_key?(module_name, field_name)
+      return true if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
+      field_name.downcase.gsub('id', '') == module_name.chop.downcase
     end
 
     def reflect_module_fields
