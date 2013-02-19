@@ -200,7 +200,7 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 2. Only 'text' custom fields appear to be getting updated. Proved that 'currency' type fields do not get updated.
 
 === Roadmap (Ranked)
-1. Add related records using AR style syntax, e.g.
+1. Get related records using AR style syntax, e.g.
         pp a.contacts
    to get contacts associated with an account.
 2. Support for multiple find fields.
