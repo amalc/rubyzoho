@@ -2,6 +2,7 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 
 require 'httmultiparty'
 require 'rexml/document'
+require 'net/https'
 require 'net/http/post/multipart'
 require 'mime/types'
 require 'ruby_zoho'
@@ -35,12 +36,13 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-      #pp x.to_s
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
+      x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
+      to_hash(x_r)[0]
     end
 
     def add_field(row, field, value)
@@ -52,13 +54,17 @@ module ZohoApi
     end
 
     def attach_file(module_name, record_id, file_path)
-      r = self.class.post(create_url(module_name, 'uploadFile'),
-          :query => { :newFormat => 1, :authtoken => @auth_token,
-            :scope => 'crmapi',
-            :id => record_id, :content => File.open(file_path) },
-          :headers => { 'Content-length' => '0' })
-      raise(RuntimeError, 'Attaching file failed.', r.body.to_s) unless r.response.code == '200'
-      r.code
+      mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
+      url = URI.parse(create_url(module_name, 'uploadFile') + "?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
+        File.open(file_path) do |file|
+          req = Net::HTTP::Post::Multipart.new url.path,
+              "file" => UploadIO.new(file, mime_type, File.basename(file_path))
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = url.port == 443 if url.scheme == "https"
+          res = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
+        end
+      pp res
+      pp res.code
     end
 
     def add_file(module_name, record_id, file_path)

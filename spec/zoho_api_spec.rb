@@ -85,7 +85,7 @@ describe ZohoApi do
     pending
     @zoho.add_record('Contacts', @h_smith)
     contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-    @zoho.add_file('Contacts', contacts[0][:contactid], @sample_pdf)
+    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf)
     #@zoho.delete_record('Contacts', contacts[0][:contactid])
   end
 
