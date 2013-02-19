@@ -173,7 +173,7 @@ describe RubyZoho::Crm do
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
   end
 
-  it 'should save and retrieve an account record with a custon field' do
+  it 'should save and retrieve an account record with a custom field' do
     accounts = RubyZoho::Crm::Account.all
     a = accounts.first
     if defined?(a.par_ltd)
