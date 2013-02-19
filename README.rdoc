@@ -195,8 +195,9 @@ either the related \module's record id, which is stored with the Task. But no, c
 == Bugs and Enhancements
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
-=== Known Bugs
+=== Known Bugs or Issues
 1. Caching is causing a problem with Quotes.
+2. Only 'text' custom fields appear to be getting updated. Proved that 'currency' type fields do not get updated.
 
 == Contributing to rubyzoho
 
