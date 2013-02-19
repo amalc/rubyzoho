@@ -225,6 +225,10 @@ describe ZohoApi do
     r.map { |t| @zoho.delete_record('Tasks', t[:activityid]) }
   end
 
+  it 'should update fields from a record' do
+    @zoho.module_fields.count.should be >= 7
+  end
+
   it 'should update a contact' do
     @zoho.add_record('Contacts', @h_smith)
     contact = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])

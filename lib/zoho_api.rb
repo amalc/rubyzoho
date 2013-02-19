@@ -36,6 +36,8 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      pp x.to_s
+      throw :stop
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
@@ -47,10 +49,19 @@ module ZohoApi
 
     def add_field(row, field, value)
       r = (REXML::Element.new 'FL')
-      r.attributes['val'] = field
+      adjust_tag_case(field)
+      r.attributes['val'] = adjust_tag_case(field)
       r.add_text(value.to_s)
       row.elements << r
       row
+    end
+
+    def adjust_tag_case(tag)
+      return tag if tag == 'id'
+      return tag.upcase if tag.downcase.rindex('id')
+      u_tags = %w[SEMODULE RELATED_TO]
+      return tag.upcase if u_tags.index(tag.upcase)
+      tag
     end
 
     def attach_file(module_name, record_id, file_path)
@@ -116,6 +127,10 @@ module ZohoApi
 
     def fields(module_name)
       return user_fields if module_name == 'Users'
+      fields_from_api(module_name) if fields_from_record(module_name).nil?
+    end
+
+    def fields_from_api(module_name)
       mod_name = ApiUtils.string_to_symbol(module_name)
       return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
       r = self.class.post(create_url(module_name, 'getFields'),
@@ -123,6 +138,15 @@ module ZohoApi
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
       update_module_fields(mod_name, module_name, r)
+    end
+
+    def fields_from_record(module_name)
+      mod_name = ApiUtils.string_to_symbol(module_name)
+      return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
+      r = first(module_name)
+      return nil if r.nil?
+      @@module_fields[mod_name] = r.first.keys
+      @@module_fields[mod_name]
     end
 
     def first(module_name)
