@@ -179,12 +179,10 @@ describe RubyZoho::Crm do
     if defined?(a.par_ltd)
       RubyZoho::Crm::Lead.update(
           :id => a.accountid,
-          :par_ltd => '1000000',
-          :par_ytd => '1000000',
-          :account_name => a.account_name + "  #{Time.now}"
+          :test_custom => '$1,000,000'
       )
       a2 = RubyZoho::Crm::Account.find_by_accountid(a.accountid)
-      a2.first.par_ltd.should eq('1000000')
+      a2.first.test_custom.should eq('$1,000,000')
     end
   end
 
