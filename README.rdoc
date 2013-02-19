@@ -182,6 +182,7 @@ write access to its own directory for this to work.
     id·i·o·syn·cra·sy ( d - -s ng kr -s ). n. pl. id·i·o·syn·cra·sies.
     1. A structural or behavioral characteristic peculiar to an individual or group.
 
+
 The Zoho API is definitely opinionated. And we have yet to be able plumb the depths of its
 views. If it behaves unexpectedly, try the Zoho forums before opening an issue here. It
 just may be the way the API works...
