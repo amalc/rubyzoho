@@ -2,8 +2,8 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 
 require 'httmultiparty'
 require 'rexml/document'
-require 'net/https'
 require 'net/http/post/multipart'
+require 'net/https'
 require 'mime/types'
 require 'ruby_zoho'
 require 'yaml'
@@ -36,8 +36,6 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-      pp x.to_s
-      throw :stop
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
@@ -51,7 +49,7 @@ module ZohoApi
       r = (REXML::Element.new 'FL')
       adjust_tag_case(field)
       r.attributes['val'] = adjust_tag_case(field)
-      r.add_text(value.to_s)
+      r.add_text("#{value}")
       row.elements << r
       row
     end
@@ -59,47 +57,23 @@ module ZohoApi
     def adjust_tag_case(tag)
       return tag if tag == 'id'
       return tag.upcase if tag.downcase.rindex('id')
-      u_tags = %w[SEMODULE RELATED_TO]
+      u_tags = %w[SEMODULE]
       return tag.upcase if u_tags.index(tag.upcase)
       tag
     end
 
     def attach_file(module_name, record_id, file_path)
       mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
-      url = URI.parse(create_url(module_name, 'uploadFile') + "?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
-        File.open(file_path) do |file|
-          req = Net::HTTP::Post::Multipart.new url.path,
-              "file" => UploadIO.new(file, mime_type, File.basename(file_path))
-          http = Net::HTTP.new(url.host, url.port)
-          http.use_ssl = url.port == 443 if url.scheme == "https"
-          res = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
-        end
-      pp res
-      pp res.code
-    end
-
-    def add_file(module_name, record_id, file_path)
-      url = URI.parse(create_url(module_name, 'uploadFile'))
-      r = nil
-      mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
-      f = File.open(file_path)
-      req = Net::HTTP::Post::Multipart.new url.path,
-      { 'authtoken' => '@auth_token', 'scope' => 'crmapi',
-        'id' => record_id,
-        'content' => UploadIO.new(f, mime_type, File.basename(file_path)) }
+      url_path = create_url(module_name, "uploadFile?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
+      url = URI.parse(create_url(module_name, url_path))
+      io = UploadIO.new(file_path, mime_type, file_path)
+      req = Net::HTTP::Post::Multipart.new url_path, 'content' => io
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
-      r = http.start { |http| http.request(req) }
-      (r.nil? or r.body.nil? or r.body.empty?) ? nil : REXML::Document.new(r.body).to_s
-    end
-
-    def to_byte_array(num)
-      result = []
-      begin
-        result << (num & 0xff)
-        num >>= 8
-      end until (num == 0 || num == -1) && (result.last[7] == num[7])
-      result.reverse
+      res = http.start do |h|
+        h.request(req)
+      end
+      raise(RuntimeError, "[RubyZoho] Attach of file #{file_path} to module #{module_name} failed.") unless res.code == '200'
     end
 
     def check_for_errors(response)
@@ -127,7 +101,7 @@ module ZohoApi
 
     def fields(module_name)
       return user_fields if module_name == 'Users'
-      fields_from_api(module_name) if fields_from_record(module_name).nil?
+      fields_from_record(module_name).nil? ? fields_from_api(module_name) : fields_from_record(module_name)
     end
 
     def fields_from_api(module_name)
@@ -196,6 +170,7 @@ module ZohoApi
     end
 
     def valid_related?(module_name, field)
+      return nil if field.downcase == 'smownerid'
       valid_relationships = {
           'Leads' => %w(email),
           'Accounts' => %w(accountid accountname),
