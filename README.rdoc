@@ -148,6 +148,9 @@ To update a record (<b>Note, that the attribute is :id</b>):
         :email => 'changed_email@domain.com'
     )
 
+To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Potentials+ and +Tasks+):
+    l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
+    l.attach_file(file_path, file_name)     # Can only be attached to a pre-existing record
 
 Objects currently supported are:
     RubyZoho::Crm::Account
