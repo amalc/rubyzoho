@@ -74,6 +74,7 @@ module ZohoApi
         h.request(req)
       end
       raise(RuntimeError, "[RubyZoho] Attach of file #{file_path} to module #{module_name} failed.") unless res.code == '200'
+      res.code
     end
 
     def check_for_errors(response)
@@ -201,6 +202,12 @@ module ZohoApi
 
     def method_name?(n)
       return /[@$"]/ !~ n.inspect
+    end
+
+    def primary_key(module_name)
+      activity_keys = { 'Tasks' => :activityid, 'Events' => :activityid, 'Calls' => :activityid }
+      return activity_keys[module_name] unless activity_keys[module_name].nil?
+      (module_name.downcase.chop + 'id').to_sym
     end
 
     def primary_key?(module_name, field_name)

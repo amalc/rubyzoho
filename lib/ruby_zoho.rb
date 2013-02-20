@@ -132,8 +132,8 @@ module RubyZoho
       result.collect { |r| new(r) }
     end
 
-    def attach(file_path, file_name)
-      RubyZoho.configuration.api.attach_file(Crm.module_name, id)
+    def attach_file(file_path, file_name)
+      RubyZoho.configuration.api.attach_file(Crm.module_name, self.send(primary_key), file_path)
     end
 
     def create(object_attribute_hash)
@@ -143,6 +143,10 @@ module RubyZoho
 
     def self.delete(id)
       RubyZoho.configuration.api.delete_record(Crm.module_name, id)
+    end
+
+    def primary_key
+      RubyZoho.configuration.api.primary_key(Crm::module_name)
     end
 
     def save
