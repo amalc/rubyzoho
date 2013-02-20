@@ -8,6 +8,7 @@ describe RubyZoho::Crm do
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     config_file = File.join(base_path, 'zoho_api_configuration.yaml')
+    @sample_pdf = File.join(base_path, 'sample.pdf')
     #params = YAML.load(File.open(config_file))
     RubyZoho.configure do |config|
       #config.api_key = params['auth_token']
@@ -28,6 +29,31 @@ describe RubyZoho::Crm do
     c.first_name.should eq('Raj')
     c.email = 'raj@portra.com'
     c.email.should eq('raj@portra.com')
+  end
+
+  it 'should attach a file to an account' do
+    r = RubyZoho::Crm::Account.all.first
+    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+  end
+
+  it 'should attach a file to a contact' do
+    r = RubyZoho::Crm::Contact.all.first
+    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+  end
+
+  it 'should attach a file to a lead' do
+    r = RubyZoho::Crm::Lead.all.first
+    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+  end
+
+  it 'should attach a file to a potential' do
+    r = RubyZoho::Crm::Potential.all.first
+    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+  end
+
+  it 'should attach a file to a task' do
+    r = RubyZoho::Crm::Task.all.first
+    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
   end
 
   it 'should find a contact by email or last name' do
@@ -235,7 +261,7 @@ describe RubyZoho::Crm do
     #c = RubyZoho::Crm::Contact.all.last
     #pp tasks = RubyZoho::Crm::Task.all
     #throw :stop
-    e = RubyZoho::Crm::Task.new(
+    e = RubyZoho::Crm::Tassk.new(
         :task_owner =>  a.account_owner,
         :subject => "Task should be related to #{a.account_name} #{Time.now}",
         #:description => 'Nothing',
