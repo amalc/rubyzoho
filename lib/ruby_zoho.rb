@@ -51,8 +51,8 @@ module RubyZoho
     end
 
     def initialize(object_attribute_hash = {})
-      @fields = RubyZoho.configuration.api.module_fields[
-          ApiUtils.string_to_symbol(Crm.module_name)]
+      @fields = object_attribute_hash == {} ? RubyZoho.configuration.api.fields(RubyZoho::Crm.module_name) :
+          object_attribute_hash.keys
       RubyZoho::Crm.create_accessor(self.class, @fields)
       retry_counter = object_attribute_hash.count
       begin
@@ -130,6 +130,10 @@ module RubyZoho
         result.concat(batch) unless batch.nil?
       end while !batch.nil?
       result.collect { |r| new(r) }
+    end
+
+    def attach(file_path, file_name)
+      RubyZoho.configuration.api.attach_file(Crm.module_name, id)
     end
 
     def create(object_attribute_hash)
