@@ -182,7 +182,7 @@ or where the Zoho API sends back an explicit error code which <b>isn't</b> in th
 
     ['4422', '5000']
 
-a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
+a standard Ruby +RuntimeError+ exception is raised with the Zoho's API message.
 
 == Optimizations for Development and Testing
 Set <tt>config.cache_fields = true</tt> in the configuration block. This caches \module field
