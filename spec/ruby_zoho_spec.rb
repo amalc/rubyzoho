@@ -17,10 +17,10 @@ describe RubyZoho::Crm do
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
-    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -56,6 +56,15 @@ describe RubyZoho::Crm do
     r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
   end
 
+  it 'should concatenate a related object and save it' do
+    a = RubyZoho::Crm::Account.all.first
+    a << RubyZoho::Crm::Contact.new(
+        :first_name => 'First Name',
+        :last_name => 'Last Name',
+        :email => 'new_email@new_domain.co.in'
+    )
+  end
+
   it 'should determine if a method is a module' do
     good_methods = [:contact, :contacts, 'contacts', 'lead', 'leads', :potentials, :quotes]
     good_methods.map { |m| RubyZoho::Crm.method_is_module?(m).should_not eq(nil) }
@@ -63,7 +72,7 @@ describe RubyZoho::Crm do
 
   it 'should find a contact by email or last name' do
     r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.id) } unless r.nil?
     1.upto(3) do
       c = RubyZoho::Crm::Contact.new(
         :first_name => 'Bob',
@@ -79,21 +88,21 @@ describe RubyZoho::Crm do
     r.should_not eq(nil)
     r.map { |c| c.last_name }.count.should eq(3)
     r.first.last_name.should eq('Smithereens')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) }
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.id) }
   end
 
   it 'should find a contact by ID' do
     contacts = RubyZoho::Crm::Contact.all
-    contact_id = contacts.first.contactid
-    c = RubyZoho::Crm::Contact.find_by_contactid(contact_id)
-    c.first.contactid.should eq(contact_id)
+    id = contacts.first.id
+    c = RubyZoho::Crm::Contact.find_by_contactid(id)
+    c.first.contactid.should eq(id)
     c.first.last_name.should eq(contacts.first.last_name)
     c.first.email.should eq(contacts.first.email)
   end
 
   it 'should find a lead by ID' do
     leads = RubyZoho::Crm::Lead.all
-    lead_id = leads.first.leadid
+    lead_id = leads.first.id
     l = RubyZoho::Crm::Lead.find_by_leadid(lead_id)
     l.first.leadid.should eq(lead_id)
   end
@@ -200,7 +209,7 @@ describe RubyZoho::Crm do
     r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
     r.should_not eq(nil)
     r.first.email.should eq(l.email)
-    r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
+    r.each { |c|  RubyZoho::Crm::Lead.delete(c.id) }
   end
 
   it 'should save and retrieve an account record with a custom field' do
@@ -208,10 +217,10 @@ describe RubyZoho::Crm do
     a = accounts.first
     if defined?(a.par_ltd)
       RubyZoho::Crm::Lead.update(
-          :id => a.accountid,
+          :id => a.id,
           :test_custom => '$1,000,000'
       )
-      a2 = RubyZoho::Crm::Account.find_by_accountid(a.accountid)
+      a2 = RubyZoho::Crm::Account.find(a.accountid)
       a2.first.test_custom.should eq('$1,000,000')
     end
   end
@@ -231,7 +240,7 @@ describe RubyZoho::Crm do
     p.save
     r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
     r.first.potential_name.should eq(h[:potential_name])
-    potential = RubyZoho::Crm::Potential.find_by_potentialid(r.first.potentialid)
+    potential = RubyZoho::Crm::Potential.find(r.first.potentialid)
     potential.first.potentialid.should eq(r.first.potentialid)
     p_by_account_id = RubyZoho::Crm::Potential.find_by_accountid(accounts.first.accountid)
     p_found = p_by_account_id.map { |pn| pn if pn.potential_name == h[:potential_name]}.compact

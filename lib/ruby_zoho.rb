@@ -103,9 +103,22 @@ module RubyZoho
       end
     end
 
+    def self.find(id)
+      self.find_by_id(id)
+    end
+
     def self.method_missing(meth, *args, &block)
       if meth.to_s =~ /^find_by_(.+)$/
         run_find_by_method($1, *args, &block)
+      else
+        super
+      end
+    end
+
+    def method_missing(meth, *args, &block)
+      if [:seid=, :semodule=].index(meth)
+        run_create_accessor(self.class, meth)
+        self.send(meth, args[0])
       else
         super
       end
@@ -117,6 +130,12 @@ module RubyZoho
       possible_module = s[s.length - 1].downcase == 's' ? s : s + 's'
       i = RubyZoho.configuration.crm_modules.index(possible_module.capitalize)
       return str_or_sym unless i.nil?
+      nil
+    end
+
+    def run_create_accessor(klass, meth)
+      method = meth.to_s.chop.to_sym
+      RubyZoho::Crm.create_accessor(klass, [method])
       nil
     end
 
@@ -142,7 +161,10 @@ module RubyZoho
     end
 
     def << object
-
+      pp self
+      object.semodule = 'semodule'
+      object.seid = 'seid'
+      pp object
     end
 
     def attach_file(file_path, file_name)
@@ -217,6 +239,12 @@ module RubyZoho
           end
 
           def self.delete(id)
+            klass = self.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
+
+          def self.find(id)
             klass = self.to_s
             Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
             super

@@ -129,7 +129,7 @@ module ZohoApi
     end
 
     def find_records(module_name, field, condition, value)
-      sc_field = ApiUtils.symbol_to_string(field)
+      sc_field = field == :id ? primary_key(module_name) : ApiUtils.symbol_to_string(field)
       return find_record_by_related_id(module_name, sc_field, value) if related_id?(module_name, sc_field)
       primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
           find_record_by_id(module_name, value)
@@ -144,7 +144,7 @@ module ZohoApi
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def find_record_by_id(module_name, id)
@@ -154,7 +154,7 @@ module ZohoApi
       raise(RuntimeError, 'Bad query', "#{module_name} #{id}") unless r.body.index('<error>').nil?
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def find_record_by_related_id(module_name, sc_field, value)
@@ -167,7 +167,7 @@ module ZohoApi
              :searchValue => value})
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def valid_related?(module_name, field)
@@ -211,8 +211,11 @@ module ZohoApi
     end
 
     def primary_key?(module_name, field_name)
-      return true if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
-      field_name.downcase.gsub('id', '') == module_name.chop.downcase
+      return nil if field_name.nil? || module_name.nil?
+      fn = field_name.class == String ? field_name : field_name.to_s
+      return true if fn == 'id'
+      return true if %w[Calls Events Tasks].index(module_name) && fn.downcase == 'activityid'
+      fn.downcase.gsub('id', '') == module_name.chop.downcase
     end
 
     def reflect_module_fields
@@ -236,10 +239,10 @@ module ZohoApi
       return nil unless r.response.code == '200'
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
-    def to_hash(xml_results)
+    def to_hash(xml_results, module_name)
       r = []
       xml_results.each do |e|
         record = {}
@@ -247,6 +250,7 @@ module ZohoApi
           k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
           v = n.text == 'null' ? nil : n.text
           record.merge!({ k => v })
+          record.merge!({ :id => v }) if primary_key?(module_name, k)
         end
         r << record
       end
@@ -255,7 +259,7 @@ module ZohoApi
     end
 
     def to_hash_with_id(xml_results, module_name)
-      h = to_hash(xml_results)
+      h = to_hash(xml_results, module_name)
       primary_key = module_name.chop.downcase + 'id'
       h.each do |e|
         e.merge!({ primary_key.to_sym => e[:id] }) if e[primary_key.to_sym].nil? && !e[:id].nil?
