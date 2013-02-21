@@ -229,7 +229,6 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 3. Support for multiple find fields.
 
 == Contributing to rubyzoho
-
 * Pull requests with unit tests or specs and a version branch are welcomed.
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
@@ -240,14 +239,18 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ---
+== Acknowledgements
+Giant buckets of Gratitude to the giants, sung and unsung heroes who put together and support the Open Source movement,
+Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.
+
+== Credits
+wcgiles@github (\@\waynecgiles) for professional and patient debugging and continued debugging of this gem.
 
 == Trademarks
-
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
 == Copyright
-
 Copyright (c) 2013 amalc. Released under the MIT license. See LICENSE.txt for
 further details.
 
