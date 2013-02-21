@@ -287,8 +287,8 @@ module ZohoApi
                       :xmlData => x },
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
-      raise('Updating record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
+      x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
+      to_hash_with_id(x_r, module_name)[0]
     end
 
     def user_fields

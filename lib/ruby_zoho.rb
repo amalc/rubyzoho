@@ -161,7 +161,8 @@ module RubyZoho
       raise(RuntimeError, 'No ID found', object_attribute_hash.to_s) if object_attribute_hash[:id].nil?
       id = object_attribute_hash[:id]
       object_attribute_hash.delete(:id)
-      RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
+      r = RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
+      new(object_attribute_hash.merge!(r))
     end
 
     def up_date(object_attribute_hash)
