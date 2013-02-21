@@ -199,8 +199,7 @@ either the related \module's record id, which is stored with the Task. But no, c
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
 === Known Bugs or Issues
-1. Caching is causing a problem with Quotes.
-2. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.
+1. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.
 
 === Roadmap (Ranked)
 1. Get related records using AR style syntax, e.g.
