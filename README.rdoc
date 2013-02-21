@@ -253,9 +253,9 @@ further details.
 ---
 = Releases
 [0.1.7] RC 1 (In Development)
-        # Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
-        # ActiveRcord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
-        # << syntax for Account/Tasks on Master/Detail relationships
+        1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+        2. ActiveRcord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
+        3. << syntax for Account/Tasks on Master/Detail relationships
 [0.1.1 - 0.1.6] Alpha Releases
                 * Configuration block signature changed
 [0.0.1 - 0.0.5] Alpha Releases
