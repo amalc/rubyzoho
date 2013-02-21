@@ -155,7 +155,6 @@ To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Poten
 Objects currently supported are:
     RubyZoho::Crm::Account
     RubyZoho::Crm::Contact
-    RubyZoho::Crm::Event
     RubyZoho::Crm::Lead
     RubyZoho::Crm::Potential
     RubyZoho::Crm::Task
