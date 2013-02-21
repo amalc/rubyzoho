@@ -54,6 +54,8 @@ module RubyZoho
       @fields = object_attribute_hash == {} ? RubyZoho.configuration.api.fields(RubyZoho::Crm.module_name) :
           object_attribute_hash.keys
       RubyZoho::Crm.create_accessor(self.class, @fields)
+      RubyZoho::Crm.create_accessor(self.class, [:module_name])
+      public_send(:module_name=, RubyZoho::Crm.module_name)
       retry_counter = object_attribute_hash.count
       begin
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
@@ -161,10 +163,11 @@ module RubyZoho
     end
 
     def << object
-      pp self
-      object.semodule = 'semodule'
-      object.seid = 'seid'
-      pp object
+      object.semodule = self.module_name
+      object.seid = self.id
+      object.fields << :seid
+      object.fields << :semodule
+      save_object(object)
     end
 
     def attach_file(file_path, file_name)
@@ -189,6 +192,14 @@ module RubyZoho
       @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
       h.delete_if { |k, v| v.nil? }
       r = RubyZoho.configuration.api.add_record(Crm.module_name, h)
+      up_date(r)
+    end
+
+    def save_object(object)
+      h = {}
+      object.fields.each { |f| h.merge!({ f => object.send(f) }) }
+      h.delete_if { |k, v| v.nil? }
+      r = RubyZoho.configuration.api.add_record(object.module_name, h)
       up_date(r)
     end
 

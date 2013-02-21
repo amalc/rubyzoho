@@ -42,7 +42,7 @@ module ZohoApi
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
-      to_hash_with_id(x_r, module_name)[0]
+      to_hash(x_r, module_name)[0]
     end
 
     def add_field(row, field, value)
@@ -246,6 +246,7 @@ module ZohoApi
       r = []
       xml_results.each do |e|
         record = {}
+        record[:module_name] = module_name
         e.elements.to_a.each do |n|
           k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
           v = n.text == 'null' ? nil : n.text
@@ -260,6 +261,8 @@ module ZohoApi
 
     def to_hash_with_id(xml_results, module_name)
       h = to_hash(xml_results, module_name)
+      pp h
+      h[:module_name] = module_name
       primary_key = module_name.chop.downcase + 'id'
       h.each do |e|
         e.merge!({ primary_key.to_sym => e[:id] }) if e[primary_key.to_sym].nil? && !e[:id].nil?

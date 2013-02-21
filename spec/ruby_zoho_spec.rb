@@ -57,12 +57,20 @@ describe RubyZoho::Crm do
   end
 
   it 'should concatenate a related object and save it' do
-    a = RubyZoho::Crm::Account.all.first
-    a << RubyZoho::Crm::Contact.new(
-        :first_name => 'First Name',
-        :last_name => 'Last Name',
-        :email => 'new_email@new_domain.co.in'
+    subject = "[DELETE THIS] New subject as of #{Time.now}"
+    a = RubyZoho::Crm::Account.all.last
+    a << RubyZoho::Crm::Task.new(
+        :subject => subject,
+        :description => 'Nothing',
+        :status => 'Not Started',
+        :priority => 'High',
+        :send_notification_email => 'False',
+        :due_date => '2014-02-16 16:00:00',
+        :start_datetime => Time.now.to_s[1,19],
+        :end_datetime => '2014-02-16 16:00:00'
     )
+    r = RubyZoho::Crm::Task.find_by_subject(subject)
+    r.first.relatedtoid.should eq(a.accountid)
   end
 
   it 'should determine if a method is a module' do
