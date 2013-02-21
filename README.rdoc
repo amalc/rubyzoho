@@ -86,7 +86,7 @@ To get a list of all accounts:
 Or for all task subjects:
 
     t = RubyZoho::Crm::Task.all
-    pp t.collect { |task| task.subject }
+    pp t.collect { |task| task.subject }  # => ['Subject 1'], ['Subject 2'], ... ['Subject n']
 
 Or for all quotes:
 
@@ -109,7 +109,7 @@ works.
 To sort a result set:
     r = RubyZoho::Crm::Contact.all
     sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
-    pp sorted.collect { |c| c.last_name }
+    pp sorted.collect { |c| c.last_name }  # => ['Name 1', ['Name 2'], ... ['Name n']]
 
 To find by ID, note well, ID is a *string*:
     leads = RubyZoho::Crm::Lead.all
@@ -150,7 +150,7 @@ To update a record (<b>Note, that the attribute is :id</b>):
 
 Custom fields are like any other field or method in Ruby:
     a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
-    pp a.custom_field
+    pp a.custom_field # => 'Custom field content'
 
 Or:
     c = RubyZoho::Crm::Contact.new(
