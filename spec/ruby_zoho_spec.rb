@@ -255,16 +255,11 @@ describe RubyZoho::Crm do
   end
 
   it 'should save an task record related to an account' do
-    pending
     a = RubyZoho::Crm::Account.all.first
-    #u = RubyZoho::Crm::User.all.first
-    #c = RubyZoho::Crm::Contact.all.last
-    #pp tasks = RubyZoho::Crm::Task.all
-    #throw :stop
-    e = RubyZoho::Crm::Tassk.new(
+    e = RubyZoho::Crm::Task.new(
         :task_owner =>  a.account_owner,
         :subject => "Task should be related to #{a.account_name} #{Time.now}",
-        #:description => 'Nothing',
+        :description => 'Nothing',
         :smownerid => "#{a.smownerid}",
         :status => 'Not Started',
         :priority => 'High',
@@ -273,12 +268,12 @@ describe RubyZoho::Crm do
         :start_datetime => Time.now.to_s[1,19],
         :end_datetime => '2014-02-16 16:00:00',
         :related_to => "#{a.account_name}",
-        :relatedtoid => "#{a.accountid}",
+        :seid => "#{a.accountid}",
         :semodule => "Accounts"
-        #:contact_name => "#{c.first_name} #{c.last_name}",
-        #:contactid => c.contactid
     )
-    pp e.save
+    r_expected  = e.save
+    r = RubyZoho::Crm::Task.find_by_activityid(r_expected.id)
+    r.first.subject.should eq(r_expected.subject)
   end
 
   it 'should get tasks by user' do
@@ -295,6 +290,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should update a lead record' do
+    r_changed = RubyZoho::Crm::Lead.find_by_email('changed_raj@portra.com')
+    r_changed.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) } unless r_changed.nil?
     l = RubyZoho::Crm::Lead.new(
       :first_name => 'Raj',
       :last_name => 'Portra',
@@ -307,8 +304,8 @@ describe RubyZoho::Crm do
     )
     r_changed = RubyZoho::Crm::Lead.find_by_email('changed_raj@portra.com')
     r.first.leadid.should eq(r_changed.first.leadid)
-    r_changed.should_not eq(nil)
     r.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
+    r_changed.each { |c|  RubyZoho::Crm::Lead.delete(c.leadid) }
   end
 
   it 'should validate a field name' do
