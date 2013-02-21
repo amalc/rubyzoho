@@ -148,6 +148,21 @@ To update a record (<b>Note, that the attribute is :id</b>):
         :email => 'changed_email@domain.com'
     )
 
+Custom fields are like any other field or method in Ruby:
+    a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
+    pp a.custom_field
+
+Or:
+    c = RubyZoho::Crm::Contact.new(
+      :first_name => 'First Name',
+      :last_name => 'Last Name',
+      :email => 'email@domain.com',
+      :account_name => a.first.account_name,
+      :accountid => a.first.accountid,  # accountid instead of account_id because of Zoho's convention
+      :custom_field_2 => 'Custom text'
+    )
+    pp c.save   # Reflects back the new Zoho record ID, and various create and modify times and users
+
 To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Potentials+ and +Tasks+ only):
     l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
     l.attach_file(file_path, file_name)     # Can only be attached to a pre-existing record
