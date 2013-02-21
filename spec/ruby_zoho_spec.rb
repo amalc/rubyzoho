@@ -56,6 +56,11 @@ describe RubyZoho::Crm do
     r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
   end
 
+  it 'should determine if a method is a module' do
+    good_methods = [:contact, :contacts, 'contacts', 'lead', 'leads', :potentials, :quotes]
+    good_methods.map { |m| RubyZoho::Crm.method_is_module?(m).should_not eq(nil) }
+  end
+
   it 'should find a contact by email or last name' do
     r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?

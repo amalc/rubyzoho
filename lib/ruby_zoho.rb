@@ -111,6 +111,15 @@ module RubyZoho
       end
     end
 
+    def self.method_is_module?(str_or_sym)
+      return nil if str_or_sym.nil?
+      s = str_or_sym.class == String ? str_or_sym : ApiUtils.symbol_to_string(str_or_sym)
+      possible_module = s[s.length - 1].downcase == 's' ? s : s + 's'
+      i = RubyZoho.configuration.crm_modules.index(possible_module.capitalize)
+      return str_or_sym unless i.nil?
+      nil
+    end
+
     def self.run_find_by_method(attrs, *args, &block)
       attrs = attrs.split('_and_')
       conditions = Array.new(args.size, '=')
@@ -130,6 +139,10 @@ module RubyZoho
         result.concat(batch) unless batch.nil?
       end while !batch.nil?
       result.collect { |r| new(r) }
+    end
+
+    def << object
+
     end
 
     def attach_file(file_path, file_name)
