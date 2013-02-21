@@ -216,15 +216,15 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 1. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.
 
 === Roadmap (Ranked)
-1. Get related records using AR style syntax, e.g.
-        pp a.contacts
-   to get contacts associated with an account.
-2. Support for multiple find fields.
-3. AR style master/detail updates e.g. where +a+ is an account.
+1. AR style master/detail updates e.g. where +a+ is an account.
     a << RubyZoho::Crm::Contact.new(
         :last_name => 'Last Name',
         :first_name => 'First Name'
     )
+2. Get related records using AR style syntax, e.g.
+        pp a.contacts
+   to get contacts associated with an account.
+3. Support for multiple find fields.
 
 == Contributing to rubyzoho
 
@@ -248,3 +248,11 @@ This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
 Copyright (c) 2013 amalc. Released under the MIT license. See LICENSE.txt for
 further details.
+
+---
+= Releases
+[0.1.1] Alpha Release
+
+[0.1.7] RC 1 (In Development)
+        * Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+        * ActiveRcord style syntax for Class.new, Class.delete, Class.update, .save
