@@ -299,10 +299,11 @@ describe RubyZoho::Crm do
   end
 
   it 'should get tasks by user' do
-    #pp u = RubyZoho::Crm::User.all.first
-    #pp tasks = RubyZoho::Crm::Task.find_by_smownerid(u.id)
-    #pp tasks = RubyZoho::Crm::Task.all
-    #tasks.map { |t| RubyZoho::Crm::Task.delete(t.activityid)} unless tasks.nil?
+    pending
+    pp u = RubyZoho::Crm::User.all.first
+    pp tasks = RubyZoho::Crm::Task.find_by_smownerid(u.id)
+    pp tasks = RubyZoho::Crm::Task.all
+    tasks.map { |t| RubyZoho::Crm::Task.delete(t.activityid)} unless tasks.nil?
   end
 
   it 'should sort contact records' do
