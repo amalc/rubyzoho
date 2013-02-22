@@ -2,16 +2,13 @@
 language: ruby
 rvm:
 - 1.9.3
-# - jruby
-
 matrix:
   allow-failures:
-    - rvm: jruby
-
+  - rvm: jruby
 env:
   global:
-  - secure: ! 'E2ZilvytrU4gPdPZna7EMJmrDHQPfjo7KLnY4geip1coSrmISaf3VhKlGMDY
+  - secure: ! 'Es86LRVpGFcxK8Ay0NzjtPgL1a7GQ25WRq4FgixHplZ8BbB2g/LGm2hFFnrD
 
-      NubPbNdM6K98F98hQfMszGjt7YJz8y5dJrpwT4847ZL9k0FLN8XsjdxW7gH4
+      TQHNvTttEhrXDRXvYqv0ePTSb2I4Tn6xOzBZTIwZlmNDl6uj/5ZL9C9I3LQb
 
-      Dqocd1v5HY2gK60quwr0YPza10bgw6XseYXlrMtVgpTFOYv5HTg='
+      1MP0XFN0GfkOpw4DqVerdzDDoRzQw7AbTBttaOVyO3Nhiddtc3E='
