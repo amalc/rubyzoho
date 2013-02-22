@@ -13,6 +13,7 @@ end
 group :development do
   gem 'bundler', '>= 1.2'
   gem 'cucumber', '>= 1.2.1'
+  gem 'holepicker'
   gem 'jeweler', '~> 1.8.4'
   gem 'relish', '>= 0.6'
   gem 'rdoc', '>= 3.12.1'

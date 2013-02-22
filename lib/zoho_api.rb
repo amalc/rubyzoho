@@ -3,6 +3,7 @@ $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 require 'httmultiparty'
 require 'rexml/document'
 require 'net/http/post/multipart'
+require 'net/https'
 require 'mime/types'
 require 'ruby_zoho'
 require 'yaml'
@@ -35,54 +36,45 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', { 'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-      #pp x.to_s
       r = self.class.post(create_url(module_name, 'insertRecords'),
           :query => { :newFormat => 1, :authtoken => @auth_token,
                       :scope => 'crmapi', :xmlData => x },
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
+      x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
+      to_hash(x_r, module_name)[0]
     end
 
     def add_field(row, field, value)
       r = (REXML::Element.new 'FL')
-      r.attributes['val'] = field
-      r.add_text(value)
+      adjust_tag_case(field)
+      r.attributes['val'] = adjust_tag_case(field)
+      r.add_text("#{value}")
       row.elements << r
       row
     end
 
-    def attach_file(module_name, record_id, file_path)
-      r = self.class.post(create_url(module_name, 'uploadFile'),
-          :query => { :newFormat => 1, :authtoken => @auth_token,
-            :scope => 'crmapi',
-            :id => record_id, :content => File.open(file_path) },
-          :headers => { 'Content-length' => '0' })
-      raise(RuntimeError, 'Attaching file failed.', r.body.to_s) unless r.response.code == '200'
-      r.code
+    def adjust_tag_case(tag)
+      return tag if tag == 'id'
+      return tag.upcase if tag.downcase.rindex('id')
+      u_tags = %w[SEMODULE]
+      return tag.upcase if u_tags.index(tag.upcase)
+      tag
     end
 
-    def add_file(module_name, record_id, file_path)
-      url = URI.parse(create_url(module_name, 'uploadFile'))
-      r = nil
+    def attach_file(module_name, record_id, file_path)
       mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
-      f = File.open(file_path)
-      req = Net::HTTP::Post::Multipart.new url.path,
-      { 'authtoken' => '@auth_token', 'scope' => 'crmapi',
-        'id' => record_id,
-        'content' => UploadIO.new(f, mime_type, File.basename(file_path)) }
+      url_path = create_url(module_name, "uploadFile?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
+      url = URI.parse(create_url(module_name, url_path))
+      io = UploadIO.new(file_path, mime_type, file_path)
+      req = Net::HTTP::Post::Multipart.new url_path, 'content' => io
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
-      r = http.start { |http| http.request(req) }
-      (r.nil? or r.body.nil? or r.body.empty?) ? nil : REXML::Document.new(r.body).to_s
-    end
-
-    def to_byte_array(num)
-      result = []
-      begin
-        result << (num & 0xff)
-        num >>= 8
-      end until (num == 0 || num == -1) && (result.last[7] == num[7])
-      result.reverse
+      res = http.start do |h|
+        h.request(req)
+      end
+      raise(RuntimeError, "[RubyZoho] Attach of file #{file_path} to module #{module_name} failed.") unless res.code == '200'
+      res.code
     end
 
     def check_for_errors(response)
@@ -110,6 +102,10 @@ module ZohoApi
 
     def fields(module_name)
       return user_fields if module_name == 'Users'
+      fields_from_record(module_name).nil? ? fields_from_api(module_name) : fields_from_record(module_name)
+    end
+
+    def fields_from_api(module_name)
       mod_name = ApiUtils.string_to_symbol(module_name)
       return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
       r = self.class.post(create_url(module_name, 'getFields'),
@@ -119,12 +115,21 @@ module ZohoApi
       update_module_fields(mod_name, module_name, r)
     end
 
+    def fields_from_record(module_name)
+      mod_name = ApiUtils.string_to_symbol(module_name)
+      return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
+      r = first(module_name)
+      return nil if r.nil?
+      @@module_fields[mod_name] = r.first.keys
+      @@module_fields[mod_name]
+    end
+
     def first(module_name)
       some(module_name, 1, 1)
     end
 
     def find_records(module_name, field, condition, value)
-      sc_field = ApiUtils.symbol_to_string(field)
+      sc_field = field == :id ? primary_key(module_name) : ApiUtils.symbol_to_string(field)
       return find_record_by_related_id(module_name, sc_field, value) if related_id?(module_name, sc_field)
       primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
           find_record_by_id(module_name, value)
@@ -139,7 +144,7 @@ module ZohoApi
                                     :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET})
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def find_record_by_id(module_name, id)
@@ -149,7 +154,7 @@ module ZohoApi
       raise(RuntimeError, 'Bad query', "#{module_name} #{id}") unless r.body.index('<error>').nil?
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def find_record_by_related_id(module_name, sc_field, value)
@@ -162,10 +167,11 @@ module ZohoApi
              :searchValue => value})
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
     def valid_related?(module_name, field)
+      return nil if field.downcase == 'smownerid'
       valid_relationships = {
           'Leads' => %w(email),
           'Accounts' => %w(accountid accountname),
@@ -198,9 +204,18 @@ module ZohoApi
       return /[@$"]/ !~ n.inspect
     end
 
+    def primary_key(module_name)
+      activity_keys = { 'Tasks' => :activityid, 'Events' => :activityid, 'Calls' => :activityid }
+      return activity_keys[module_name] unless activity_keys[module_name].nil?
+      (module_name.downcase.chop + 'id').to_sym
+    end
+
     def primary_key?(module_name, field_name)
-      return true if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
-      field_name.downcase.gsub('id', '') == module_name.chop.downcase
+      return nil if field_name.nil? || module_name.nil?
+      fn = field_name.class == String ? field_name : field_name.to_s
+      return true if fn == 'id'
+      return true if %w[Calls Events Tasks].index(module_name) && fn.downcase == 'activityid'
+      fn.downcase.gsub('id', '') == module_name.chop.downcase
     end
 
     def reflect_module_fields
@@ -224,22 +239,36 @@ module ZohoApi
       return nil unless r.response.code == '200'
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
-      to_hash(x)
+      to_hash(x, module_name)
     end
 
-    def to_hash(xml_results)
+    def to_hash(xml_results, module_name)
       r = []
       xml_results.each do |e|
         record = {}
+        record[:module_name] = module_name
         e.elements.to_a.each do |n|
           k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
           v = n.text == 'null' ? nil : n.text
           record.merge!({ k => v })
+          record.merge!({ :id => v }) if primary_key?(module_name, k)
         end
         r << record
       end
       return nil if r == []
       r
+    end
+
+    def to_hash_with_id(xml_results, module_name)
+      h = to_hash(xml_results, module_name)
+      pp h
+      h[:module_name] = module_name
+      primary_key = module_name.chop.downcase + 'id'
+      h.each do |e|
+        e.merge!({ primary_key.to_sym => e[:id] }) if e[primary_key.to_sym].nil? && !e[:id].nil?
+        e.merge!({ e[:id] => primary_key.to_sym }) if e[:id].nil? && !e[primary_key.to_sym].nil?
+      end
+      h
     end
 
     def update_module_fields(mod_name, module_name, r)
@@ -265,8 +294,8 @@ module ZohoApi
                       :xmlData => x },
           :headers => { 'Content-length' => '0' })
       check_for_errors(r)
-      raise('Updating record failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      r.response.code
+      x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
+      to_hash_with_id(x_r, module_name)[0]
     end
 
     def user_fields

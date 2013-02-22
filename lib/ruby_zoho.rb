@@ -51,9 +51,11 @@ module RubyZoho
     end
 
     def initialize(object_attribute_hash = {})
-      @fields = RubyZoho.configuration.api.module_fields[
-          ApiUtils.string_to_symbol(Crm.module_name)]
+      @fields = object_attribute_hash == {} ? RubyZoho.configuration.api.fields(RubyZoho::Crm.module_name) :
+          object_attribute_hash.keys
       RubyZoho::Crm.create_accessor(self.class, @fields)
+      RubyZoho::Crm.create_accessor(self.class, [:module_name])
+      public_send(:module_name=, RubyZoho::Crm.module_name)
       retry_counter = object_attribute_hash.count
       begin
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
@@ -103,16 +105,50 @@ module RubyZoho
       end
     end
 
-    def create(object_attribute_hash)
-      initialize(object_attribute_hash)
-      save
+    def self.find(id)
+      self.find_by_id(id)
     end
 
-    def save
-      h = {}
-      @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
-      h.delete_if { |k, v| v.nil? }
-      RubyZoho.configuration.api.add_record(Crm.module_name, h)
+    def self.method_missing(meth, *args, &block)
+      if meth.to_s =~ /^find_by_(.+)$/
+        run_find_by_method($1, *args, &block)
+      else
+        super
+      end
+    end
+
+    def method_missing(meth, *args, &block)
+      if [:seid=, :semodule=].index(meth)
+        run_create_accessor(self.class, meth)
+        self.send(meth, args[0])
+      else
+        super
+      end
+    end
+
+    def self.method_is_module?(str_or_sym)
+      return nil if str_or_sym.nil?
+      s = str_or_sym.class == String ? str_or_sym : ApiUtils.symbol_to_string(str_or_sym)
+      possible_module = s[s.length - 1].downcase == 's' ? s : s + 's'
+      i = RubyZoho.configuration.crm_modules.index(possible_module.capitalize)
+      return str_or_sym unless i.nil?
+      nil
+    end
+
+    def run_create_accessor(klass, meth)
+      method = meth.to_s.chop.to_sym
+      RubyZoho::Crm.create_accessor(klass, [method])
+      nil
+    end
+
+    def self.run_find_by_method(attrs, *args, &block)
+      attrs = attrs.split('_and_')
+      conditions = Array.new(args.size, '=')
+      h = RubyZoho.configuration.api.find_records(
+          Crm.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
+      )
+      return h.collect { |r| new(r) } unless h.nil?
+      nil
     end
 
     def self.all         #TODO Refactor into low level API
@@ -126,34 +162,73 @@ module RubyZoho
       result.collect { |r| new(r) }
     end
 
+    def << object
+      object.semodule = self.module_name
+      object.seid = self.id
+      object.fields << :seid
+      object.fields << :semodule
+      save_object(object)
+    end
+
+    def attach_file(file_path, file_name)
+      RubyZoho.configuration.api.attach_file(Crm.module_name, self.send(primary_key), file_path)
+    end
+
+    def create(object_attribute_hash)
+      initialize(object_attribute_hash)
+      save
+    end
+
     def self.delete(id)
       RubyZoho.configuration.api.delete_record(Crm.module_name, id)
     end
 
-    def self.method_missing(meth, *args, &block)
-      if meth.to_s =~ /^find_by_(.+)$/
-        run_find_by_method($1, *args, &block)
-      else
-        super
-      end
+    def primary_key
+      RubyZoho.configuration.api.primary_key(Crm::module_name)
     end
 
-    def self.run_find_by_method(attrs, *args, &block)
-      attrs = attrs.split('_and_')
-      conditions = Array.new(args.size, '=')
-      h = RubyZoho.configuration.api.find_records(
-          Crm.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
-      )
-      return h.collect { |r| new(r) } unless h.nil?
-      nil
+    def save
+      h = {}
+      @fields.each { |f| h.merge!({ f => eval("self.#{f.to_s}") }) }
+      h.delete_if { |k, v| v.nil? }
+      r = RubyZoho.configuration.api.add_record(Crm.module_name, h)
+      up_date(r)
+    end
+
+    def save_object(object)
+      h = {}
+      object.fields.each { |f| h.merge!({ f => object.send(f) }) }
+      h.delete_if { |k, v| v.nil? }
+      r = RubyZoho.configuration.api.add_record(object.module_name, h)
+      up_date(r)
     end
 
     def self.update(object_attribute_hash)
       raise(RuntimeError, 'No ID found', object_attribute_hash.to_s) if object_attribute_hash[:id].nil?
       id = object_attribute_hash[:id]
       object_attribute_hash.delete(:id)
-      RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
+      r = RubyZoho.configuration.api.update_record(Crm.module_name, id, object_attribute_hash)
+      new(object_attribute_hash.merge!(r))
     end
+
+    def up_date(object_attribute_hash)
+      retry_counter = object_attribute_hash.length
+      begin
+        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
+      rescue NoMethodError => e
+        m = e.message.slice(/`(.*?)=/)
+        unless m.nil?
+          m.gsub!('`', '')
+          m.gsub!('(', '')
+          m.gsub!(')', '')
+          RubyZoho::Crm.create_accessor(self.class, [m.chop])
+        end
+        retry_counter -= 1
+        retry if retry_counter > 0
+      end
+      self
+    end
+
 
     def self.setup_classes
       RubyZoho.configuration.crm_modules.each do |module_name|
@@ -175,6 +250,12 @@ module RubyZoho
           end
 
           def self.delete(id)
+            klass = self.to_s
+            Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
+            super
+          end
+
+          def self.find(id)
             klass = self.to_s
             Crm.module_name = klass.slice(klass.rindex('::') + 2, klass.length) + 's'
             super

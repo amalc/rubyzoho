@@ -2,10 +2,13 @@
 
 {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho]
 
+
 = rubyzoho
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle, but without ActiveRecord. Current focus is on Zoho CRM.
+
+<b>Release notes are at the \end of this page.</b>
 
 == Install
     gem install rubyzoho
@@ -85,7 +88,7 @@ To get a list of all accounts:
 Or for all task subjects:
 
     t = RubyZoho::Crm::Task.all
-    pp t.collect { |task| task.subject }
+    pp t.collect { |task| task.subject }  # => ['Subject 1'], ['Subject 2'], ... ['Subject n']
 
 Or for all quotes:
 
@@ -108,7 +111,7 @@ works.
 To sort a result set:
     r = RubyZoho::Crm::Contact.all
     sorted =  r.sort {|a, b| a.last_name <=> b.last_name }
-    pp sorted.collect { |c| c.last_name }
+    pp sorted.collect { |c| c.last_name }  # => ['Name 1', ['Name 2'], ... ['Name n']]
 
 To find by ID, note well, ID is a *string*:
     leads = RubyZoho::Crm::Lead.all
@@ -147,11 +150,28 @@ To update a record (<b>Note, that the attribute is :id</b>):
         :email => 'changed_email@domain.com'
     )
 
+Custom fields are like any other field or method in Ruby:
+    a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
+    pp a.custom_field # => 'Custom field content'
 
-Objects currently supported are:
+Or:
+    c = RubyZoho::Crm::Contact.new(
+      :first_name => 'First Name',
+      :last_name => 'Last Name',
+      :email => 'email@domain.com',
+      :account_name => a.first.account_name,
+      :accountid => a.first.accountid,  # accountid instead of account_id because of Zoho's convention
+      :custom_field_2 => 'Custom text'
+    )
+    pp c.save   # Reflects back the new Zoho record ID, and various create and modify times and users
+
+To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Potentials+ and +Tasks+ only):
+    l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
+    l.attach_file(file_path, file_name)     # Can only be attached to a pre-existing record
+
+Classes (Zoho modules) currently supported are:
     RubyZoho::Crm::Account
     RubyZoho::Crm::Contact
-    RubyZoho::Crm::Event
     RubyZoho::Crm::Lead
     RubyZoho::Crm::Potential
     RubyZoho::Crm::Task
@@ -164,7 +184,7 @@ or where the Zoho API sends back an explicit error code which <b>isn't</b> in th
 
     ['4422', '5000']
 
-a standard Ruby +RuntimeError+ exception is raised with the Zoho API message.
+a standard Ruby +RuntimeError+ exception is raised with the Zoho's API message.
 
 == Optimizations for Development and Testing
 Set <tt>config.cache_fields = true</tt> in the configuration block. This caches \module field
@@ -182,6 +202,7 @@ write access to its own directory for this to work.
     id·i·o·syn·cra·sy ( d - -s ng kr -s ). n. pl. id·i·o·syn·cra·sies.
     1. A structural or behavioral characteristic peculiar to an individual or group.
 
+
 The Zoho API is definitely opinionated. And we have yet to be able plumb the depths of its
 views. If it behaves unexpectedly, try the Zoho forums before opening an issue here. It
 just may be the way the API works...
@@ -193,8 +214,21 @@ either the related \module's record id, which is stored with the Task. But no, c
 == Bugs and Enhancements
 Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!
 
-== Contributing to rubyzoho
+=== Known Bugs or Issues
+1. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.
 
+=== Roadmap (Ranked)
+1. AR style master/detail updates e.g. where +a+ is an account.
+    a << RubyZoho::Crm::Contact.new(
+        :last_name => 'Last Name',
+        :first_name => 'First Name'
+    )
+2. Get related records using AR style syntax, e.g.
+        pp a.contacts
+   to get contacts associated with an account.
+3. Support for multiple find fields.
+
+== Contributing to rubyzoho
 * Pull requests with unit tests or specs and a version branch are welcomed.
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
@@ -205,13 +239,27 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ---
+== Acknowledgements
+Giant buckets of Gratitude to the giants, sung and unsung heroes who put together and support the Open Source movement,
+Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.
+
+== Credits
+wcgiles@github (\@\waynecgiles) for professional and patient debugging and continued debugging of this gem.
 
 == Trademarks
-
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
 == Copyright
+Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE.txt for further details.
 
-Copyright (c) 2013 amalc. Released under the MIT license. See LICENSE.txt for
-further details.
+---
+= Releases
+[0.1.7] RC 1 (In Development)
+        1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+        2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
+        3. << syntax for Account/Tasks on Master/Detail relationships
+[0.1.1 - 0.1.6] Alpha Releases
+                1. Configuration block signature changed
+[0.0.1 - 0.0.5] Alpha Releases
+
