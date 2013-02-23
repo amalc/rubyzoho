@@ -9,14 +9,14 @@ describe RubyZoho::Crm do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
     RubyZoho.configure do |config|
-      config.api_key = ENV['ZOHO_API_KEY']
+      config.api_key =  'e194b2951fb238e26bc096de9d0cf5f8'
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
-    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -25,6 +25,7 @@ describe RubyZoho::Crm do
     c.first_name.should eq('Raj')
     c.email = 'raj@portra.com'
     c.email.should eq('raj@portra.com')
+    c.module_name.should eq('Contacts')
   end
 
   it 'should attach a file to an account' do

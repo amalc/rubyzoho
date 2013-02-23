@@ -260,15 +260,7 @@ module ZohoApi
     end
 
     def to_hash_with_id(xml_results, module_name)
-      h = to_hash(xml_results, module_name)
-      pp h
-      h[:module_name] = module_name
-      primary_key = module_name.chop.downcase + 'id'
-      h.each do |e|
-        e.merge!({ primary_key.to_sym => e[:id] }) if e[primary_key.to_sym].nil? && !e[:id].nil?
-        e.merge!({ e[:id] => primary_key.to_sym }) if e[:id].nil? && !e[primary_key.to_sym].nil?
-      end
-      h
+      to_hash(xml_results, module_name)
     end
 
     def update_module_fields(mod_name, module_name, r)
