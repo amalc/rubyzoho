@@ -13,10 +13,10 @@ describe RubyZoho::Crm do
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
-    #r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-    #r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-    #r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    #r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+    r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+    r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+    r.each { |c|  RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do

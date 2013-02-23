@@ -57,6 +57,11 @@ module RubyZoho
       RubyZoho::Crm.create_accessor(self.class, @fields)
       RubyZoho::Crm.create_accessor(self.class, [:module_name])
       public_send(:module_name=, self.class.module_name)
+      update_or_create_attrs(object_attribute_hash)
+      self
+    end
+
+    def update_or_create_attrs(object_attribute_hash)
       retry_counter = object_attribute_hash.count
       begin
         object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
@@ -66,7 +71,6 @@ module RubyZoho
         retry_counter -= 1
         retry if retry_counter > 0
       end
-      self
     end
 
     def attr_writers
@@ -211,15 +215,7 @@ module RubyZoho
     end
 
     def up_date(object_attribute_hash)
-      retry_counter = object_attribute_hash.length
-      begin
-        object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
-      rescue NoMethodError => e
-        m = e.message.slice(/`(.*?)=/)
-        RubyZoho::Crm.create_accessor(self.class, [m.gsub(/[`()]*/, '').chop]) unless m.nil?
-        retry_counter -= 1
-        retry if retry_counter > 0
-      end
+      update_or_create_attrs(object_attribute_hash)
       self
     end
 
