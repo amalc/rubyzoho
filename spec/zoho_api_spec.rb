@@ -78,14 +78,14 @@ describe ZohoApi do
   it 'should attach a file to a contact record' do
     @zoho.add_record('Contacts', @h_smith)
     contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf)
+    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf, File.basename(@sample_pdf))
     @zoho.delete_record('Contacts', contacts[0][:contactid])
   end
 
   it 'should attach a file to a potential record' do
     pending
     potential = @zoho.first('Potentials').first
-    @zoho.attach_file('Potentials', potential[:potentialid], @sample_pdf)
+    @zoho.attach_file('Potentials', potential[:potentialid], @sample_pdf, File.basename(@sample_pdf))
   end
 
   it 'should delete a contact record with id' do
@@ -142,7 +142,7 @@ describe ZohoApi do
     r = @zoho.fields('Accounts')
     r.count.should >= 25
     r = @zoho.fields('Contacts')
-    r.count.should be >= 21
+    r.count.should be >= 19
     r = @zoho.fields('Events')
     r.count.should >= 10
     r = @zoho.fields('Leads')
