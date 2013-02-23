@@ -33,15 +33,9 @@ describe ZohoApi do
 
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
-    config_file = File.join(base_path, 'zoho_api_configuration.yaml')
-    #params = YAML.load(File.open(config_file))
-    #@zoho = ZohoApi::Crm.new(params['auth_token'])
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
-    #api_key = '783539943dc16d7005b0f3b78367d5d2'
-    api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-    #api_key = '62cedfe9427caef8afb9ea3b5bf68154'
-    @zoho = init_api(api_key, base_path, modules)
+    @zoho = init_api(ENV['ZOHO_API_KEY'], base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',

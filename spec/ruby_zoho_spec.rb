@@ -7,13 +7,9 @@ describe RubyZoho::Crm do
 
   before(:all) do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
-    config_file = File.join(base_path, 'zoho_api_configuration.yaml')
     @sample_pdf = File.join(base_path, 'sample.pdf')
-    #params = YAML.load(File.open(config_file))
     RubyZoho.configure do |config|
-      #config.api_key = params['auth_token']
-      #config.api_key = 'e194b2951fb238e26bc096de9d0cf5f8'
-      config.api_key = '62cedfe9427caef8afb9ea3b5bf68154'
+      config.api_key = ENV['ZOHO_API_KEY']
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
