@@ -33,7 +33,7 @@ describe RubyZoho::Crm do
 
   it 'should attach a file to an account' do
     r = RubyZoho::Crm::Account.all.first
-    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+    r.attach_file(@sample_pdf, '1_' + File.basename(@sample_pdf)).should eq('200')
   end
 
   it 'should attach a file to a contact' do

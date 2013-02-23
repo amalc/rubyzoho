@@ -171,7 +171,7 @@ module RubyZoho
     end
 
     def attach_file(file_path, file_name)
-      RubyZoho.configuration.api.attach_file(Crm.module_name, self.send(primary_key), file_path)
+      RubyZoho.configuration.api.attach_file(Crm.module_name, self.send(primary_key), file_path, file_name)
     end
 
     def create(object_attribute_hash)

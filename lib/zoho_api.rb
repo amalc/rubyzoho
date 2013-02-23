@@ -62,11 +62,11 @@ module ZohoApi
       tag
     end
 
-    def attach_file(module_name, record_id, file_path)
+    def attach_file(module_name, record_id, file_path, file_name)
       mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
       url_path = create_url(module_name, "uploadFile?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
       url = URI.parse(create_url(module_name, url_path))
-      io = UploadIO.new(file_path, mime_type, file_path)
+      io = UploadIO.new(file_path, mime_type, file_name)
       req = Net::HTTP::Post::Multipart.new url_path, 'content' => io
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
