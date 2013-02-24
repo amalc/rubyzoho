@@ -155,42 +155,50 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of calls' do
-    pending
+    #pending
     r = RubyZoho::Crm::Call.all
-    r.count.should be > 1  unless r.nil?
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Call) }  unless r.nil?
+    unless r.nil?
+      #r.count.should be > 1
+      r.map { |e| e.class.should eq(RubyZoho::Crm::Call) }
+      r.map { |e| e.id.should eq(e.activityid)}
+    end
   end
 
   it 'should get a list of contacts' do
     r = RubyZoho::Crm::Contact.all
     r.count.should be > 1
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Contact) }
+    r.map { |e| e.class.should eq(RubyZoho::Crm::Contact) }
+    r.map { |e| e.id.should eq(e.contactid)}
   end
 
   it 'should get a list of events' do
     r = RubyZoho::Crm::Event.all
     r.map { |r| r.class.should eq(RubyZoho::Crm::Event) } unless r.nil?
+    r.map { |e| e.id.should eq(e.eventid)}
   end
 
   it 'should get a list of potentials' do
     r = RubyZoho::Crm::Potential.all
     r.count.should be > 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Potential) }
+    r.map { |e| e.id.should eq(e.potentialid)}
   end
 
   it 'should get a list of quotes' do
     r = RubyZoho::Crm::Quote.all
     r.count.should be >= 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
+    r.map { |e| e.id.should eq(e.quoteid)}
   end
 
   it 'should get a list of tasks' do
     r = RubyZoho::Crm::Task.all
     r.map { |r| r.class.should eq(RubyZoho::Crm::Task) } unless r.nil?
+    r.map { |e| e.id.should eq(e.activityid)}
   end
 
   it 'should get a list of users' do
-    r = RubyZoho::Crm::User.all
+    pp r = RubyZoho::Crm::User.all
     r.count.should be >= 1
   end
 
