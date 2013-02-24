@@ -2,7 +2,6 @@ require 'zoho_api'
 require 'api_utils'
 require 'yaml'
 
-
 module RubyZoho
 
   class Configuration
@@ -219,11 +218,16 @@ module RubyZoho
       self
     end
 
+
+
+
+
     def self.setup_classes
       RubyZoho.configuration.crm_modules.each do |module_name|
         klass_name = module_name.chop
         c = Class.new(RubyZoho::Crm) do
           include RubyZoho
+
           attr_reader :fields
           @module_name = module_name
         end
