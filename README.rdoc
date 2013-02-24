@@ -260,11 +260,12 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
+
+== Released
 [0.1.7]
         1. Bug for attach_file method, respect the file_name parameter.
         2. \:\id is the primary key across all classes in addition to Zoho's existing convention.
 
-== Released
 [0.1.1 - 0.1.6] Alpha Releases
                 1. Configuration block signature changed
 [0.0.1 - 0.0.5] Alpha Releases
