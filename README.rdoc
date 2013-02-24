@@ -261,7 +261,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
 [0.1.7]
-        1. Bug for attach_file method. Repsect file_name.
+        1. Bug for attach_file method, respect the file_name parameter.
         2. \:\id is the primary key across all classes in addition to Zoho's existing convention.
 
 == Released
