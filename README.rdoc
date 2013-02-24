@@ -264,7 +264,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 == Released
 [0.1.7]
         1. Bug for attach_file method, respect the file_name parameter.
-        2. \:\id is the primary key across all classes in addition to Zoho's existing convention.
+        2. \:\id is the primary key across all Zoho related classes (modules) in addition to Zoho's existing convention.
 
 [0.1.1 - 0.1.6] Alpha Releases
                 1. Configuration block signature changed
