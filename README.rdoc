@@ -1,8 +1,6 @@
-{<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho]
+= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho]
 
-{<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho]
 
-= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
 
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
