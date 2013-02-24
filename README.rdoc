@@ -253,10 +253,17 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 
 ---
 = Releases
-[0.1.7] RC 1 (In Development)
+== Release Candidates
+
+== Development
+[0.1.8]
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
+[0.1.7]
+        1. Bug for attach_file method. Repsect file_name.
+
+== Released
 [0.1.1 - 0.1.6] Alpha Releases
                 1. Configuration block signature changed
 [0.0.1 - 0.0.5] Alpha Releases
