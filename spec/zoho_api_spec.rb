@@ -35,7 +35,7 @@ describe ZohoApi do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
-    @zoho = init_api(ENV['ZOHO_API_KEY'], base_path, modules)
+    @zoho = init_api(ENV['ZOHO_API_KEY'].strip, base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',

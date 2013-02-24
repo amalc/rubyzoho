@@ -92,12 +92,7 @@ module ZohoApi
     end
 
     def delete_record(module_name, record_id)
-      r = self.class.post(create_url(module_name, 'deleteRecords'),
-        :query => { :newFormat => 1, :authtoken => @auth_token,
-          :scope => 'crmapi', :id => record_id },
-        :headers => { 'Content-length' => '0' })
-      raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
-      check_for_errors(r)
+      post_action(module_name, record_id, 'deleteRecords')
     end
 
     def fields(module_name)
@@ -170,38 +165,17 @@ module ZohoApi
       to_hash(x, module_name)
     end
 
-    def valid_related?(module_name, field)
-      return nil if field.downcase == 'smownerid'
-      valid_relationships = {
-          'Leads' => %w(email),
-          'Accounts' => %w(accountid accountname),
-          'Contacts' => %w(contactid accountid vendorid email),
-          'Potentials' => %w(potentialid accountid campaignid contactid potentialname),
-          'Campaigns' => %w(campaignid campaignname),
-          'Cases' => %w(caseid productid accountid potentialid),
-          'Solutions' => %w(solutionid productid),
-          'Products' => %w(productid vendorid productname),
-          'Purchase Order' => %w(purchaseorderid contactid vendorid),
-          'Quotes' => %w(quoteid potentialid accountid contactid),
-          'Sales Orders' => %w(salesorderid potentialid accountid contactid quoteid),
-          'Invoices' => %w(invoiceid accountid salesorderid contactid),
-          'Vendors' => %w(vendorid vendorname),
-          'Tasks' => %w(taskid),
-          'Events' => %w(eventid),
-          'Notes' => %w(notesid)
-      }
-      valid_relationships[module_name].index(field.downcase)
-    end
-
-    def related_id?(module_name, field_name)
-      field = field_name.to_s
-      return false if field.rindex('id').nil?
-      return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
-      field.downcase.gsub('id', '') != module_name.chop.downcase
-    end
-
     def method_name?(n)
       return /[@$"]/ !~ n.inspect
+    end
+
+    def post_action(module_name, record_id, action_type)
+      r = self.class.post(create_url(module_name, action_type),
+                          :query => {:newFormat => 1, :authtoken => @auth_token,
+                                     :scope => 'crmapi', :id => record_id},
+                          :headers => {'Content-length' => '0'})
+      raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
+      check_for_errors(r)
     end
 
     def primary_key(module_name)
@@ -216,6 +190,13 @@ module ZohoApi
       return true if fn == 'id'
       return true if %w[Calls Events Tasks].index(module_name) && fn.downcase == 'activityid'
       fn.downcase.gsub('id', '') == module_name.chop.downcase
+    end
+
+    def related_id?(module_name, field_name)
+      field = field_name.to_s
+      return false if field.rindex('id').nil?
+      return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
+      field.downcase.gsub('id', '') != module_name.chop.downcase
     end
 
     def reflect_module_fields
@@ -313,6 +294,29 @@ module ZohoApi
         end
       end
       @@users = result
+    end
+
+    def valid_related?(module_name, field)
+      return nil if field.downcase == 'smownerid'
+      valid_relationships = {
+          'Leads' => %w(email),
+          'Accounts' => %w(accountid accountname),
+          'Contacts' => %w(contactid accountid vendorid email),
+          'Potentials' => %w(potentialid accountid campaignid contactid potentialname),
+          'Campaigns' => %w(campaignid campaignname),
+          'Cases' => %w(caseid productid accountid potentialid),
+          'Solutions' => %w(solutionid productid),
+          'Products' => %w(productid vendorid productname),
+          'Purchase Order' => %w(purchaseorderid contactid vendorid),
+          'Quotes' => %w(quoteid potentialid accountid contactid),
+          'Sales Orders' => %w(salesorderid potentialid accountid contactid quoteid),
+          'Invoices' => %w(invoiceid accountid salesorderid contactid),
+          'Vendors' => %w(vendorid vendorname),
+          'Tasks' => %w(taskid),
+          'Events' => %w(eventid),
+          'Notes' => %w(notesid)
+      }
+      valid_relationships[module_name].index(field.downcase)
     end
 
   end

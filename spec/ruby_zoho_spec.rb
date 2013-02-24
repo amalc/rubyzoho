@@ -9,7 +9,7 @@ describe RubyZoho::Crm do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
     RubyZoho.configure do |config|
-      config.api_key =  'e194b2951fb238e26bc096de9d0cf5f8'
+      config.api_key =  ENV['ZOHO_API_KEY'].strip
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
