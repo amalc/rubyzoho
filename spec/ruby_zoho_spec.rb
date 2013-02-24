@@ -155,10 +155,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of calls' do
-    #pending
     r = RubyZoho::Crm::Call.all
     unless r.nil?
-      #r.count.should be > 1
       r.map { |e| e.class.should eq(RubyZoho::Crm::Call) }
       r.map { |e| e.id.should eq(e.activityid)}
     end
@@ -198,7 +196,7 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of users' do
-    pp r = RubyZoho::Crm::User.all
+    r = RubyZoho::Crm::User.all
     r.count.should be >= 1
   end
 

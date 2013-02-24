@@ -11,6 +11,7 @@ module ApiUtils
   end
 
   def self.string_to_symbol(s)
+    s.gsub!(/[()%]*/, '')
     s.gsub(' ', '_').downcase.to_sym
   end
 

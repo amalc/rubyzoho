@@ -79,9 +79,9 @@ module RubyZoho
 
     def self.create_accessor(klass, names)
       names.each do |name|
-        n = name
-        n = name.to_s if name.class == Symbol
-        raise(RuntimeError, "Bad field name: #{name}") unless method_name?(name)
+        n = name.class == Symbol ? name.to_s : name
+        n.gsub!(/[()]*/, '')
+        raise(RuntimeError, "Bad field name: #{name}") unless method_name?(n)
         create_getter(klass, n)
         create_setter(klass, n)
       end
