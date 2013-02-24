@@ -43,6 +43,7 @@ module RubyZoho
     zoho
   end
 
+  require 'active_model'
   class Crm
 
     class << self
@@ -227,6 +228,8 @@ module RubyZoho
         klass_name = module_name.chop
         c = Class.new(RubyZoho::Crm) do
           include RubyZoho
+          include ActiveModel
+          extend ActiveModel::Naming
 
           attr_reader :fields
           @module_name = module_name
