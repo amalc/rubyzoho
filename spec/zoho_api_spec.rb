@@ -140,15 +140,15 @@ describe ZohoApi do
 
   it 'should get a list of fields for a module' do
     r = @zoho.fields('Accounts')
-    r.count.should >= 25
+    r.count.should >= 10
     r = @zoho.fields('Contacts')
-    r.count.should be >= 19
+    r.count.should be >= 10
     r = @zoho.fields('Events')
     r.count.should >= 10
     r = @zoho.fields('Leads')
-    r.count.should be >= 16
+    r.count.should be >= 10
     r = @zoho.fields('Potentials')
-    r.count.should be >= 15
+    r.count.should be >= 10
     r = @zoho.fields('Tasks')
     r.count.should >= 10
     r = @zoho.fields('Users')
