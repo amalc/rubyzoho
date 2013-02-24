@@ -262,6 +262,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         3. << syntax for Account/Tasks on Master/Detail relationships
 [0.1.7]
         1. Bug for attach_file method. Repsect file_name.
+        2. \:\id is the primary key across all classes in addition to Zoho's existing convention.
 
 == Released
 [0.1.1 - 0.1.6] Alpha Releases
