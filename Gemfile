@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'activemodel', '>= 3.2.11'
 gem 'httmultiparty', '>= 0.3.8'
 gem 'roxml', '>= 3.3.1'
 gem 'multipart-post'

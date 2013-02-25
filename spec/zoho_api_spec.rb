@@ -35,7 +35,7 @@ describe ZohoApi do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
     modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
-    @zoho = init_api(ENV['ZOHO_API_KEY'], base_path, modules)
+    @zoho = init_api(ENV['ZOHO_API_KEY'].strip, base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
           :email => 'rsmith@smithereens.com',
@@ -78,14 +78,14 @@ describe ZohoApi do
   it 'should attach a file to a contact record' do
     @zoho.add_record('Contacts', @h_smith)
     contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf)
+    @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf, File.basename(@sample_pdf))
     @zoho.delete_record('Contacts', contacts[0][:contactid])
   end
 
   it 'should attach a file to a potential record' do
     pending
     potential = @zoho.first('Potentials').first
-    @zoho.attach_file('Potentials', potential[:potentialid], @sample_pdf)
+    @zoho.attach_file('Potentials', potential[:potentialid], @sample_pdf, File.basename(@sample_pdf))
   end
 
   it 'should delete a contact record with id' do
@@ -140,15 +140,15 @@ describe ZohoApi do
 
   it 'should get a list of fields for a module' do
     r = @zoho.fields('Accounts')
-    r.count.should >= 25
+    r.count.should >= 10
     r = @zoho.fields('Contacts')
-    r.count.should be >= 21
+    r.count.should be >= 10
     r = @zoho.fields('Events')
     r.count.should >= 10
     r = @zoho.fields('Leads')
-    r.count.should be >= 16
+    r.count.should be >= 10
     r = @zoho.fields('Potentials')
-    r.count.should be >= 15
+    r.count.should be >= 10
     r = @zoho.fields('Tasks')
     r.count.should >= 10
     r = @zoho.fields('Users')

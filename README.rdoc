@@ -1,9 +1,7 @@
-{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho]
-
-{<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho]
+= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho]
 
 
-= rubyzoho
+
 
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle, but without ActiveRecord. Current focus is on Zoho CRM.
@@ -255,10 +253,19 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 
 ---
 = Releases
-[0.1.7] RC 1 (In Development)
+== Release Candidates
+
+== Development
+[0.1.8]
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
+
+== Released
+[0.1.7]
+        1. Bug for attach_file method, respect the file_name parameter.
+        2. \:\id is the primary key across all Zoho related classes (modules) in addition to Zoho's existing convention.
+
 [0.1.1 - 0.1.6] Alpha Releases
                 1. Configuration block signature changed
 [0.0.1 - 0.0.5] Alpha Releases

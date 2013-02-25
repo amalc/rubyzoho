@@ -9,7 +9,7 @@ describe RubyZoho::Crm do
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
     RubyZoho.configure do |config|
-      config.api_key = ENV['ZOHO_API_KEY']
+      config.api_key =  ENV['ZOHO_API_KEY'].strip
       config.crm_modules = %w(Quotes)
       config.cache_fields = true
     end
@@ -25,11 +25,12 @@ describe RubyZoho::Crm do
     c.first_name.should eq('Raj')
     c.email = 'raj@portra.com'
     c.email.should eq('raj@portra.com')
+    c.module_name.should eq('Contacts')
   end
 
   it 'should attach a file to an account' do
     r = RubyZoho::Crm::Account.all.first
-    r.attach_file(@sample_pdf, File.basename(@sample_pdf)).should eq('200')
+    r.attach_file(@sample_pdf, '1_' + File.basename(@sample_pdf)).should eq('200')
   end
 
   it 'should attach a file to a contact' do
@@ -154,38 +155,44 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of calls' do
-    pending
     r = RubyZoho::Crm::Call.all
-    r.count.should be > 1  unless r.nil?
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Call) }  unless r.nil?
+    unless r.nil?
+      r.map { |e| e.class.should eq(RubyZoho::Crm::Call) }
+      r.map { |e| e.id.should eq(e.activityid)}
+    end
   end
 
   it 'should get a list of contacts' do
     r = RubyZoho::Crm::Contact.all
     r.count.should be > 1
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Contact) }
+    r.map { |e| e.class.should eq(RubyZoho::Crm::Contact) }
+    r.map { |e| e.id.should eq(e.contactid)}
   end
 
   it 'should get a list of events' do
     r = RubyZoho::Crm::Event.all
     r.map { |r| r.class.should eq(RubyZoho::Crm::Event) } unless r.nil?
+    r.map { |e| e.id.should eq(e.eventid)}
   end
 
   it 'should get a list of potentials' do
     r = RubyZoho::Crm::Potential.all
     r.count.should be > 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Potential) }
+    r.map { |e| e.id.should eq(e.potentialid)}
   end
 
   it 'should get a list of quotes' do
     r = RubyZoho::Crm::Quote.all
     r.count.should be >= 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
+    r.map { |e| e.id.should eq(e.quoteid)}
   end
 
   it 'should get a list of tasks' do
     r = RubyZoho::Crm::Task.all
     r.map { |r| r.class.should eq(RubyZoho::Crm::Task) } unless r.nil?
+    r.map { |e| e.id.should eq(e.activityid)}
   end
 
   it 'should get a list of users' do
