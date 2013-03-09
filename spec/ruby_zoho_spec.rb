@@ -335,8 +335,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should validate a field name' do
-    good_names = ['This is OK', 'OK_to_use']
-    bad_names = ['This % is not', 'Bad()']
+    good_names = ['This is OK', 'OK_to_use', 'field()']
+    bad_names = ['This %#{@} is not']
     good_names.map { |f| RubyZoho::Crm.method_name?(ApiUtils.string_to_symbol(f)).should_not eq(false)}
     bad_names.map { |f| RubyZoho::Crm.method_name?(ApiUtils.string_to_symbol(f)).should eq(false)}
   end
