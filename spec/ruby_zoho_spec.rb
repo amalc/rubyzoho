@@ -125,7 +125,7 @@ describe RubyZoho::Crm do
 
   it 'should get a list of attr_writers for contacts' do
     c = RubyZoho::Crm::Contact.new
-    c.attr_writers.count.should be >= 21
+    c.attr_writers.count.should be >= 10
   end
 
   it 'should get a list of attr_writers for leads' do
