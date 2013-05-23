@@ -35,7 +35,8 @@ module RubyZoho
     base_path = File.join(File.dirname(__FILE__), '..', 'spec', 'fixtures')
     if File.exists?(File.join(base_path, 'fields.snapshot')) && cache_fields == true
       fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
-      zoho = ZohoApi::Crm.new(api_key, modules, fields)
+      zoho = ZohoApi::Crm.new(api_key, modules,
+          self.configuration.ignore_fields_with_bad_names, fields)
     else
       zoho = ZohoApi::Crm.new(api_key, modules, self.configuration.ignore_fields_with_bad_names)
       fields = zoho.module_fields
@@ -224,10 +225,6 @@ module RubyZoho
       update_or_create_attrs(object_attribute_hash)
       self
     end
-
-
-
-
 
     def self.setup_classes
       RubyZoho.configuration.crm_modules.each do |module_name|

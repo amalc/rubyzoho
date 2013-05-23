@@ -178,6 +178,24 @@ module ZohoApi
       to_hash(x, module_name)
     end
 
+    def hashed_field_value_pairs(module_name, n, record)
+      field_name = n.attribute('val').to_s.gsub('val=', '')
+      if @ignore_fields == true
+        return clean_field_name?(field_name) == true ?
+            create_and_add_field_value_pair(field_name, module_name, n, record)
+                : nil
+      end
+      create_and_add_field_value_pair(field_name, module_name, n, record)
+    end
+
+    def create_and_add_field_value_pair(field_name, module_name, n, record)
+      k = ApiUtils.string_to_symbol(field_name)
+      v = n.text == 'null' ? nil : n.text
+      r = record.merge({k => v})
+      r = r.merge({:id => v}) if primary_key?(module_name, k)
+      r
+    end
+
     def method_name?(n)
       return /[@$"]/ !~ n.inspect
     end
@@ -250,29 +268,18 @@ module ZohoApi
       r
     end
 
-    def hashed_field_value_pairs(module_name, n, record)
-      field_name = n.attribute('val').to_s.gsub('val=', '')
-      if clean_field_name?(field_name)
-        k = ApiUtils.string_to_symbol(field_name)
-        v = n.text == 'null' ? nil : n.text
-        r = record.merge({k => v})
-        r = r.merge({:id => v}) if primary_key?(module_name, k)
-        return r
-      end
-      nil
-    end
-
     def to_hash_with_id(xml_results, module_name)
       to_hash(xml_results, module_name)
     end
 
     def update_module_fields(mod_name, module_name, r)
       @@module_fields[mod_name] = []
+      @@module_fields[(mod_name.to_s + '_original_name').to_sym] = []
       x = REXML::Document.new(r.body)
       REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
         field = ApiUtils.string_to_symbol(f.to_s)
         @@module_fields[mod_name] << field if method_name?(field)
-        pp @@module_fields[mod_name + '_original_name'] << field
+        pp @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
       end
       @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
       return @@module_fields[mod_name] unless @@module_fields.nil?

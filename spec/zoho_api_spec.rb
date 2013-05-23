@@ -20,11 +20,12 @@ describe ZohoApi do
   end
 
   def init_api(api_key, base_path, modules)
+    ignore_fields = true
     if File.exists?(File.join(base_path, 'fields.snapshot'))
       fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
-      zoho = ZohoApi::Crm.new(api_key, modules, fields)
+      zoho = ZohoApi::Crm.new(api_key, modules, ignore_fields, fields)
     else
-      zoho = ZohoApi::Crm.new(api_key, modules)
+      zoho = ZohoApi::Crm.new(api_key, modules, ignore_fields)
       fields = zoho.module_fields
       File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) }
     end
