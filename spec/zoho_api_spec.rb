@@ -245,8 +245,10 @@ describe ZohoApi do
   end
 
   it 'should validate that a field name is clean' do
-    pp @zoho.clean_field_name?('Name')
-    pp @zoho.clean_field_name?('Name (All Upper)')
+    @zoho.clean_field_name?(nil).should eq(false)
+    @zoho.clean_field_name?('Name').should eq(true)
+    @zoho.clean_field_name?('Full_Name').should eq(true)
+    @zoho.clean_field_name?('Name (All Upper)').should eq(false)
   end
 
 end

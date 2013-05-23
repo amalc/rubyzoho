@@ -253,7 +253,9 @@ module ZohoApi
     end
 
     def clean_field_name?(field_name)
-
+      return false if field_name.nil?
+      r = field_name[/[0-9, a-z, A-Z, _]*/]
+      field_name.size == r.size
     end
 
     def to_hash_with_id(xml_results, module_name)
