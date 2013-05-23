@@ -35,7 +35,7 @@ Make sure the following block is executed prior to making calls to the gem.
       config.api_key = '<< API Key from Zoho>>'
       # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
       # config.crm_modules = ['Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got, adds to free edition modules
-      # config.ignore_fields_with_bad_names = true # Ignores field with special characters in the name
+      # config.ignore_fields_with_bad_names = true # Ignores field with special characters in the name (Release 1.8)
       # Currently only Quotes are suported
     end
 
@@ -262,6 +262,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
+        4. Option in config to ignore fields with improper field names
 
 == Released
 [0.1.7]
