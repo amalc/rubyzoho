@@ -45,7 +45,7 @@ your daily allowance. See below for some optimizations during development and te
 
 == Use
 RubyZoho attempts to follow the ActiveRecord lifecycle, i.e. new, save, update and delete.
-See examples below. (<b>N.B. Custom fields _cannot_ have special characters in them.</b>)
+See examples below. (<b>N.B. Fields _cannot_ have special characters in them.</b>)
 
 To get a list of supported attributes for a Zoho CRM contact:
 
