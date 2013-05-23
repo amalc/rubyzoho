@@ -90,6 +90,24 @@ module ZohoApiFieldUtils
     @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
   end
 
+  def to_hash(xml_results, module_name)
+    r = []
+    xml_results.each do |e|
+      record = {}
+      record[:module_name] = module_name
+      e.elements.to_a.each do |n|
+        record = hashed_field_value_pairs(module_name, n, record)
+      end
+      r << record unless record.nil?
+    end
+    return nil if r == []
+    r
+  end
+
+  def to_hash_with_id(xml_results, module_name)
+    to_hash(xml_results, module_name)
+  end
+
   def update_module_fields(mod_name, module_name, response)
     @@module_fields[mod_name] = []
     @@module_fields[(mod_name.to_s + '_original_name').to_sym] = []
