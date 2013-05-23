@@ -88,11 +88,6 @@ module RubyZoho
       names
     end
 
-    def self.method_name?(n)
-      name = n.class == String ? ApiUtils.string_to_symbol(n) : n
-      return /[@$"]/ !~ name.inspect
-    end
-
     def self.create_getter(klass, *names)
       names.each do |name|
         klass.send(:define_method, "#{name}") { instance_variable_get("@#{name}") }
@@ -126,6 +121,11 @@ module RubyZoho
       end
     end
 
+    def self.method_name?(n)
+      name = n.class == String ? ApiUtils.string_to_symbol(n) : n
+      return /[@$"]/ !~ name.inspect
+    end
+
     def self.method_is_module?(str_or_sym)
       return nil if str_or_sym.nil?
       s = str_or_sym.class == String ? str_or_sym : ApiUtils.symbol_to_string(str_or_sym)
@@ -149,6 +149,11 @@ module RubyZoho
       )
       return h.collect { |r| new(r) } unless h.nil?
       nil
+    end
+
+    def self.first
+      r = RubyZoho.configuration.api.first(self.module_name)
+      new(r[0])
     end
 
     def self.all         #TODO Refactor into low level API

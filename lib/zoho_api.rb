@@ -100,6 +100,12 @@ module ZohoApi
       fields_from_record(module_name).nil? ? fields_from_api(module_name) : fields_from_record(module_name)
     end
 
+    def fields_original(module_name)
+      return nil if @@module_fields.nil?
+      #return user_fields if module_name == 'Users'
+      @@module_fields[module_name + '_original_name']
+    end
+
     def fields_from_api(module_name)
       mod_name = ApiUtils.string_to_symbol(module_name)
       return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
@@ -215,7 +221,7 @@ module ZohoApi
 
     def some(module_name, index = 1, number_of_records = nil)
       r = self.class.get(create_url(module_name, 'getRecords'),
-        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+        :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
           :fromIndex => index, :toIndex => number_of_records || NUMBER_OF_RECORDS_TO_GET })
       return nil unless r.response.code == '200'
       check_for_errors(r)
@@ -250,6 +256,7 @@ module ZohoApi
       REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
         field = ApiUtils.string_to_symbol(f.to_s)
         @@module_fields[mod_name] << field if method_name?(field)
+        pp @@module_fields[mod_name + '_original_name'] << field
       end
       @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
       return @@module_fields[mod_name] unless @@module_fields.nil?

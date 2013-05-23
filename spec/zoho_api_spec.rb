@@ -57,16 +57,13 @@ describe ZohoApi do
   
   it 'should add a new event' do
     pending
-    h = { :event_owner => 'Wayne Giles',
-          :smownerid => '748054000000056023',
-          :start_datetime => '2013-02-16 16:00:00',
-          :end_datetime => '2014-02-16 16:00:00',
-          :subject => 'Test Event',
-          :related_to => 'Potential One',
-          :relatedtoid => '748054000000123057',
-          :semodule => 'Potentials',
-          :contact_name => 'Wayne Smith',
-          :contactid => '748054000000097043' }
+    pp @zoho.fields_from_api('Events')
+    pp @zoho.fields_from_record('Events')
+    pp @zoho.some('Events')
+    h = { :subject => 'Test Event',
+          :start_datetime => '2014-02-16 16:00:00',
+          :end_datetime => '2014-02-16 18:00:00'
+    }
     @zoho.add_record('Events', h)
     events = @zoho.some('Events')
     pp events
@@ -158,6 +155,13 @@ describe ZohoApi do
   it 'should get a list of user fields' do
     r = @zoho.user_fields
     r.count.should be >= 7
+  end
+
+  it 'should get a list of local and remote fields' do
+    pending
+    @zoho.fields('Accounts')
+    pp r = @zoho.fields_original('Accounts')
+    r.count.should >= 10
   end
 
   it 'should retrieve records by module name' do
