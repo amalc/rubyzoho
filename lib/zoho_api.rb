@@ -234,16 +234,19 @@ module ZohoApi
       xml_results.each do |e|
         record = {}
         record[:module_name] = module_name
-        e.elements.to_a.each do |n|
-          k = ApiUtils.string_to_symbol(n.attribute('val').to_s.gsub('val=', ''))
-          v = n.text == 'null' ? nil : n.text
-          record.merge!({ k => v })
-          record.merge!({ :id => v }) if primary_key?(module_name, k)
-        end
+        e.elements.to_a.each { |n| hashed_field_value_pairs(module_name, n, record) }
         r << record
       end
       return nil if r == []
       r
+    end
+
+    def hashed_field_value_pairs(module_name, n, record)
+      field_name = n.attribute('val').to_s.gsub('val=', '')
+      k = ApiUtils.string_to_symbol(field_name)
+      v = n.text == 'null' ? nil : n.text
+      record.merge!({k => v})
+      record.merge!({:id => v}) if primary_key?(module_name, k)
     end
 
     def to_hash_with_id(xml_results, module_name)
