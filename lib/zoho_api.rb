@@ -272,18 +272,22 @@ module ZohoApi
       to_hash(xml_results, module_name)
     end
 
-    def update_module_fields(mod_name, module_name, r)
+    def update_module_fields(mod_name, module_name, response)
       @@module_fields[mod_name] = []
       @@module_fields[(mod_name.to_s + '_original_name').to_sym] = []
-      x = REXML::Document.new(r.body)
+      extract_fields_from_response(mod_name, module_name, response)
+      return @@module_fields[mod_name] unless @@module_fields.nil?
+      nil
+    end
+
+    def extract_fields_from_response(mod_name, module_name, response)
+      x = REXML::Document.new(response.body)
       REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
         field = ApiUtils.string_to_symbol(f.to_s)
         @@module_fields[mod_name] << field if method_name?(field)
         @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
       end
       @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
-      return @@module_fields[mod_name] unless @@module_fields.nil?
-      nil
     end
 
     def update_record(module_name, id, fields_values_hash)
@@ -311,19 +315,29 @@ module ZohoApi
           :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
               :type => 'AllUsers' })
       check_for_errors(r)
-      x = REXML::Document.new(r.body).elements.to_a("/users")
+      result = extract_users_from_xml_response(r)
+      @@users = result
+    end
+
+    def extract_users_from_xml_response(response)
+      x = REXML::Document.new(response.body).elements.to_a("/users")
       result = []
       x.each do |e|
-        e.elements.to_a.each do |n|
-          record = {}
-          record.merge!( { :user_name => n.text })
-          n.attributes.each_pair do |k, v|
-            record.merge!({ k.to_s.to_sym => v.to_string.match(/'(.*?)'/).to_s.gsub("'", '') })
-          end
+        e.elements.to_a.each do |node|
+          record = extract_user_name_and_attribs(node)
           result << record
         end
       end
-      @@users = result
+      result
+    end
+
+    def extract_user_name_and_attribs(node)
+      record = {}
+      record.merge!({:user_name => node.text})
+      node.attributes.each_pair do |k, v|
+        record.merge!({k.to_s.to_sym => v.to_string.match(/'(.*?)'/).to_s.gsub("'", '')})
+      end
+      record
     end
 
     def valid_related?(module_name, field)
