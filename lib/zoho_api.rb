@@ -282,12 +282,16 @@ module ZohoApi
 
     def extract_fields_from_response(mod_name, module_name, response)
       x = REXML::Document.new(response.body)
-      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
-        field = ApiUtils.string_to_symbol(f.to_s)
-        @@module_fields[mod_name] << field if method_name?(field)
-        @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
+      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |field|
+        extract_field(field, mod_name)
       end
       @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
+    end
+
+    def extract_field(f, mod_name)
+      field = ApiUtils.string_to_symbol(f.to_s)
+      @@module_fields[mod_name] << field if method_name?(field)
+      @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
     end
 
     def update_record(module_name, id, fields_values_hash)
