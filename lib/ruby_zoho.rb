@@ -5,13 +5,14 @@ require 'yaml'
 module RubyZoho
 
   class Configuration
-    attr_accessor :api, :api_key, :cache_fields, :crm_modules
+    attr_accessor :api, :api_key, :cache_fields, :crm_modules, :ignore_fields_with_bad_names
 
     def initialize
       self.api_key = nil
       self.api = nil
       self.cache_fields = false
       self.crm_modules = nil
+      self.ignore_fields_with_bad_names = true
     end
   end
 
@@ -36,7 +37,7 @@ module RubyZoho
       fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
       zoho = ZohoApi::Crm.new(api_key, modules, fields)
     else
-      zoho = ZohoApi::Crm.new(api_key, modules)
+      zoho = ZohoApi::Crm.new(api_key, modules, self.configuration.ignore_fields_with_bad_names)
       fields = zoho.module_fields
       File.open(File.join(base_path, 'fields.snapshot'), 'wb') { |file| file.write(fields.to_yaml) } if cache_fields == true
     end

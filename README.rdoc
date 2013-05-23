@@ -254,7 +254,7 @@ This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE.txt for further details.
 
 ---
-= Releases
+= Releases (Uses Semantic Versioning)
 == Release Candidates
 
 == Development
