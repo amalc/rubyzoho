@@ -8,6 +8,7 @@ require 'mime/types'
 require 'ruby_zoho'
 require 'yaml'
 require 'api_utils'
+require 'zoho_api_field_utils'
 
 module ZohoApi
 
@@ -46,23 +47,6 @@ module ZohoApi
       to_hash(x_r, module_name)[0]
     end
 
-    def add_field(row, field, value)
-      r = (REXML::Element.new 'FL')
-      adjust_tag_case(field)
-      r.attributes['val'] = adjust_tag_case(field)
-      r.add_text("#{value}")
-      row.elements << r
-      row
-    end
-
-    def adjust_tag_case(tag)
-      return tag if tag == 'id'
-      return tag.upcase if tag.downcase.rindex('id')
-      u_tags = %w[SEMODULE]
-      return tag.upcase if u_tags.index(tag.upcase)
-      tag
-    end
-
     def attach_file(module_name, record_id, file_path, file_name)
       mime_type = (MIME::Types.type_for(file_path)[0] || MIME::Types["application/octet-stream"][0])
       url_path = create_url(module_name, "uploadFile?authtoken=#{@auth_token}&scope=crmapi&id=#{record_id}")
@@ -88,48 +72,12 @@ module ZohoApi
       response.code
     end
 
-    def clean_field_name?(field_name)
-      return false if field_name.nil?
-      r = field_name[/[0-9, a-z, A-Z, _]*/]
-      field_name.size == r.size
-    end
-
     def create_url(module_name, api_call)
       "https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}"
     end
 
     def delete_record(module_name, record_id)
       post_action(module_name, record_id, 'deleteRecords')
-    end
-
-    def fields(module_name)
-      return user_fields if module_name == 'Users'
-      fields_from_record(module_name).nil? ? fields_from_api(module_name) : fields_from_record(module_name)
-    end
-
-    def fields_original(module_name)
-      return nil if @@module_fields.nil?
-      #return user_fields if module_name == 'Users'
-      @@module_fields[module_name + '_original_name']
-    end
-
-    def fields_from_api(module_name)
-      mod_name = ApiUtils.string_to_symbol(module_name)
-      return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
-      r = self.class.post(create_url(module_name, 'getFields'),
-          :query => { :authtoken => @auth_token, :scope => 'crmapi' },
-          :headers => { 'Content-length' => '0' })
-      check_for_errors(r)
-      update_module_fields(mod_name, module_name, r)
-    end
-
-    def fields_from_record(module_name)
-      mod_name = ApiUtils.string_to_symbol(module_name)
-      return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
-      r = first(module_name)
-      return nil if r.nil?
-      @@module_fields[mod_name] = r.first.keys
-      @@module_fields[mod_name]
     end
 
     def first(module_name)
@@ -178,24 +126,6 @@ module ZohoApi
       to_hash(x, module_name)
     end
 
-    def hashed_field_value_pairs(module_name, n, record)
-      field_name = n.attribute('val').to_s.gsub('val=', '')
-      if @ignore_fields == true
-        return clean_field_name?(field_name) == true ?
-            create_and_add_field_value_pair(field_name, module_name, n, record)
-                : nil
-      end
-      create_and_add_field_value_pair(field_name, module_name, n, record)
-    end
-
-    def create_and_add_field_value_pair(field_name, module_name, n, record)
-      k = ApiUtils.string_to_symbol(field_name)
-      v = n.text == 'null' ? nil : n.text
-      r = record.merge({k => v})
-      r = r.merge({:id => v}) if primary_key?(module_name, k)
-      r
-    end
-
     def method_name?(n)
       return /[@$"]/ !~ n.inspect
     end
@@ -228,11 +158,6 @@ module ZohoApi
       return false if field.rindex('id').nil?
       return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
       field.downcase.gsub('id', '') != module_name.chop.downcase
-    end
-
-    def reflect_module_fields
-      @modules.each { |m| fields(m) }
-      @@module_fields
     end
 
     def related_records(parent_module, parent_record_id, related_module)
@@ -272,28 +197,6 @@ module ZohoApi
       to_hash(xml_results, module_name)
     end
 
-    def update_module_fields(mod_name, module_name, response)
-      @@module_fields[mod_name] = []
-      @@module_fields[(mod_name.to_s + '_original_name').to_sym] = []
-      extract_fields_from_response(mod_name, module_name, response)
-      return @@module_fields[mod_name] unless @@module_fields.nil?
-      nil
-    end
-
-    def extract_fields_from_response(mod_name, module_name, response)
-      x = REXML::Document.new(response.body)
-      REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |field|
-        extract_field(field, mod_name)
-      end
-      @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
-    end
-
-    def extract_field(f, mod_name)
-      field = ApiUtils.string_to_symbol(f.to_s)
-      @@module_fields[mod_name] << field if method_name?(field)
-      @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
-    end
-
     def update_record(module_name, id, fields_values_hash)
       x = REXML::Document.new
       contacts = x.add_element module_name
@@ -307,10 +210,6 @@ module ZohoApi
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
       to_hash_with_id(x_r, module_name)[0]
-    end
-
-    def user_fields
-      @@module_fields[:users] = users[0].keys
     end
 
     def users(user_type = 'AllUsers')
