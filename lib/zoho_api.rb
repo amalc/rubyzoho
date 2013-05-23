@@ -279,7 +279,7 @@ module ZohoApi
       REXML::XPath.each(x, "/#{module_name}/section/FL/@dv") do |f|
         field = ApiUtils.string_to_symbol(f.to_s)
         @@module_fields[mod_name] << field if method_name?(field)
-        pp @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
+        @@module_fields[(mod_name.to_s + '_original_name').to_sym] << field
       end
       @@module_fields[mod_name] << ApiUtils.string_to_symbol(module_name.chop + 'id')
       return @@module_fields[mod_name] unless @@module_fields.nil?
