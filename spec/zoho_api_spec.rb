@@ -244,4 +244,9 @@ describe ZohoApi do
     @zoho.delete_record('Contacts', contact[0][:contactid])
   end
 
+  it 'should validate that a field name is clean' do
+    pp @zoho.clean_field_name?('Name')
+    pp @zoho.clean_field_name?('Name (All Upper)')
+  end
+
 end
