@@ -27,7 +27,7 @@ module RubyZoho
     self.configuration.crm_modules = %w[Accounts Calls Contacts Events Leads Potentials Tasks].concat(
         self.configuration.crm_modules).uniq
     self.configuration.api = init_api(self.configuration.api_key,
-        self.configuration.crm_modules, self.configuration.cache_fields)
+                                      self.configuration.crm_modules, self.configuration.cache_fields)
     RubyZoho::Crm.setup_classes()
   end
 
@@ -36,7 +36,7 @@ module RubyZoho
     if File.exists?(File.join(base_path, 'fields.snapshot')) && cache_fields == true
       fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
       zoho = ZohoApi::Crm.new(api_key, modules,
-          self.configuration.ignore_fields_with_bad_names, fields)
+                              self.configuration.ignore_fields_with_bad_names, fields)
     else
       zoho = ZohoApi::Crm.new(api_key, modules, self.configuration.ignore_fields_with_bad_names)
       fields = zoho.module_fields
@@ -45,6 +45,6 @@ module RubyZoho
     zoho
   end
 
-  require 'zoho_crm'
+  require 'crm'
 
 end

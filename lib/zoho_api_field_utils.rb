@@ -1,5 +1,8 @@
 module ZohoApiFieldUtils
 
+  @@module_fields = {}
+  @@users = []
+
   def add_field(row, field, value)
     r = (REXML::Element.new 'FL')
     adjust_tag_case(field)
@@ -38,8 +41,8 @@ module ZohoApiFieldUtils
     mod_name = ApiUtils.string_to_symbol(module_name)
     return @@module_fields[mod_name] unless @@module_fields[mod_name].nil?
     r = self.class.post(create_url(module_name, 'getFields'),
-        :query => { :authtoken => @auth_token, :scope => 'crmapi' },
-        :headers => { 'Content-length' => '0' })
+                        :query => { :authtoken => @auth_token, :scope => 'crmapi' },
+                        :headers => { 'Content-length' => '0' })
     check_for_errors(r)
     update_module_fields(mod_name, module_name, r)
   end
@@ -58,7 +61,7 @@ module ZohoApiFieldUtils
     if @ignore_fields == true
       return clean_field_name?(field_name) == true ?
           create_and_add_field_value_pair(field_name, module_name, n, record)
-              : nil
+      : nil
     end
     create_and_add_field_value_pair(field_name, module_name, n, record)
   end
@@ -66,8 +69,8 @@ module ZohoApiFieldUtils
   def create_and_add_field_value_pair(field_name, module_name, n, record)
     k = ApiUtils.string_to_symbol(field_name)
     v = n.text == 'null' ? nil : n.text
-    r = record.merge({k => v})
-    r = r.merge({:id => v}) if primary_key?(module_name, k)
+    r = record.merge({ k => v })
+    r = r.merge({ :id => v }) if primary_key?(module_name, k)
     r
   end
 
