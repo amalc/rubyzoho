@@ -1,4 +1,5 @@
-class ZohoCrmCrudMethods
+
+module ZohoCrmCrudMethods
 
   def self.find(id)
     self.find_by_id(id)

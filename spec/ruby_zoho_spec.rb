@@ -20,6 +20,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should add accessors using a list of names' do
+    pp __LINE__
+    pp RubyZoho::Crm::Contact.methods
     c = RubyZoho::Crm::Contact.new
     c.first_name = 'Raj'
     c.first_name.should eq('Raj')
@@ -281,6 +283,7 @@ describe RubyZoho::Crm do
   end
 
   it 'should save an task record related to an account' do
+    pp RubyZoho::Crm::Account.methods
     a = RubyZoho::Crm::Account.all.first
     e = RubyZoho::Crm::Task.new(
         :task_owner =>  a.account_owner,

@@ -1,4 +1,4 @@
-require 'active_model'
+#require 'active_model'
 require 'zoho_crm_crud_methods'
 require 'zoho_crm_utils'
 
@@ -8,6 +8,9 @@ class RubyZoho::Crm
     attr_accessor :module_name
   end
   @module_name = 'Crm'
+
+  include ZohoCrmCrudMethods
+  include ZohoCrmUtils
 
   def initialize(object_attribute_hash = {})
     @fields = object_attribute_hash == {} ? RubyZoho.configuration.api.fields(self.class.module_name) :
@@ -39,7 +42,6 @@ class RubyZoho::Crm
   def self.run_find_by_method(attrs, *args, &block)
     attrs = attrs.split('_and_')
     conditions = Array.new(args.size, '=')
-    pp RubyZoho.configuration.api
     h = RubyZoho.configuration.api.find_records(
         self.module_name, ApiUtils.string_to_symbol(attrs[0]), conditions[0], args[0]
     )
