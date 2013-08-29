@@ -29,4 +29,4 @@ c = Class.new(RubyZoho::Crm) do
   end
 end
 
-Kernel.const_set 'User', c
+Kernel.const_set 'CRMUser', c
