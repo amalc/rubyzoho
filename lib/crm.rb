@@ -107,6 +107,6 @@ class RubyZoho::Crm
     end
   end
 
-  Kernel.const_set 'User', c
+  Kernel.const_set 'CRMUser', c
 
 end
