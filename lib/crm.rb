@@ -1,5 +1,5 @@
 require 'active_model'
-require 'zoho_crm_crud_methods'
+require 'crud_methods'
 require 'zoho_crm_utils'
 
 class RubyZoho::Crm
@@ -9,24 +9,20 @@ class RubyZoho::Crm
   end
   @module_name = 'Crm'
 
-  include ZohoCrmCrudMethods
+  include CrudMethods
   include ZohoCrmUtils
 
   def initialize(object_attribute_hash = {})
     @fields = object_attribute_hash == {} ? RubyZoho.configuration.api.fields(self.class.module_name) :
         object_attribute_hash.keys
-    ZohoCrmUtils.create_accessor(self.class, @fields)
-    ZohoCrmUtils.create_accessor(self.class, [:module_name])
+    create_accessor(self.class, @fields)
+    create_accessor(self.class, [:module_name])
     public_send(:module_name=, self.class.module_name)
     update_or_create_attrs(object_attribute_hash)
     self
   end
 
   def self.method_missing(meth, *args, &block)
-    pp __method__
-    pp meth
-    pp caller[0]
-    pp self
     if meth.to_s =~ /^find_by_(.+)$/
       run_find_by_method($1, *args, &block)
     else
@@ -82,7 +78,7 @@ class RubyZoho::Crm
 
   c = Class.new(self) do
     def initialize(object_attribute_hash = {})
-      Crm.module_name = 'Users'
+      module_name = 'Users'
       super
     end
 
