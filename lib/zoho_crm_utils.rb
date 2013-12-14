@@ -6,7 +6,7 @@ module ZohoCrmUtils
       object_attribute_hash.map { |(k, v)| public_send("#{k}=", v) }
     rescue NoMethodError => e
       m = e.message.slice(/`(.*?)=/)
-      RubyZoho::Crm.create_accessor(self.class, [m.gsub(/[`()]*/, '').chop]) unless m.nil?
+      create_accessor(self.class, [m.gsub(/[`()]*/, '').chop]) unless m.nil?
       retry_counter -= 1
       retry if retry_counter > 0
     end
