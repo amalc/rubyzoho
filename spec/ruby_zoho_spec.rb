@@ -20,8 +20,6 @@ describe RubyZoho::Crm do
   end
 
   it 'should add accessors using a list of names' do
-    pp __LINE__
-    pp RubyZoho::Crm::Contact.methods
     c = RubyZoho::Crm::Contact.new
     c.first_name = 'Raj'
     c.first_name.should eq('Raj')
@@ -115,8 +113,8 @@ describe RubyZoho::Crm do
   end
 
   it 'should find a user by email address' do
-    users = RubyZoho::Crm::User.all
-    r = RubyZoho::Crm::User.find_by_email(users.first.email)
+    users = RubyZoho::Crm::CRMUser.all
+    r = RubyZoho::Crm::CRMUser.find_by_email(users.first.email)
     r.first.email.should eq(users.first.email)
   end
 
@@ -186,6 +184,7 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of quotes' do
+    pending
     r = RubyZoho::Crm::Quote.all
     r.count.should be >= 1
     r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
@@ -199,7 +198,7 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of users' do
-    r = RubyZoho::Crm::User.all
+    r = RubyZoho::Crm::CRMUser.all
     r.count.should be >= 1
   end
 
