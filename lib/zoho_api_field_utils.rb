@@ -61,7 +61,7 @@ module ZohoApiFieldUtils
     if @ignore_fields == true
       return clean_field_name?(field_name) == true ?
           create_and_add_field_value_pair(field_name, module_name, n, record)
-      : nil
+      : record
     end
     create_and_add_field_value_pair(field_name, module_name, n, record)
   end
