@@ -7,8 +7,4 @@ matrix:
   - rvm: jruby
 env:
   global:
-  - secure: ! 'Es86LRVpGFcxK8Ay0NzjtPgL1a7GQ25WRq4FgixHplZ8BbB2g/LGm2hFFnrD
-
-      TQHNvTttEhrXDRXvYqv0ePTSb2I4Tn6xOzBZTIwZlmNDl6uj/5ZL9C9I3LQb
-
-      1MP0XFN0GfkOpw4DqVerdzDDoRzQw7AbTBttaOVyO3Nhiddtc3E='
+  - secure: "Z9gYY+iN1CB6+6KOG9zhCFHqNoUpeDrO0asn6ocpsaAVpQ+5L1ehdLcneZR+c/8fEyplC1sPtPQaq3u1/xrZ8dluev6iRoDZvEAS3GDg594lIB9owBJXXQKKGddyKfdCcp6xcNphJtcgSNtuxfNmhQyTvSBp0TjBgVvknoa1dNE="

@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'activemodel', '>= 3.2.11'
-gem 'httmultiparty', '>= 0.3.8'
-gem 'roxml', '>= 3.3.1'
+gem 'activemodel'
+gem 'httmultiparty'
+gem 'roxml'
 gem 'multipart-post'
 
 group :test do
