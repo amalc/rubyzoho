@@ -246,7 +246,7 @@ Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.
 == Credits and Contributions
 Thanks to a growing and wonderful community!
 @aeldaly
-@fheemeyer.
+@fheemeyer
 @qume
 @tjsousa
 @wcgiles
