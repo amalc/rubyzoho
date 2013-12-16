@@ -1,4 +1,4 @@
-= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho]
+= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho]
 
 
 
@@ -243,8 +243,15 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 Giant buckets of Gratitude to the giants, sung and unsung heroes who put together and support the Open Source movement,
 Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.
 
-== Credits
-wcgiles@github (\@\waynecgiles) for professional and patient debugging and continued debugging of this gem.
+== Credits and Contributions
+Thanks to a growing and wonderful community!
+@aeldaly
+@fheemeyer
+@qume
+@tjsousa
+@wcgiles
+
+Drop me a line if I've left anybody out and my advance apologies.
 
 == Trademarks
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
@@ -266,8 +273,8 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 
 [0.1.11] (Current master branch)
         1. Incorporate fix to namespace collision between Devise and RubyZoho, User renamed to CRMUser thanks to @qume.
-        2. Other fixes from @aeldaly and @fheemeyer.
-        3. Refactor of the code base to improve modularization.
+        2. Other fixes from  @tjsousa, @aeldaly and @fheemeyer.
+        3. Refactor of the code base to improve modularization and test coverage.
 == Released
 [0.1.7]
         1. Bug for attach_file method, respect the file_name parameter.
