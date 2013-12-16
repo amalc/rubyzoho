@@ -6,8 +6,6 @@
 Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
 ActiveRecord lifecycle, but without ActiveRecord. Current focus is on Zoho CRM.
 
-<b>WARNING: Edge is currently untested. Out of API calls. </b>
-
 <b>Release notes are at the \end of this page.</b>
 
 == Install
