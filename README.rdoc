@@ -260,12 +260,16 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 == Release Candidates (Uses {Semantic Versioning}[http://semver.org/])
 
 == Development
-[0.1.8]
+[0.1.12]
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
         4. Option in config to ignore fields with improper field names
 
+[0.1.11] (Current master branch)
+        1. Incorporate fix to namespace collision between Devise and RubyZoho, User renamed to CRMUser thanks to @qume.
+        2. Other fixes from @aeldaly and @fheemeyer.
+        3. Refactor of the code base to improve modularization.
 == Released
 [0.1.7]
         1. Bug for attach_file method, respect the file_name parameter.
