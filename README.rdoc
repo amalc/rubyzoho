@@ -243,8 +243,15 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 Giant buckets of Gratitude to the giants, sung and unsung heroes who put together and support the Open Source movement,
 Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.
 
-== Credits
-wcgiles@github (\@\waynecgiles) for professional and patient debugging and continued debugging of this gem.
+== Credits and Contributions
+Thanks to a growing and wonderful community!
+@aeldaly
+@fheemeyer.
+@qume
+@tjsousa
+@wcgiles
+
+Drop me a line if I've left anybody out and my advance apologies.
 
 == Trademarks
 Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
