@@ -273,7 +273,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         4. Option in config to ignore fields with improper field names
 
 == Released
-[0.1.11] (Current master branch)
+[0.1.11]
         1. Incorporate fix to namespace collision between Devise and RubyZoho, User renamed to CRMUser thanks to @qume.
         2. Other fixes from  @tjsousa, @aeldaly and @fheemeyer.
         3. Refactor of the code base to improve modularization and test coverage.
