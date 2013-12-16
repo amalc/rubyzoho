@@ -1,4 +1,5 @@
-= rubyzoho {<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho]
+= rubyzoho
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho]
 
 
 
@@ -271,11 +272,13 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         3. << syntax for Account/Tasks on Master/Detail relationships
         4. Option in config to ignore fields with improper field names
 
-[0.1.11] (Current master branch)
+== Released
+[0.1.11]
         1. Incorporate fix to namespace collision between Devise and RubyZoho, User renamed to CRMUser thanks to @qume.
         2. Other fixes from  @tjsousa, @aeldaly and @fheemeyer.
         3. Refactor of the code base to improve modularization and test coverage.
-== Released
+[0.1.8 - 0.1.10]
+        Various forks out in the community so bumped the release number to 0.1.11 prevent confusion.
 [0.1.7]
         1. Bug for attach_file method, respect the file_name parameter.
         2. \:\id is the primary key across all Zoho related classes (modules) in addition to Zoho's existing convention.
