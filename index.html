@@ -1,71 +1,340 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Rubyzoho by amalc</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Rubyzoho : An ActiveRecord lifecycle style Ruby API for Zoho. With support for Rails and Devise." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Rubyzoho</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Rubyzoho</h1>
-          <h2>An ActiveRecord lifecycle style Ruby API for Zoho.</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/amalc/rubyzoho">View on GitHub</a>
+
+          <h1 id="project_title">Rubyzoho</h1>
+          <h2 id="project_tagline">An ActiveRecord lifecycle style Ruby API for Zoho. With support for Rails and Devise.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/amalc/rubyzoho/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/amalc/rubyzoho/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/amalc/rubyzoho/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/amalc/rubyzoho/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/amalc/rubyzoho" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>= rubyzoho
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status">}[<a href="https://travis-ci.org/amalc/rubyzoho">https://travis-ci.org/amalc/rubyzoho</a>] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status">}[<a href="https://gemnasium.com/amalc/rubyzoho">https://gemnasium.com/amalc/rubyzoho</a>] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png">}[<a href="https://codeclimate.com/github/amalc/rubyzoho">https://codeclimate.com/github/amalc/rubyzoho</a>] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status">}[<a href="https://coveralls.io/r/amalc/rubyzoho">https://coveralls.io/r/amalc/rubyzoho</a>] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version">}[<a href="http://badge.fury.io/rb/rubyzoho">http://badge.fury.io/rb/rubyzoho</a>]</p>
 
-        <hr>
+<p>Abstracting Zoho's API into a set of Ruby classes, with reflection of Zoho's fields using a more familiar
+ActiveRecord lifecycle, but without ActiveRecord. Current focus is on Zoho CRM.</p>
 
-        <section id="main_content">
-          <h3>Welcome to GitHub Pages.</h3>
+<p><b>Release notes are at the \end of this page.</b></p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>== Install
+    gem install rubyzoho</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>== Configure</p>
+
+<p>=== Rails
+Put the following in an initializer (e.g. <tt>/config/initializers/zoho.rb</tt>):</p>
+
+<pre><code>require 'ruby_zoho'
+
+RubyZoho.configure do |config|
+  config.api_key = '&lt;&lt; API Key from Zoho&gt;&gt;'
+  # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
+  # config.crm_modules = ['Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got, adds to free edition modules
+  # config.ignore_fields_with_bad_names = true # Ignores field with special characters in the name (Release 1.8)
+  # Currently only Quotes are supported
+end
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>=== Ruby
+Make sure the following block is executed prior to making calls to the gem.</p>
 
-<h3>Designer Templates</h3>
+<pre><code>require 'ruby_zoho'
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+RubyZoho.configure do |config|
+  config.api_key = '&lt;&lt; API Key from Zoho&gt;&gt;'
+  # config.crm_modules = ['Accounts', 'Contacts', 'Leads', 'Potentials'] # Defaults to free edition if not set
+  # config.crm_modules = ['Quotes', 'SalesOrders', 'Invoices'] # Depending on what kind of account you've got, adds to free edition modules
+  # config.ignore_fields_with_bad_names = true # Ignores field with special characters in the name (Release 1.8)
+  # Currently only Quotes are suported
+end
+</code></pre>
 
-<h3>Rather Drive Stick?</h3>
+<p>Please be aware that Zoho limits API calls. So running tests repeatedly will quickly exhaust
+your daily allowance. See below for some optimizations during development and testing.</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>== Use
+RubyZoho attempts to follow the ActiveRecord lifecycle, i.e. new, save, update and delete.
+See examples below. (<b>N.B. Fields <em>cannot</em> have special characters in them.</b>)</p>
 
-<h3>Authors and Contributors</h3>
+<p>To get a list of supported attributes for a Zoho CRM contact:</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<pre><code>require 'ruby_zoho'
 
-<h3>Support or Contact</h3>
+c = RubyZoho::Crm::Contact.new
+c.attr_writers  # =&gt; List of updatable attributes
+c.fields # =&gt; Array of all fields
+</code></pre>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </section>
+<p>Attributes are reflected from the current API instance of Zoho, dynamically on
+initialization of the API, when the RubyZoho.configure block is called. This
+includes custom fields.</p>
 
-        <footer>
-          Rubyzoho is maintained by <a href="https://github.com/amalc">amalc</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<p>Another example:</p>
 
-        
-      </div>
+<pre><code>l = RubyZoho::Crm::Lead.new
+l.attr_writers  # =&gt; List of updatable attributes
+l.fields # =&gt; Array of all fields
+</code></pre>
+
+<p>To retrieve an existing record:</p>
+
+<pre><code>l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
+</code></pre>
+
+<p>Returns one or more records matching the query. The find_by_ follows
+ActiveRecord style reflections, so if the attribute is present in the API, it can
+be queried. There is currently a single attribute limitation imposed by the Zoho 
+API. Note, what is returned is an Array class which is also Enumerable. Use +.each+,
++.map+, +.first+, +.last+, etc to navigate through the result set.</p>
+
+<p>Equality is the only match currently supported.</p>
+
+<p>To get a list of all accounts:</p>
+
+<pre><code>a = RubyZoho::Crm::Account.all
+a.each do |account|
+  pp account.account_name
+end
+</code></pre>
+
+<p>Or for all task subjects:</p>
+
+<pre><code>t = RubyZoho::Crm::Task.all
+pp t.collect { |task| task.subject }  # =&gt; ['Subject 1'], ['Subject 2'], ... ['Subject n']
+</code></pre>
+
+<p>Or for all quotes:</p>
+
+<pre><code>q = RubyZoho::Crm::Quote.all
+q.each do |quote|
+  pp quote.subject
+  pp quote.quote_name
+end
+</code></pre>
+
+<p>To get the first quote:
+    q.first</p>
+
+<p>Or the last one:
+    q.last</p>
+
+<p>Since the result is Enumerable:
+    q.map { |m| m.last_name }
+works.</p>
+
+<p>To sort a result set:
+    r = RubyZoho::Crm::Contact.all
+    sorted =  r.sort {|a, b| a.last_name &lt;=&gt; b.last_name }
+    pp sorted.collect { |c| c.last_name }  # =&gt; ['Name 1', ['Name 2'], ... ['Name n']]</p>
+
+<p>To find by ID, note well, ID is a <em>string</em>:
+    leads = RubyZoho::Crm::Lead.all
+    l = RubyZoho::Crm::Lead.find_by_leadid(leads.last.leadid)</p>
+
+<p>To create a new record:</p>
+
+<pre><code>c = RubyZoho::Crm::Contact.new(
+  :first_name =&gt; 'First Name',
+  :last_name =&gt; 'Last Name',
+  :email =&gt; 'email@domain.com',
+  etc.
+)
+c.save
+r = RubyZoho::Crm::Contact.find_by_email('email@domain.com')
+r.first.contactid # =&gt; Has the newly created contact's ID
+</code></pre>
+
+<p>To add a contact to an existing account:</p>
+
+<pre><code>a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
+c = RubyZoho::Crm::Contact.new(
+  :first_name =&gt; 'First Name',
+  :last_name =&gt; 'Last Name',
+  :email =&gt; 'email@domain.com',
+  :account_name =&gt; a.first.account_name,
+  :accountid =&gt; a.first.accountid  # accountid instead of account_id because of Zoho's convention
+  etc.
+)
+c.save
+</code></pre>
+
+<p>To update a record (<b>Note, that the attribute is :id</b>):
+    l = RubyZoho::Crm::Lead.find_by_email('<a href="mailto:email@domain.com">email@domain.com</a>')
+    RubyZoho::Crm::Lead.update(
+        :id =&gt; l.first.leadid,
+        :email =&gt; '<a href="mailto:changed_email@domain.com">changed_email@domain.com</a>'
+    )</p>
+
+<p>Custom fields are like any other field or method in Ruby:
+    a = RubyZoho::Crm::Account.find_by_account_name('Very Big Account')
+    pp a.custom_field # =&gt; 'Custom field content'</p>
+
+<p>Or:
+    c = RubyZoho::Crm::Contact.new(
+      :first_name =&gt; 'First Name',
+      :last_name =&gt; 'Last Name',
+      :email =&gt; '<a href="mailto:email@domain.com">email@domain.com</a>',
+      :account_name =&gt; a.first.account_name,
+      :accountid =&gt; a.first.accountid,  # accountid instead of account_id because of Zoho's convention
+      :custom_field_2 =&gt; 'Custom text'
+    )
+    pp c.save   # Reflects back the new Zoho record ID, and various create and modify times and users</p>
+
+<p>To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Potentials+ and +Tasks+ only):
+    l = RubyZoho::Crm::Lead.find_by_email('<a href="mailto:email@domain.com">email@domain.com</a>')
+    l.attach_file(file_path, file_name)     # Can only be attached to a pre-existing record</p>
+
+<p>Classes (Zoho modules) currently supported are:
+    RubyZoho::Crm::Account
+    RubyZoho::Crm::Contact
+    RubyZoho::Crm::Lead
+    RubyZoho::Crm::Potential
+    RubyZoho::Crm::Task
+    RubyZoho::Crm::Quote
+    RubyZoho::Crm::User</p>
+
+<p>== Error Handling
+Errors, i.e. situations where the Zoho API either returns an http code something other than 200
+or where the Zoho API sends back an explicit error code which <b>isn't</b> in the set</p>
+
+<pre><code>['4422', '5000']
+</code></pre>
+
+<p>a standard Ruby +RuntimeError+ exception is raised with the Zoho's API message.</p>
+
+<p>== Optimizations for Development and Testing
+Set <tt>config.cache_fields = true</tt> in the configuration block. This caches \module field
+lists and is useful during development and testing, to reduce total API calls during start up.
+Defaults to false. We <b>do not</b> recommend use of this in production. The gem will need
+write access to its own directory for this to work.</p>
+
+<pre><code>RubyZoho.configure do |config|
+  # Other stuff for initialization
+  config.cache_fields = true
+end
+</code></pre>
+
+<p>== Idiosyncractic Behavior
+    From freedictionary.com
+    id·i·o·syn·cra·sy ( d - -s ng kr -s ). n. pl. id·i·o·syn·cra·sies.
+    1. A structural or behavioral characteristic peculiar to an individual or group.</p>
+
+<p>The Zoho API is definitely opinionated. And we have yet to be able plumb the depths of its
+views. If it behaves unexpectedly, try the Zoho forums before opening an issue here. It
+just may be the way the API works...</p>
+
+<p>An example of this is retrieving related records. You would think that since a Task can
+be related to an Account or a Potential etc. that you should be able to retrieve it by
+either the related \module's record id, which is stored with the Task. But no, can't be done.</p>
+
+<p>== Bugs and Enhancements
+Please open an issue on GitHub. Or better yet, send in a pull request with the fix or enhancement!</p>
+
+<p>=== Known Bugs or Issues
+1. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.</p>
+
+<p>=== Roadmap (Ranked)
+1. AR style master/detail updates e.g. where +a+ is an account.
+    a &lt;&lt; RubyZoho::Crm::Contact.new(
+        :last_name =&gt; 'Last Name',
+        :first_name =&gt; 'First Name'
+    )
+2. Get related records using AR style syntax, e.g.
+        pp a.contacts
+   to get contacts associated with an account.
+3. Support for multiple find fields.</p>
+
+<p>== Contributing to rubyzoho</p>
+
+<ul>
+<li>Pull requests with unit tests or specs and a version branch are welcomed.</li>
+<li>Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.</li>
+<li>Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.</li>
+<li>Fork the project.</li>
+<li>Start a feature/bugfix branch.</li>
+<li>Commit and push until you are happy with your contribution.</li>
+<li>Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.</li>
+<li>Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.</li>
+</ul><hr><p>== Acknowledgements
+Giant buckets of Gratitude to the giants, sung and unsung heroes who put together and support the Open Source movement,
+Linux, Ruby and Rails. We stand on the shoulders of giants. Thank you.</p>
+
+<p>== Credits and Contributions
+Thanks to a growing and wonderful community!
+<a href="https://github.com/aeldaly" class="user-mention">@aeldaly</a>
+<a href="https://github.com/fheemeyer" class="user-mention">@fheemeyer</a>
+<a href="https://github.com/qume" class="user-mention">@qume</a>
+<a href="https://github.com/tjsousa" class="user-mention">@tjsousa</a>
+<a href="https://github.com/wcgiles" class="user-mention">@wcgiles</a></p>
+
+<p>Drop me a line if I've left anybody out and my advance apologies.</p>
+
+<p>== Trademarks
+Zoho, the Zoho suite and related applications are owned, trademarked and copyrighted by the Zoho Corporation Pvt. Ltd.
+This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.</p>
+
+<p>== Copyright
+Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE.txt for further details.</p>
+
+<hr><p>= Releases
+== Release Candidates (Uses {Semantic Versioning}[<a href="http://semver.org/%5D">http://semver.org/]</a>)</p>
+
+<p>== Development
+[0.1.12]
+        1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+        2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
+        3. &lt;&lt; syntax for Account/Tasks on Master/Detail relationships
+        4. Option in config to ignore fields with improper field names</p>
+
+<p>== Released
+[0.1.11]
+        1. Incorporate fix to namespace collision between Devise and RubyZoho, User renamed to CRMUser thanks to <a href="https://github.com/qume" class="user-mention">@qume</a>.
+        2. Other fixes from  <a href="https://github.com/tjsousa" class="user-mention">@tjsousa</a>, <a href="https://github.com/aeldaly" class="user-mention">@aeldaly</a> and <a href="https://github.com/fheemeyer" class="user-mention">@fheemeyer</a>.
+        3. Refactor of the code base to improve modularization and test coverage.
+[0.1.8 - 0.1.10]
+        Various forks out in the community so bumped the release number to 0.1.11 prevent confusion.
+[0.1.7]
+        1. Bug for attach_file method, respect the file_name parameter.
+        2. :\id is the primary key across all Zoho related classes (modules) in addition to Zoho's existing convention.</p>
+
+<p>[0.1.1 - 0.1.6] Alpha Releases
+                1. Configuration block signature changed
+[0.0.1 - 0.0.5] Alpha Releases</p>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Rubyzoho maintained by <a href="https://github.com/amalc">amalc</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
