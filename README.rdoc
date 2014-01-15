@@ -273,7 +273,7 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
         4. Option in config to ignore fields with improper field names
 
 == Patch
-[0.1.12
+[0.1.12]
         1. Refresh dependencies
         2. Remove Cucumber
         3. Remove Relish
