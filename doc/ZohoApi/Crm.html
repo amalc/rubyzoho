@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class ZohoApi::Crm - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/zoho_api.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    <!-- Included Modules -->
+<nav id="includes-section" class="section">
+  <h3 class="section-header">Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">HTTParty</span>
+  
+  
+  </ul>
+</nav>
+
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-module_names">::module_names</a>
+    
+    <li><a href="#method-c-new">::new</a>
+    
+    <li><a href="#method-i-add_field">#add_field</a>
+    
+    <li><a href="#method-i-add_record">#add_record</a>
+    
+    <li><a href="#method-i-create_url">#create_url</a>
+    
+    <li><a href="#method-i-delete_record">#delete_record</a>
+    
+    <li><a href="#method-i-fields">#fields</a>
+    
+    <li><a href="#method-i-find_records">#find_records</a>
+    
+    <li><a href="#method-i-first">#first</a>
+    
+    <li><a href="#method-i-reflect_module_fields">#reflect_module_fields</a>
+    
+    <li><a href="#method-i-some">#some</a>
+    
+    <li><a href="#method-i-to_hash">#to_hash</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../LICENSE_txt.html">LICENSE</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../RubyZoho.html">RubyZoho</a>
+  
+    <li><a href="../RubyZoho/Configuration.html">RubyZoho::Configuration</a>
+  
+    <li><a href="../RubyZoho/Crm.html">RubyZoho::Crm</a>
+  
+    <li><a href="../RubyZoho/Crm/Account.html">RubyZoho::Crm::Account</a>
+  
+    <li><a href="../RubyZoho/Crm/Contact.html">RubyZoho::Crm::Contact</a>
+  
+    <li><a href="../RubyZoho/Crm/Lead.html">RubyZoho::Crm::Lead</a>
+  
+    <li><a href="../RubyZoho/Crm/Potential.html">RubyZoho::Crm::Potential</a>
+  
+    <li><a href="../RubyZoho/Crm/Quote.html">RubyZoho::Crm::Quote</a>
+  
+    <li><a href="../ZohoApi.html">ZohoApi</a>
+  
+    <li><a href="../ZohoApi/Crm.html">ZohoApi::Crm</a>
+  
+    <li><a href="../ApiUtils.html">ApiUtils</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class ZohoApi::Crm</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="NUMBER_OF_RECORDS_TO_GET">NUMBER_OF_RECORDS_TO_GET
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-auth_token" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">auth_token</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>debug_output $stderr</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-module_fields" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">module_fields</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>debug_output $stderr</p>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-module_names" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">module_names</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="module_names-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">module_names</span>
+  <span class="ruby-node">%w{Leads Accounts Contacts Potentials Quotes Invoices SalesOrders}</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- module_names-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- module_names-method -->
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(auth_token)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">auth_token</span>)
+  <span class="ruby-ivar">@auth_token</span> = <span class="ruby-identifier">auth_token</span>
+  <span class="ruby-ivar">@module_fields</span> = <span class="ruby-identifier">reflect_module_fields</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-add_field" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_field</span><span
+            class="method-args">(row, field, value)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_field-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_field</span>(<span class="ruby-identifier">row</span>, <span class="ruby-identifier">field</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">r</span> = (<span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Element</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">'FL'</span>)
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">attributes</span>[<span class="ruby-string">'val'</span>] = <span class="ruby-identifier">field</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">add_text</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">row</span>.<span class="ruby-identifier">elements</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">r</span>
+  <span class="ruby-identifier">row</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_field-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_field-method -->
+
+    
+      <div id="method-i-add_record" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_record</span><span
+            class="method-args">(module_name, fields_values_hash)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_record-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_record</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-identifier">fields_values_hash</span>)
+  <span class="ruby-identifier">x</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">contacts</span> = <span class="ruby-identifier">x</span>.<span class="ruby-identifier">add_element</span> <span class="ruby-identifier">module_name</span>
+  <span class="ruby-identifier">row</span> = <span class="ruby-identifier">contacts</span>.<span class="ruby-identifier">add_element</span> <span class="ruby-string">'row'</span>, { <span class="ruby-string">'no'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'1'</span>}
+  <span class="ruby-identifier">fields_values_hash</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">add_field</span>(<span class="ruby-identifier">row</span>, <span class="ruby-constant">ApiUtils</span>.<span class="ruby-identifier">symbol_to_string</span>(<span class="ruby-identifier">k</span>), <span class="ruby-identifier">v</span>) }
+  <span class="ruby-identifier">r</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">create_url</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-string">'insertRecords'</span>),
+      <span class="ruby-value">:query</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:newFormat</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:authtoken</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@auth_token</span>,
+                  <span class="ruby-value">:scope</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'crmapi'</span>, <span class="ruby-value">:xmlData</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">x</span> },
+      <span class="ruby-value">:headers</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">'Content-length'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'0'</span> })
+  <span class="ruby-identifier">raise</span>(<span class="ruby-string">'Adding record failed'</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">to_s</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_record-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_record-method -->
+
+    
+      <div id="method-i-create_url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_url</span><span
+            class="method-args">(module_name, api_call)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create_url-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 48</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_url</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-identifier">api_call</span>)
+  <span class="ruby-node">&quot;https://crm.zoho.com/crm/private/xml/#{module_name}/#{api_call}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_url-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_url-method -->
+
+    
+      <div id="method-i-delete_record" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">delete_record</span><span
+            class="method-args">(module_name, record_id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="delete_record-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_record</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-identifier">record_id</span>)
+  <span class="ruby-identifier">r</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">create_url</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-string">'deleteRecords'</span>),
+    <span class="ruby-value">:query</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:newFormat</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:authtoken</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@auth_token</span>,
+      <span class="ruby-value">:scope</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'crmapi'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">record_id</span> },
+    <span class="ruby-value">:headers</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">'Content-length'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'0'</span> })
+  <span class="ruby-identifier">raise</span>(<span class="ruby-string">'Adding contact failed'</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">to_s</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- delete_record-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- delete_record-method -->
+
+    
+      <div id="method-i-fields" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">fields</span><span
+            class="method-args">(module_name)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="fields-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fields</span>(<span class="ruby-identifier">module_name</span>)
+  <span class="ruby-identifier">record</span> = <span class="ruby-identifier">first</span>(<span class="ruby-identifier">module_name</span>)
+  <span class="ruby-identifier">record</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">keys</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- fields-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- fields-method -->
+
+    
+      <div id="method-i-find_records" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_records</span><span
+            class="method-args">(module_name, field, condition, value)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="find_records-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_records</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-identifier">field</span>, <span class="ruby-identifier">condition</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">sc_field</span> = <span class="ruby-constant">ApiUtils</span>.<span class="ruby-identifier">symbol_to_string</span>(<span class="ruby-identifier">field</span>)
+  <span class="ruby-identifier">search_condition</span> = <span class="ruby-string">'('</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">sc_field</span> <span class="ruby-operator">+</span> <span class="ruby-string">'|'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">condition</span> <span class="ruby-operator">+</span> <span class="ruby-string">'|'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">+</span> <span class="ruby-string">')'</span>
+  <span class="ruby-identifier">r</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">create_url</span>(<span class="ruby-node">&quot;#{module_name}&quot;</span>, <span class="ruby-string">'getSearchRecords'</span>),
+     <span class="ruby-value">:query</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:newFormat</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">2</span>, <span class="ruby-value">:authtoken</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@auth_token</span>, <span class="ruby-value">:scope</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'crmapi'</span>,
+                 <span class="ruby-value">:selectColumns</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'All'</span>, <span class="ruby-value">:searchCondition</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">search_condition</span>,
+                 <span class="ruby-value">:fromIndex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:toIndex</span> =<span class="ruby-operator">&gt;</span>  <span class="ruby-constant">NUMBER_OF_RECORDS_TO_GET</span> })
+  <span class="ruby-identifier">raise</span>(<span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">'Bad query'</span>, <span class="ruby-node">&quot;#{sc_field} #{condition} #{value}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">'&lt;error&gt;'</span>).<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">x</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">body</span>).<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">to_a</span>(<span class="ruby-node">&quot;/response/result/#{module_name}/row&quot;</span>)
+  <span class="ruby-identifier">to_hash</span>(<span class="ruby-identifier">x</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- find_records-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find_records-method -->
+
+    
+      <div id="method-i-first" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">first</span><span
+            class="method-args">(module_name)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="first-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">first</span>(<span class="ruby-identifier">module_name</span>)
+  <span class="ruby-identifier">some</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-value">1</span>, <span class="ruby-value">1</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- first-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- first-method -->
+
+    
+      <div id="method-i-reflect_module_fields" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reflect_module_fields</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="reflect_module_fields-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reflect_module_fields</span>
+  <span class="ruby-identifier">module_names</span> = <span class="ruby-constant">ZohoApi</span><span class="ruby-operator">::</span><span class="ruby-constant">Crm</span>.<span class="ruby-identifier">module_names</span>
+  <span class="ruby-identifier">module_fields</span> = {}
+  <span class="ruby-identifier">module_names</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">module_fields</span>.<span class="ruby-identifier">merge!</span>({ <span class="ruby-constant">ApiUtils</span>.<span class="ruby-identifier">string_to_symbol</span>(<span class="ruby-identifier">n</span>) =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fields</span>(<span class="ruby-identifier">n</span>) }) }
+  <span class="ruby-identifier">module_fields</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reflect_module_fields-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reflect_module_fields-method -->
+
+    
+      <div id="method-i-some" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">some</span><span
+            class="method-args">(module_name, index = 1, number_of_records = nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="some-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">some</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-identifier">index</span> = <span class="ruby-value">1</span>, <span class="ruby-identifier">number_of_records</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">r</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">create_url</span>(<span class="ruby-identifier">module_name</span>, <span class="ruby-string">'getRecords'</span>),
+    <span class="ruby-value">:query</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:newFormat</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">2</span>, <span class="ruby-value">:authtoken</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@auth_token</span>, <span class="ruby-value">:scope</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'crmapi'</span>,
+      <span class="ruby-value">:fromIndex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">index</span>, <span class="ruby-value">:toIndex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">number_of_records</span> <span class="ruby-operator">||</span> <span class="ruby-constant">NUMBER_OF_RECORDS_TO_GET</span> })
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+  <span class="ruby-identifier">x</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">body</span>).<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">to_a</span>(<span class="ruby-node">&quot;/response/result/#{module_name}/row&quot;</span>)
+  <span class="ruby-identifier">to_hash</span>(<span class="ruby-identifier">x</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- some-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- some-method -->
+
+    
+      <div id="method-i-to_hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_hash</span><span
+            class="method-args">(xml_results)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="to_hash-source">
+            <pre><span class="ruby-comment"># File lib/zoho_api.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_hash</span>(<span class="ruby-identifier">xml_results</span>)
+  <span class="ruby-identifier">r</span> = []
+  <span class="ruby-identifier">xml_results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">record</span> = {}
+    <span class="ruby-identifier">e</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">k</span> = <span class="ruby-constant">ApiUtils</span>.<span class="ruby-identifier">string_to_symbol</span>(<span class="ruby-identifier">n</span>.<span class="ruby-identifier">attribute</span>(<span class="ruby-string">'val'</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">'val='</span>, <span class="ruby-string">''</span>))
+      <span class="ruby-identifier">v</span> = <span class="ruby-identifier">n</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">==</span> <span class="ruby-string">'null'</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">text</span>
+      <span class="ruby-identifier">record</span>.<span class="ruby-identifier">merge!</span>({ <span class="ruby-identifier">k</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">v</span> })
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">r</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">record</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">r</span> <span class="ruby-operator">==</span> []
+  <span class="ruby-identifier">r</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- to_hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- to_hash-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
