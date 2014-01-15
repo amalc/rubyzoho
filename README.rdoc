@@ -266,11 +266,18 @@ Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE
 == Release Candidates (Uses {Semantic Versioning}[http://semver.org/])
 
 == Development
-[0.1.12]
+[0.2.0]
         1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
         3. << syntax for Account/Tasks on Master/Detail relationships
         4. Option in config to ignore fields with improper field names
+
+== Patch
+[0.1.12
+        1. Refresh dependencies
+        2. Remove Cucumber
+        3. Remove Relish
+        4. Fix production dependencies to reduce gem footprint
 
 == Released
 [0.1.11]
