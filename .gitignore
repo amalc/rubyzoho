@@ -1,2 +1,18 @@
-/.idea/
-/coverage/
+*.gem
+*.rbc
+.bundle
+.config
+coverage
+InstalledFiles
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
+.DS*
+# YARD artifacts
+.yardoc
+_yardoc
+doc/
