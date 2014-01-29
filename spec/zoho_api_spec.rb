@@ -5,7 +5,7 @@ require 'spec_helper'
 require 'zoho_api'
 require 'xmlsimple'
 require 'yaml'
-require 'vcr'
+#require 'vcr'
 
 describe ZohoApi do
 
@@ -36,10 +36,10 @@ describe ZohoApi do
   end
 
   before(:all) do
-    VCR.configure do |c|
-      c.cassette_library_dir = 'fixtures/vcr_cassettes'
-      c.hook_into :webmock # or :fakeweb
-    end
+    #VCR.configure do |c|
+    #  c.cassette_library_dir = 'fixtures/vcr_cassettes'
+    #  c.hook_into :webmock # or :fakeweb
+    #end
 
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
