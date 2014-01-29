@@ -252,4 +252,21 @@ describe ZohoApi do
     @zoho.clean_field_name?('Name (All Upper)').should eq(false)
   end
 
+  it 'should relate contact with a product' do
+    contact = @zoho.add_record('Contacts', @h_smith)
+    product = @zoho.add_record('Products', {product_name: 'Watches'})
+
+    related_module_params = { related_module: "Contacts", xml_data: { contactid: contact[:id] }}
+    r = @zoho.update_related_records('Products', product[:id], related_module_params)
+    r.should eq(200)
+
+    r = @zoho.related_records('Products', product[:id], 'Contacts')
+    r.should eq(200)
+
+    @zoho.delete_record('Contacts', contact[:id])
+    @zoho.delete_record('Products', product[:id])
+  end
+
+  
+
 end

@@ -65,8 +65,16 @@ module ZohoApi
     def check_for_errors(response)
       raise(RuntimeError, "Web service call failed with #{response.code}") unless response.code == 200
       x = REXML::Document.new(response.body)
-      code = REXML::XPath.first(x, '//code')
-      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || ['4422', '5000'].index(code.text)
+
+      # updateRelatedRecords returns two codes one in the status tag and another in a success tag, we want the
+      # code under the success tag in this case
+      code = REXML::XPath.first(x, '//success/code') || code = REXML::XPath.first(x, '//code')
+
+      # 4422 code is no records returned, not really an error
+      # TODO: find out what 5000 is
+      # 4800 code is returned when building an association. i.e Adding a product to a lead. Also this doesn't return a message
+      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || ['4422', '5000', '4800'].index(code.text)
+
       return code.text unless code.nil?
       response.code
     end
@@ -135,6 +143,23 @@ module ZohoApi
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
       to_hash(x, module_name)
+    end
+
+    def update_related_records(parent_module, parent_record_id, related_module_fields)
+      x = REXML::Document.new
+      leads = x.add_element related_module_fields[:related_module]
+      row = leads.add_element 'row', { 'no' => '1' }
+      related_module_fields[:xml_data].each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+  
+      r = self.class.post(create_url("#{parent_module}", 'updateRelatedRecords'),
+                          :query => { :newFormat => 1,
+                                      :id => parent_record_id,
+                                      :authtoken => @auth_token, :scope => 'crmapi',
+                                      :relatedModule => related_module_fields[:related_module],
+                                      :xmlData => x },
+                          :headers => { 'Content-length' => '0' })
+
+      check_for_errors(r)
     end
 
     def update_record(module_name, id, fields_values_hash)

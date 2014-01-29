@@ -41,6 +41,14 @@ module CrudMethods
       new(object_attribute_hash.merge!(r))
     end
 
+    def update_related(object_attribute_hash)
+      raise(RuntimeError, 'No ID found', object_attribute_hash.to_s) if object_attribute_hash[:id].nil?
+      id = object_attribute_hash[:id]
+      object_attribute_hash.delete(:id)
+      RubyZoho.configuration.api.update_related_records(self.module_name, id, object_attribute_hash)
+      find(id)
+    end
+
   end
 
   def attach_file(file_path, file_name)
