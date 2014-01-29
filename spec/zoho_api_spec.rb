@@ -1,9 +1,11 @@
 $:.unshift File.join('..', File.dirname(__FILE__), 'lib')
 
 require 'spec_helper'
+#noinspection RubyResolve
 require 'zoho_api'
 require 'xmlsimple'
 require 'yaml'
+require 'vcr'
 
 describe ZohoApi do
 
@@ -22,6 +24,7 @@ describe ZohoApi do
   def init_api(api_key, base_path, modules)
     ignore_fields = true
     if File.exists?(File.join(base_path, 'fields.snapshot'))
+      #noinspection RubyResolve
       fields = YAML.load(File.read(File.join(base_path, 'fields.snapshot')))
       zoho = ZohoApi::Crm.new(api_key, modules, ignore_fields, fields)
     else
@@ -33,9 +36,14 @@ describe ZohoApi do
   end
 
   before(:all) do
+    VCR.configure do |c|
+      c.cassette_library_dir = 'fixtures/vcr_cassettes'
+      c.hook_into :webmock # or :fakeweb
+    end
+
     base_path = File.join(File.dirname(__FILE__), 'fixtures')
     @sample_pdf = File.join(base_path, 'sample.pdf')
-    modules = ['Accounts', 'Contacts', 'Events', 'Leads', 'Tasks', 'Potentials']
+    modules = %w(Accounts Contacts Events Leads Tasks Potentials)
     @zoho = init_api(ENV['ZOHO_API_KEY'].strip, base_path, modules)
     @h_smith = { :first_name => 'Robert',
           :last_name => 'Smith',
@@ -256,7 +264,7 @@ describe ZohoApi do
     contact = @zoho.add_record('Contacts', @h_smith)
     product = @zoho.add_record('Products', {product_name: 'Watches'})
 
-    related_module_params = { related_module: "Contacts", xml_data: { contactid: contact[:id] }}
+    related_module_params = {related_module: 'Contacts', xml_data: {contactid: contact[:id]}}
     r = @zoho.update_related_records('Products', product[:id], related_module_params)
     r.should eq(200)
 
