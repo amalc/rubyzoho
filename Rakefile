@@ -3,23 +3,18 @@
 require 'rubygems'
 require 'bundler'
 
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
-require 'cucumber/rake/task'
 
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
-Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "features --format progress"
-end
-
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
+  $stderr.puts 'Run `bundle install` to install missing gems'
   exit e.status_code
 end
 require 'rake'
@@ -27,13 +22,13 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "rubyzoho"
-  gem.homepage = "http://github.com/amalc/rubyzoho"
-  gem.license = "MIT"
-  gem.summary = "A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API."
-  gem.description = ""
-  gem.email = ""
-  gem.authors = ["amalc"]
+  gem.name = 'rubyzoho'
+  gem.homepage = 'http://github.com/amalc/rubyzoho'
+  gem.license = 'MIT'
+  gem.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
+  gem.description = ''
+  gem.email = ''
+  gem.authors = ['amalc']
   # dependencies defined in Gemfile
 end
 
