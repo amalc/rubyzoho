@@ -258,10 +258,10 @@ describe ZohoApi do
 
     related_module_params = { related_module: "Contacts", xml_data: { contactid: contact[:id] }}
     r = @zoho.update_related_records('Products', product[:id], related_module_params)
-    r.should eq(4800)
+    r.should eq('4800')
 
     r = @zoho.related_records('Products', product[:id], 'Contacts')
-    r.should eq(200)
+    r.should eq('200')
 
     @zoho.delete_record('Contacts', contact[:id])
     @zoho.delete_record('Products', product[:id])
