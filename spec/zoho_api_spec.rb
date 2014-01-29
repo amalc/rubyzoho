@@ -183,7 +183,7 @@ describe ZohoApi do
     pending
     r = @zoho.some('Accounts').first
     pp r
-    related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
+    #related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
   end
 
   it 'should return calls' do
