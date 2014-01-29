@@ -38,7 +38,6 @@ Gem::Specification.new do |s|
       "lib/zoho_api_finders.rb",
       "lib/zoho_crm_users.rb",
       "lib/zoho_crm_utils.rb",
-      "rubyzoho-0.1.11.gem",
       "rubyzoho.gemspec",
       "spec/api_utils_spec.rb",
       "spec/fixtures/sample.pdf",
