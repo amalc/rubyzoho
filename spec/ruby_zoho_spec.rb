@@ -16,7 +16,7 @@ describe RubyZoho::Crm do
     r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
     r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
     r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
-    r.each { |c| RubyZoho::Crm::Contact.delete(c.contactid) } unless r.nil?
+    r.each { |contact| RubyZoho::Crm::Contact.delete(contact.contactid) } unless r.nil?
   end
 
   it 'should add accessors using a list of names' do
@@ -56,6 +56,7 @@ describe RubyZoho::Crm do
   it 'should concatenate a related object and save it' do
     subject = "[DELETE THIS] New subject as of #{Time.now}"
     a = RubyZoho::Crm::Account.all.last
+    #noinspection RubyArgCount
     a << RubyZoho::Crm::Task.new(
         :subject => subject,
         :description => 'Nothing',
@@ -151,7 +152,7 @@ describe RubyZoho::Crm do
   it 'should get a list of accounts' do
     r = RubyZoho::Crm::Account.all
     r.count.should be > 1
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Account) }
+    r.map { |account| account.class.should eq(RubyZoho::Crm::Account) }
   end
 
   it 'should get a list of calls' do
@@ -172,14 +173,14 @@ describe RubyZoho::Crm do
   it 'should get a list of events' do
     pending
     r = RubyZoho::Crm::Event.all
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Event) } unless r.nil?
+    r.map { |event| event.class.should eq(RubyZoho::Crm::Event) } unless r.nil?
     r.map { |e| e.id.should eq(e.eventid) }
   end
 
   it 'should get a list of potentials' do
     r = RubyZoho::Crm::Potential.all
     r.count.should be > 1
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Potential) }
+    r.map { |potential| potential.class.should eq(RubyZoho::Crm::Potential) }
     r.map { |e| e.id.should eq(e.potentialid) }
   end
 
@@ -187,13 +188,13 @@ describe RubyZoho::Crm do
     pending
     r = RubyZoho::Crm::Quote.all
     r.count.should be >= 1
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Quote) }
+    r.map { |quote| quote.class.should eq(RubyZoho::Crm::Quote) }
     r.map { |e| e.id.should eq(e.quoteid) }
   end
 
   it 'should get a list of tasks' do
     r = RubyZoho::Crm::Task.all
-    r.map { |r| r.class.should eq(RubyZoho::Crm::Task) } unless r.nil?
+    r.map { |task| task.class.should eq(RubyZoho::Crm::Task) } unless r.nil?
     r.map { |e| e.id.should eq(e.activityid) }
   end
 
@@ -210,7 +211,7 @@ describe RubyZoho::Crm do
     c.save
     r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
     r.first.email.should eq('raj@portra.com')
-    r.each { |c| RubyZoho::Crm::Contact.delete(c.contactid) }
+    r.each { |contact| RubyZoho::Crm::Contact.delete(contact.contactid) }
   end
 
   it 'should save a lead record' do
@@ -296,7 +297,7 @@ describe RubyZoho::Crm do
         :end_datetime => '2014-02-16 16:00:00',
         :related_to => "#{a.account_name}",
         :seid => "#{a.accountid}",
-        :semodule => "Accounts"
+        :semodule => 'Accounts'
     )
     r_expected = e.save
     r = RubyZoho::Crm::Task.find_by_activityid(r_expected.id)
