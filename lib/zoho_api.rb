@@ -22,7 +22,7 @@ module ZohoApi
     include ZohoApiFieldUtils
     include ZohoApiFinders
 
-    #debug_output $stderr
+    debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
