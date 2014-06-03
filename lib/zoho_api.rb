@@ -22,7 +22,7 @@ module ZohoApi
     include ZohoApiFieldUtils
     include ZohoApiFinders
 
-    debug_output $stderr
+    #debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -138,7 +138,7 @@ module ZohoApi
       r = self.class.get(create_url(module_name, 'getRecords'),
                          :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
                                      :sortColumnString => sort_column, :sortOrderString => sort_order,
-                                     :fromIndex => index, :toIndex => number_of_records || NUMBER_OF_RECORDS_TO_GET })
+                                     :fromIndex => index, :toIndex => index + (number_of_records || NUMBER_OF_RECORDS_TO_GET) - 1 })
       return nil unless r.response.code == '200'
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
