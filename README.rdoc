@@ -1,6 +1,5 @@
 = rubyzoho
-{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho]
-
+{<img src="https://travis-ci.org/amalc/rubyzoho.png?branch=master" alt="Build Status" />}[https://travis-ci.org/amalc/rubyzoho] {<img src="https://gemnasium.com/amalc/rubyzoho.png" alt="Dependency Status" />}[https://gemnasium.com/amalc/rubyzoho] {<img src="https://codeclimate.com/github/amalc/rubyzoho.png" />}[https://codeclimate.com/github/amalc/rubyzoho] {<img src="https://coveralls.io/repos/amalc/rubyzoho/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/amalc/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.png" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho] {<img src="https://badge.fury.io/rb/rubyzoho.svg" alt="Gem Version" />}[http://badge.fury.io/rb/rubyzoho]
 
 
 
