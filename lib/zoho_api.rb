@@ -69,7 +69,7 @@ module ZohoApi
 
       # updateRelatedRecords returns two codes one in the status tag and another in a success tag, we want the
       # code under the success tag in this case
-      code = REXML::XPath.first(x, '//success/code') || code = REXML::XPath.first(x, '//code')
+      code = REXML::XPath.first(x, '//success/code') || REXML::XPath.first(x, '//code')
 
       # 4422 code is no records returned, not really an error
       # TODO: find out what 5000 is

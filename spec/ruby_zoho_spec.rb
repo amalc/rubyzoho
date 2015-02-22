@@ -297,13 +297,27 @@ describe RubyZoho::Crm do
     VCR.use_cassette 'zoho/save_account_custom_field' do
       accounts = RubyZoho::Crm::Account.all
       a = accounts.first
-      if defined?(a.par_lifetime_to_date)
+      if defined?(a.par_lifetime_to_dat)
         RubyZoho::Crm::Account.update(
             :id => a.id,
-            :par_lifetime_to_date => 1000000
+            :par_lifetime_to_date => '$1000000'
         )
-        pp a2 = RubyZoho::Crm::Account.find(a.accountid)
+        a2 = RubyZoho::Crm::Account.find(a.accountid)
         a2.first.test_custom.should eq('1000000')
+      end
+    end
+  end
+
+  it 'should save and retrieve a lead record with a custom field' do
+    VCR.use_cassette 'zoho/save_lead_custom_field' do
+      l = RubyZoho::Crm::Lead.first
+      if defined?(l.test_label)
+        RubyZoho::Crm::Lead.update(
+            :id => l.id,
+            :test_label => '$1000000'
+        )
+        l2 = RubyZoho::Crm::Lead.find(l.id)
+        l2.first.test_label.should eq('$1000000')
       end
     end
   end
