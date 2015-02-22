@@ -216,7 +216,7 @@ Please open an issue on GitHub. Or better yet, send in a pull request with the f
 
 === Known Bugs or Issues
 1. If you're having trouble with updating custom fields, be sure to check the permission of the user that created the custom field.
-2. Only text fields can be updated as custom fields. At this point it isn't clear what to send thw Zoho API to have it accept anything else. Please send in a PR if you figure it out.
+2. Only text fields can be updated as custom fields. At this point it isn't clear what to send the Zoho API to have it accept anything else. Please send in a PR if you figure it out.
 
 === Roadmap (Ranked)
 1. AR style master/detail updates e.g. where +a+ is an account.
