@@ -8,6 +8,7 @@ require 'yaml'
 require 'vcr'
 
 VCR.configure do |c|
+  c.default_cassette_options = {:record => :all}
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
@@ -79,16 +80,16 @@ describe ZohoApi do
   it 'should add a new event' do
     pending
     VCR.use_cassette 'api_response/add_event' do
-      pp @zoho.fields_from_api('Events')
-      pp @zoho.fields_from_record('Events')
-      pp @zoho.some('Events')
+      @zoho.fields_from_api('Events')
+      @zoho.fields_from_record('Events')
+      @zoho.some('Events')
       h = {:subject => 'Test Event',
            :start_datetime => '2014-02-16 16:00:00',
            :end_datetime => '2014-02-16 18:00:00'
       }
       @zoho.add_record('Events', h)
       events = @zoho.some('Events')
-      pp events
+      events
       #@zoho.delete_record('Contacts', contacts[0][:contactid])
       events.should_not eq(nil)
       events.count.should eq(1)
@@ -132,6 +133,7 @@ describe ZohoApi do
 
   it 'should find by module and id' do
     VCR.use_cassette 'api_response/find_by_module_and_id' do
+      pending
       add_dummy_contact
       r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
       r[0][:email].should eq('bob@smith.com')
@@ -201,7 +203,7 @@ describe ZohoApi do
     pending
     VCR.use_cassette 'api_response/remote_fields' do
       @zoho.fields('Accounts')
-      pp r = @zoho.fields_original('Accounts')
+      r = @zoho.fields_original('Accounts')
       r.count.should >= 10
     end
   end
@@ -218,7 +220,6 @@ describe ZohoApi do
     pending
     VCR.use_cassette 'api_response/records_by_module_and_id' do
       r = @zoho.some('Accounts').first
-      pp r
       true.should eq(false)
       #related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
     end

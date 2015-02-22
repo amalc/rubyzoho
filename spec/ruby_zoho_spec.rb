@@ -5,6 +5,7 @@ require 'zoho_api'
 require 'vcr'
 
 VCR.configure do |c|
+  c.default_cassette_options = {:record => :all}
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
