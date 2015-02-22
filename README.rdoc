@@ -259,7 +259,7 @@ Zoho, the Zoho suite and related applications are owned, trademarked and copyrig
 This software is not associated in anyway with the Zoho Corporation Pvt. Ltd.
 
 == Copyright
-Copyright (c) 2013 amalc (\@\amalc). Released under the MIT license. See LICENSE.txt for further details.
+Copyright (c) 2013 - 2015 amalc (\@\amalc). Released under the MIT license. See LICENSE.txt for further details.
 
 ---
 = Releases
