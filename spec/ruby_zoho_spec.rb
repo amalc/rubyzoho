@@ -384,7 +384,8 @@ describe RubyZoho::Crm do
     VCR.use_cassette 'zoho/tasks_by_owner' do
       task_owner = RubyZoho::Crm::Task.first.task_owner
       tasks = RubyZoho::Crm::Task.find_by_task_owner(task_owner)
-      #tasks.map { |t| RubyZoho::Crm::Task.delete(t.activityid)} unless tasks.nil?
+      tasks.should_not eq(nil)
+      tasks.map { |t| RubyZoho::Crm::Task.delete(t.activityid) } unless tasks.nil?
       true.should eq(false)
     end
   end
