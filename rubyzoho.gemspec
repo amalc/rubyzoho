@@ -5,100 +5,65 @@
 # stub: rubyzoho 0.2.0 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "rubyzoho"
-  s.version = "0.3.0"
+  s.name = 'rubyzoho'
+  s.version = '0.3.0'
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["amalc"]
-  s.date = "2014-01-29"
-  s.description = ""
-  s.email = ""
-  s.extra_rdoc_files = [
-    "LICENSE.txt",
-    "README.rdoc"
-  ]
-  s.files = [
-    ".coverall.yml",
-    ".document",
-    ".rspec",
-    ".ruby-gemset",
-    ".ruby-version",
-    ".travis.yml",
-    "Gemfile",
-    "LICENSE.txt",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION",
-    "lib/api_utils.rb",
-    "lib/crm.rb",
-    "lib/crud_methods.rb",
-    "lib/ruby_zoho.rb",
-    "lib/zoho_api.rb",
-    "lib/zoho_api_field_utils.rb",
-    "lib/zoho_api_finders.rb",
-    "lib/zoho_crm_users.rb",
-    "lib/zoho_crm_utils.rb",
-    "rubyzoho.gemspec",
-    "spec/api_utils_spec.rb",
-    "spec/fixtures/sample.pdf",
-    "spec/fixtures/sample_contact.xml",
-    "spec/fixtures/sample_contact_search.xml",
-    "spec/fixtures/sample_contacts.xml",
-    "spec/fixtures/sample_contacts_list.xml",
-    "spec/fixtures/sample_leads_list.xml",
-    "spec/ruby_zoho_spec.rb",
-    "spec/spec_helper.rb",
-    "spec/zoho_api_spec.rb"
-  ]
-  s.homepage = "http://github.com/amalc/rubyzoho"
-  s.licenses = ["MIT"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = "2.1.11"
-  s.summary = "A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise."
+  s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
+  s.authors = ['amalc']
+  s.date = '2014-01-29'
+  s.description = ''
+  s.email = ''
+  s.extra_rdoc_files = %w(LICENSE.txt README.rdoc)
+  s.files = %w(.coverall.yml .document .rspec .ruby-gemset .ruby-version .travis.yml Gemfile LICENSE.txt README.rdoc Rakefile VERSION lib/api_utils.rb lib/crm.rb lib/crud_methods.rb lib/ruby_zoho.rb lib/zoho_api.rb lib/zoho_api_field_utils.rb lib/zoho_api_finders.rb lib/zoho_crm_users.rb lib/zoho_crm_utils.rb rubyzoho.gemspec spec/api_utils_spec.rb spec/fixtures/sample.pdf spec/fixtures/sample_contact.xml spec/fixtures/sample_contact_search.xml spec/fixtures/sample_contacts.xml spec/fixtures/sample_contacts_list.xml spec/fixtures/sample_leads_list.xml spec/ruby_zoho_spec.rb spec/spec_helper.rb spec/zoho_api_spec.rb)
+  s.homepage = 'http://github.com/amalc/rubyzoho'
+  s.licenses = ['MIT']
+  s.require_paths = ['lib']
+  s.rubygems_version = '2.1.11'
+  s.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activemodel>, [">= 0"])
-      s.add_runtime_dependency(%q<httmultiparty>, [">= 0"])
-      s.add_runtime_dependency(%q<roxml>, [">= 0"])
-      s.add_runtime_dependency(%q<multipart-post>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, [">= 1.2"])
-      s.add_development_dependency(%q<holepicker>, [">= 0"])
-      s.add_development_dependency(%q<jeweler>, [">= 0"])
-      s.add_development_dependency(%q<rdoc>, [">= 3.12.1"])
-      s.add_development_dependency(%q<rspec>, [">= 2.12.0"])
-      s.add_development_dependency(%q<vcr>, [">= 0"])
-      s.add_development_dependency(%q<webmock>, [">= 0"])
-      s.add_development_dependency(%q<xml-simple>, [">= 1.1.2"])
+      s.add_runtime_dependency(%q<activemodel>, ['>= 0'])
+      s.add_runtime_dependency(%q<httmultiparty>, ['>= 0'])
+      s.add_runtime_dependency(%q<roxml>, ['>= 0'])
+      s.add_runtime_dependency(%q<multipart-post>, ['>= 0'])
+      s.add_development_dependency(%q<bundler>, ['>= 1.2'])
+      s.add_development_dependency(%q<holepicker>, ['>= 0'])
+      s.add_development_dependency(%q<jeweler>, ['>= 0'])
+      s.add_development_dependency(%q<rdoc>, ['>= 3.12.1'])
+      s.add_development_dependency(%q<rspec>, ['>= 2.12.0'])
+      s.add_development_dependency(%q<vcr>, ['>= 0'])
+      s.add_development_dependency(%q<webmock>, ['>= 0'])
+      s.add_development_dependency(%q<xml-simple>, ['>= 1.1.2'])
     else
-      s.add_dependency(%q<activemodel>, [">= 0"])
-      s.add_dependency(%q<httmultiparty>, [">= 0"])
-      s.add_dependency(%q<roxml>, [">= 0"])
-      s.add_dependency(%q<multipart-post>, [">= 0"])
-      s.add_dependency(%q<bundler>, [">= 1.2"])
-      s.add_dependency(%q<holepicker>, [">= 0"])
-      s.add_dependency(%q<jeweler>, [">= 0"])
-      s.add_dependency(%q<rdoc>, [">= 3.12.1"])
-      s.add_dependency(%q<rspec>, [">= 2.12.0"])
-      s.add_dependency(%q<vcr>, [">= 0"])
-      s.add_dependency(%q<webmock>, [">= 0"])
-      s.add_dependency(%q<xml-simple>, [">= 1.1.2"])
+      s.add_dependency(%q<activemodel>, ['>= 0'])
+      s.add_dependency(%q<httmultiparty>, ['>= 0'])
+      s.add_dependency(%q<roxml>, ['>= 0'])
+      s.add_dependency(%q<multipart-post>, ['>= 0'])
+      s.add_dependency(%q<bundler>, ['>= 1.2'])
+      s.add_dependency(%q<holepicker>, ['>= 0'])
+      s.add_dependency(%q<jeweler>, ['>= 0'])
+      s.add_dependency(%q<rdoc>, ['>= 3.12.1'])
+      s.add_dependency(%q<rspec>, ['>= 2.12.0'])
+      s.add_dependency(%q<vcr>, ['>= 0'])
+      s.add_dependency(%q<webmock>, ['>= 0'])
+      s.add_dependency(%q<xml-simple>, ['>= 1.1.2'])
     end
   else
-    s.add_dependency(%q<activemodel>, [">= 0"])
-    s.add_dependency(%q<httmultiparty>, [">= 0"])
-    s.add_dependency(%q<roxml>, [">= 0"])
-    s.add_dependency(%q<multipart-post>, [">= 0"])
-    s.add_dependency(%q<bundler>, [">= 1.2"])
-    s.add_dependency(%q<holepicker>, [">= 0"])
-    s.add_dependency(%q<jeweler>, [">= 0"])
-    s.add_dependency(%q<rdoc>, [">= 3.12.1"])
-    s.add_dependency(%q<rspec>, [">= 2.12.0"])
-    s.add_dependency(%q<vcr>, [">= 0"])
-    s.add_dependency(%q<webmock>, [">= 0"])
-    s.add_dependency(%q<xml-simple>, [">= 1.1.2"])
+    s.add_dependency(%q<activemodel>, ['>= 0'])
+    s.add_dependency(%q<httmultiparty>, ['>= 0'])
+    s.add_dependency(%q<roxml>, ['>= 0'])
+    s.add_dependency(%q<multipart-post>, ['>= 0'])
+    s.add_dependency(%q<bundler>, ['>= 1.2'])
+    s.add_dependency(%q<holepicker>, ['>= 0'])
+    s.add_dependency(%q<jeweler>, ['>= 0'])
+    s.add_dependency(%q<rdoc>, ['>= 3.12.1'])
+    s.add_dependency(%q<rspec>, ['>= 2.12.0'])
+    s.add_dependency(%q<vcr>, ['>= 0'])
+    s.add_dependency(%q<webmock>, ['>= 0'])
+    s.add_dependency(%q<xml-simple>, ['>= 1.1.2'])
   end
 end
 
