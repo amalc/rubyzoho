@@ -92,6 +92,7 @@ describe ZohoApi do
     pending
     potential = @zoho.first('Potentials').first
     @zoho.attach_file('Potentials', potential[:potentialid], @sample_pdf, File.basename(@sample_pdf))
+    true.should eq(false)
   end
 
   it 'should delete a contact record with id' do
@@ -183,6 +184,7 @@ describe ZohoApi do
     pending
     r = @zoho.some('Accounts').first
     pp r
+    true.should eq(false)
     #related = @zoho.related_records('Accounts', r[:accountid], 'Attachments')
   end
 
@@ -228,7 +230,6 @@ describe ZohoApi do
   end
 
   it 'should do a full CRUD lifecycle on tasks' do
-    pending
     mod_name = 'Tasks'
     fields = @zoho.fields(mod_name)
     fields.count >= 10

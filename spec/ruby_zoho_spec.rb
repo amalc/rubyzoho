@@ -175,6 +175,7 @@ describe RubyZoho::Crm do
     r = RubyZoho::Crm::Event.all
     r.map { |event| event.class.should eq(RubyZoho::Crm::Event) } unless r.nil?
     r.map { |e| e.id.should eq(e.eventid) }
+    true.should eq(false)
   end
 
   it 'should get a list of potentials' do
@@ -306,9 +307,10 @@ describe RubyZoho::Crm do
 
   it 'should get tasks by user' do
     pending
-    pp task_owner = RubyZoho::Crm::Task.first.task_owner
-    pp tasks = RubyZoho::Crm::Task.find_by_task_owner(task_owner)
+    task_owner = RubyZoho::Crm::Task.first.task_owner
+    tasks = RubyZoho::Crm::Task.find_by_task_owner(task_owner)
     #tasks.map { |t| RubyZoho::Crm::Task.delete(t.activityid)} unless tasks.nil?
+    true.should eq(false)
   end
 
   it 'should sort contact records' do
