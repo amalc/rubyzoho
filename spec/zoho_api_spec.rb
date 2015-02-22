@@ -133,7 +133,6 @@ describe ZohoApi do
 
   it 'should find by module and id' do
     VCR.use_cassette 'api_response/find_by_module_and_id' do
-      pending
       add_dummy_contact
       r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
       r[0][:email].should eq('bob@smith.com')
