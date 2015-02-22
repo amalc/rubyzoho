@@ -58,3 +58,7 @@ Gemfile.lock
 fields.snapshot
 
 fixtures
+
+# VCR Cassettes
+spec/vcr
+log
