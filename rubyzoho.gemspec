@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   )
   s.homepage = 'http://github.com/amalc/rubyzoho'
   s.licenses = ['MIT']
-  s.platform = Gem::Platform::CURRENT
+  s.platform = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.required_ruby_version = '>= 1.9.3'
   s.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
