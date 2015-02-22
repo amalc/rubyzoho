@@ -16,6 +16,7 @@ module ZohoApi
 
   include ApiUtils
 
+  # noinspection RubyStringKeysInHashInspection
   class Crm
 
     include HTTMultiParty
@@ -36,12 +37,12 @@ module ZohoApi
     def add_record(module_name, fields_values_hash)
       x = REXML::Document.new
       element = x.add_element module_name
-      row = element.add_element 'row', { 'no' => '1' }
+      row = element.add_element 'row', {'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
       r = self.class.post(create_url(module_name, 'insertRecords'),
-                          :query => { :newFormat => 1, :authtoken => @auth_token,
-                                      :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true' },
-                          :headers => { 'Content-length' => '0' })
+                          :query => {:newFormat => 1, :authtoken => @auth_token,
+                                     :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true'},
+                          :headers => {'Content-length' => '0'})
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
       to_hash(x_r, module_name)[0]
@@ -73,7 +74,7 @@ module ZohoApi
       # 4422 code is no records returned, not really an error
       # TODO: find out what 5000 is
       # 4800 code is returned when building an association. i.e Adding a product to a lead. Also this doesn't return a message
-      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || ['4422', '5000', '4800'].index(code.text)
+      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || %w(4422 5000 4800).index(code.text)
 
       return code.text unless code.nil?
       response.code
@@ -92,20 +93,20 @@ module ZohoApi
     end
 
     def method_name?(n)
-      return /[@$"]/ !~ n.inspect
+      /[@$"]/ !~ n.inspect
     end
 
     def post_action(module_name, record_id, action_type)
       r = self.class.post(create_url(module_name, action_type),
-                          :query => { :newFormat => 1, :authtoken => @auth_token,
-                                      :scope => 'crmapi', :id => record_id },
-                          :headers => { 'Content-length' => '0' })
+                          :query => {:newFormat => 1, :authtoken => @auth_token,
+                                     :scope => 'crmapi', :id => record_id},
+                          :headers => {'Content-length' => '0'})
       raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
       check_for_errors(r)
     end
 
     def primary_key(module_name)
-      activity_keys = { 'Tasks' => :activityid, 'Events' => :activityid, 'Calls' => :activityid }
+      activity_keys = {'Tasks' => :activityid, 'Events' => :activityid, 'Calls' => :activityid}
       return activity_keys[module_name] unless activity_keys[module_name].nil?
       (module_name.downcase.chop + 'id').to_sym
     end
@@ -127,8 +128,8 @@ module ZohoApi
 
     def related_records(parent_module, parent_record_id, related_module)
       r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'),
-                         :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
-                                     :parentModule => parent_module, :id => parent_record_id })
+                         :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+                                    :parentModule => parent_module, :id => parent_record_id})
 
       REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
       check_for_errors(r)
@@ -136,9 +137,9 @@ module ZohoApi
 
     def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc)
       r = self.class.get(create_url(module_name, 'getRecords'),
-                         :query => { :newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
-                                     :sortColumnString => sort_column, :sortOrderString => sort_order,
-                                     :fromIndex => index, :toIndex => index + (number_of_records || NUMBER_OF_RECORDS_TO_GET) - 1 })
+                         :query => {:newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
+                                    :sortColumnString => sort_column, :sortOrderString => sort_order,
+                                    :fromIndex => index, :toIndex => index + (number_of_records || NUMBER_OF_RECORDS_TO_GET) - 1})
       return nil unless r.response.code == '200'
       check_for_errors(r)
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
@@ -148,16 +149,16 @@ module ZohoApi
     def update_related_records(parent_module, parent_record_id, related_module_fields)
       x = REXML::Document.new
       leads = x.add_element related_module_fields[:related_module]
-      row = leads.add_element 'row', { 'no' => '1' }
+      row = leads.add_element 'row', {'no' => '1'}
       related_module_fields[:xml_data].each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-  
+
       r = self.class.post(create_url("#{parent_module}", 'updateRelatedRecords'),
-                          :query => { :newFormat => 1,
-                                      :id => parent_record_id,
-                                      :authtoken => @auth_token, :scope => 'crmapi',
-                                      :relatedModule => related_module_fields[:related_module],
-                                      :xmlData => x, :wfTrigger => 'true' },
-                          :headers => { 'Content-length' => '0' })
+                          :query => {:newFormat => 1,
+                                     :id => parent_record_id,
+                                     :authtoken => @auth_token, :scope => 'crmapi',
+                                     :relatedModule => related_module_fields[:related_module],
+                                     :xmlData => x, :wfTrigger => 'true'},
+                          :headers => {'Content-length' => '0'})
 
       check_for_errors(r)
     end
@@ -165,13 +166,13 @@ module ZohoApi
     def update_record(module_name, id, fields_values_hash)
       x = REXML::Document.new
       contacts = x.add_element module_name
-      row = contacts.add_element 'row', { 'no' => '1' }
+      row = contacts.add_element 'row', {'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
       r = self.class.post(create_url(module_name, 'updateRecords'),
-                          :query => { :newFormat => 1, :authtoken => @auth_token,
-                                      :scope => 'crmapi', :id => id,
-                                      :xmlData => x, :wfTrigger => 'true' },
-                          :headers => { 'Content-length' => '0' })
+                          :query => {:newFormat => 1, :authtoken => @auth_token,
+                                     :scope => 'crmapi', :id => id,
+                                     :xmlData => x, :wfTrigger => 'true'},
+                          :headers => {'Content-length' => '0'})
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
       to_hash_with_id(x_r, module_name)[0]
@@ -180,8 +181,8 @@ module ZohoApi
     def users(user_type = 'AllUsers')
       return @@users unless @@users == [] || user_type == 'Refresh'
       r = self.class.get(create_url('Users', 'getUsers'),
-                         :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
-                                     :type => 'AllUsers' })
+                         :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
+                                    :type => 'AllUsers'})
       check_for_errors(r)
       result = extract_users_from_xml_response(r)
       @@users = result
@@ -201,9 +202,9 @@ module ZohoApi
 
     def extract_user_name_and_attribs(node)
       record = {}
-      record.merge!({ :user_name => node.text })
+      record.merge!({:user_name => node.text})
       node.attributes.each_pair do |k, v|
-        record.merge!({ k.to_s.to_sym => v.to_string.match(/'(.*?)'/).to_s.gsub('\'', '') })
+        record.merge!({k.to_s.to_sym => v.to_string.match(/'(.*?)'/).to_s.gsub('\'', '')})
       end
       record
     end
