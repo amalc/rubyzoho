@@ -2,10 +2,8 @@ module ZohoApiFinders
   NUMBER_OF_RECORDS_TO_GET = 200
 
   def find_records(module_name, field, condition, value)
-    pp __method__
     sc_field = field == :id ? primary_key(module_name) : ApiUtils.symbol_to_string(field)
-    pp sc_field
-    pp related_id?(module_name, sc_field)
+    related_id?(module_name, sc_field)
     return find_record_by_related_id(module_name, sc_field, value) if related_id?(module_name, sc_field)
     primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
         find_record_by_id(module_name, value)

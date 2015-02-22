@@ -119,9 +119,7 @@ module ZohoApi
     end
 
     def related_id?(module_name, field_name)
-      pp __method__
       field = field_name.to_s
-      pp field
       return false if field.rindex('id').nil?
       return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
       field.downcase.gsub('id', '') != module_name.chop.downcase

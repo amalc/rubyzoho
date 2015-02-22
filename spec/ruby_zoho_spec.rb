@@ -297,13 +297,13 @@ describe RubyZoho::Crm do
     VCR.use_cassette 'zoho/save_account_custom_field' do
       accounts = RubyZoho::Crm::Account.all
       a = accounts.first
-      if defined?(a.par_ltd)
-        RubyZoho::Crm::Lead.update(
+      if defined?(a.par_lifetime_to_date)
+        RubyZoho::Crm::Account.update(
             :id => a.id,
-            :test_custom => '$1,000,000'
+            :par_lifetime_to_date => 1000000
         )
-        a2 = RubyZoho::Crm::Account.find(a.accountid)
-        a2.first.test_custom.should eq('$1,000,000')
+        pp a2 = RubyZoho::Crm::Account.find(a.accountid)
+        a2.first.test_custom.should eq('1000000')
       end
     end
   end
