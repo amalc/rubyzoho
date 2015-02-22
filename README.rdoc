@@ -265,12 +265,19 @@ Copyright (c) 2013 - 2015 amalc (\@\amalc). Released under the MIT license. See 
 == Release Candidates (Uses {Semantic Versioning}[http://semver.org/])
 
 == Development
-[0.3.0]
-        1. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+[0.7.0]
+        1. << syntax for Account/Tasks on Master/Detail relationships
         2. ActiveRecord style syntax for Class.\new, Class.delete, Class.find, Class.update, Object.save
-        3. << syntax for Account/Tasks on Master/Detail relationships
-        4. Option in config to ignore fields with improper field names
+        3. Modules Supported: Accounts, Contacts, Leads, Potentials, Quotes, Tasks and Users
+[0.6.0]
+        1. Option in config to ignore fields with improper field names
+[0.5.0]
+        1. Support for testing without calling Zoho to prevent crushing API call limits in CI.
 == Released
+[0.4.0]
+        1. Fixed major bug with retrieving records thanks to @kjcpass PR#28
+[0.3.0]
+        1. Added activating workflows thanks to @pjsim PR#23
 [0.2.0]
         1. Added related entities feature thanks to @richkettle and @swithik.
         2. Refresh dependencies
