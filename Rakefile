@@ -19,21 +19,6 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = 'rubyzoho'
-  gem.homepage = 'http://github.com/amalc/rubyzoho'
-  gem.license = 'MIT'
-  gem.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
-  gem.description = ''
-  gem.email = ''
-  gem.authors = ['amalc']
-  # dependencies defined in Gemfile
-end
-
-Jeweler::RubygemsDotOrgTasks.new
-
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'

@@ -13,11 +13,11 @@ end
 group :development do
   gem 'bundler', '>= 1.2'
   gem 'holepicker'
-  gem 'jeweler'
   gem 'rdoc', '>= 3.12.1'
 end
 
 group :development, :test do
+  gem 'rake'
   gem 'rspec', '>= 2.12.0'
   gem 'vcr'
   gem 'webmock'
