@@ -10,7 +10,7 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  c.debug_logger = File.open('log/vcr_debug.log', 'w')
+  # c.debug_logger = File.open('log/vcr_debug.log', 'w')
 end
 
 describe ZohoApi do
