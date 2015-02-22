@@ -2,7 +2,10 @@ module ZohoApiFinders
   NUMBER_OF_RECORDS_TO_GET = 200
 
   def find_records(module_name, field, condition, value)
+    pp __method__
     sc_field = field == :id ? primary_key(module_name) : ApiUtils.symbol_to_string(field)
+    pp sc_field
+    pp related_id?(module_name, sc_field)
     return find_record_by_related_id(module_name, sc_field, value) if related_id?(module_name, sc_field)
     primary_key?(module_name, sc_field) == false ? find_record_by_field(module_name, sc_field, condition, value) :
         find_record_by_id(module_name, value)
@@ -31,8 +34,10 @@ module ZohoApiFinders
   end
 
   def find_record_by_related_id(module_name, sc_field, value)
+    pp __method__
     raise(RuntimeError, "[RubyZoho] Not a valid query field #{sc_field} for module #{module_name}") unless valid_related?(module_name, sc_field)
     field = sc_field.downcase
+    pp field
     r = self.class.get(create_url("#{module_name}", 'getSearchRecordsByPDC'),
                        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                    :selectColumns => 'All', :version => 2, :searchColumn => field,
