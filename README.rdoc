@@ -43,7 +43,7 @@ for example,
      RubyZoho.configure do |config|
        config.api_key = '<< API Key from Zoho>>'
        config.crm_modules = ['Accounts']
-       config.cache_fields = true
+       config.cache_fields = true if Rails.env.development?
      end unless Rails.env.test?
 
 and wrap the code calling the API in a <tt>begin ... rescue</tt> block.
