@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w(LICENSE.txt README.rdoc)
   s.files = %w(
     .coverall.yml .document .rspec .travis.yml Gemfile
-    LICENSE.txt README.rdoc Rakefile VERSION lib/api_utils.rb lib/crm.rb lib/crud_methods.rb
+    LICENSE.txt README.rdoc Rakefile lib/api_utils.rb lib/crm.rb lib/crud_methods.rb
     lib/ruby_zoho.rb lib/zoho_api.rb lib/zoho_api_field_utils.rb lib/zoho_api_finders.rb
     lib/zoho_crm_users.rb lib/zoho_crm_utils.rb rubyzoho.gemspec spec/api_utils_spec.rb
     spec/fixtures/sample.pdf spec/fixtures/sample_contact.xml spec/fixtures/sample_contact_search.xml
