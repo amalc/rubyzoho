@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rubyzoho'
-  s.version = '0.3.3'
+  s.version = '0.3.4'
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['amalc']
@@ -25,15 +25,15 @@ Gem::Specification.new do |s|
   s.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
 
   s.add_runtime_dependency(%q<activemodel>, ['>= 3.0'])
-  s.add_runtime_dependency(%q<httmultiparty>, ['~> 0.3'])
-  s.add_runtime_dependency(%q<roxml>, ['~> 1.0'])
-  s.add_runtime_dependency(%q<multipart-post>, ['~> 1.0'])
-  s.add_development_dependency(%q<bundler>, ['~> 1.2'])
-  s.add_development_dependency(%q<holepicker>, ['~> 1.0'])
-  s.add_development_dependency(%q<rdoc>, ['~> 3.12'])
-  s.add_development_dependency(%q<rspec>, ['~> 2.12'])
-  s.add_development_dependency(%q<vcr>, ['~> 1.0'])
-  s.add_development_dependency(%q<webmock>, ['~> 1.0'])
-  s.add_development_dependency(%q<xml-simple>, ['~> 1.1'])
+  s.add_runtime_dependency(%q<httmultiparty>, ['>= 0.3'])
+  s.add_runtime_dependency(%q<roxml>, ['>= 1.0'])
+  s.add_runtime_dependency(%q<multipart-post>, ['>= 1.0'])
+  s.add_development_dependency(%q<bundler>, ['>= 1.2'])
+  s.add_development_dependency(%q<holepicker>, ['>= 1.0'])
+  s.add_development_dependency(%q<rdoc>, ['>= 3.12'])
+  s.add_development_dependency(%q<rspec>, ['>= 2.12'])
+  s.add_development_dependency(%q<vcr>, ['>= 1.0'])
+  s.add_development_dependency(%q<webmock>, ['>= 1.0'])
+  s.add_development_dependency(%q<xml-simple>, ['>= 1.1'])
 end
 
