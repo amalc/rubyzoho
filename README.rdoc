@@ -26,6 +26,12 @@ Put the following in an initializer (e.g. <tt><RAILS_ROOT>/config/initializers/z
       # Currently only Quotes are supported
     end
 
+You can reduce the number of API calls made during development and production by adding
+
+    config.cache_fields = true
+
+to the initializer.
+
 === Ruby
 Make sure the following block is executed prior to making calls to the gem.
 

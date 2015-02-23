@@ -315,10 +315,11 @@ describe RubyZoho::Crm do
       if defined?(l.test_label)
         RubyZoho::Crm::Lead.update(
             :id => l.id,
-            :test_label => '$1000000'
+            :test_label => '$101',
+            :test_integer => 1
         )
         l2 = RubyZoho::Crm::Lead.find(l.id)
-        l2.first.test_label.should eq('$1000000')
+        l2.first.test_label.should eq('$101')
       end
     end
   end
