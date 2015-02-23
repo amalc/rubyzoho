@@ -142,6 +142,10 @@ describe ZohoApi do
     VCR.use_cassette 'api_response/find_by_module_and_field' do
       add_dummy_contact
       r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
+      while r.nil?
+        sleep(SLEEP_INTERVAL)
+        r = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
+      end
       r[0][:email].should eq('bob@smith.com')
       delete_dummy_contact
     end
