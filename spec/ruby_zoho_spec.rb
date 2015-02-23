@@ -432,7 +432,7 @@ describe RubyZoho::Crm do
 
   it 'should update a lead record' do
     VCR.use_cassette 'zoho/update_lead' do
-      r_changed = RubyZoho::Crm::Lead.find_by_email('changed_raj@portra.com')
+      r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
       r_changed.each { |c| RubyZoho::Crm::Lead.delete(c.leadid) } unless r_changed.nil?
       l = RubyZoho::Crm::Lead.new(
           :first_name => 'Raj',
@@ -448,8 +448,11 @@ describe RubyZoho::Crm do
           :id => r.first.leadid,
           :email => 'changed_rajj@portra.com'
       )
-      sleep(60)
       r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
+      while r_changed.nil?
+        sleep(15)
+        r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
+      end
       r.first.leadid.should eq(r_changed.first.leadid)
       r.each { |c| RubyZoho::Crm::Lead.delete(c.leadid) }
       r_changed.each { |c| RubyZoho::Crm::Lead.delete(c.leadid) }
