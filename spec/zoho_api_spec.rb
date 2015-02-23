@@ -15,13 +15,15 @@ VCR.configure do |c|
 end
 
 describe ZohoApi do
+  # Reset this to zero when running with VCR
+  SLEEP_INTERVAL = 15
 
   def add_dummy_contact
     VCR.use_cassette 'api_response/add_dummy_contact' do
       c = {:first_name => 'BobDifficultToMatch', :last_name => 'SmithDifficultToMatch',
            :email => 'bob@smith.com'}
       @zoho.add_record('Contacts', c)
-      sleep(30)
+      sleep(SLEEP_INTERVAL * 2)
     end
   end
 
@@ -74,7 +76,7 @@ describe ZohoApi do
       @zoho.add_record('Contacts', @h_smith)
       contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       while contacts.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       end
       contacts.should_not eq(nil)
@@ -107,7 +109,7 @@ describe ZohoApi do
       @zoho.add_record('Contacts', @h_smith)
       contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       while contacts.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       end
       @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf, File.basename(@sample_pdf))
@@ -129,7 +131,7 @@ describe ZohoApi do
       add_dummy_contact
       c = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
       while c.nil? do
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         c = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
       end
       @zoho.delete_record('Contacts', c[0][:contactid])
@@ -174,7 +176,7 @@ describe ZohoApi do
       @zoho.add_record('Potentials', p)
       p1 = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
       while p1.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         p1 = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
       end
       p1.should_not eq(nil)
@@ -306,7 +308,7 @@ describe ZohoApi do
       @zoho.add_record(mod_name, {:task_owner => 'Task Owner', :subject => 'Test Task', :due_date => '2100/1/1'})
       r = @zoho.find_record_by_field('Tasks', 'Subject', '=', 'Test Task')
       while r.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = @zoho.find_record_by_field('Tasks', 'Subject', '=', 'Test Task')
       end
       r.should_not eq(nil)
@@ -325,14 +327,14 @@ describe ZohoApi do
       @zoho.add_record('Contacts', @h_smith)
       contact = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       while contact.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         contact = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
       end
       h_changed = {:email => 'robert.smith@smithereens.com'}
       @zoho.update_record('Contacts', contact[0][:contactid], h_changed)
       changed_contact = @zoho.find_records('Contacts', :email, '=', h_changed[:email])
       while changed_contact.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         changed_contact = @zoho.find_records('Contacts', :email, '=', h_changed[:email])
       end
       changed_contact[0][:email].should eq(h_changed[:email])

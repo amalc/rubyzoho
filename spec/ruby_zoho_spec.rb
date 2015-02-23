@@ -13,6 +13,8 @@ end
 
 
 describe RubyZoho::Crm do
+  # Reset this to zero when running with VCR
+  SLEEP_INTERVAL = 15
 
   before(:all) do
     VCR.use_cassette 'zoho/initialization' do
@@ -114,7 +116,7 @@ describe RubyZoho::Crm do
       end
       r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
       while r.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
       end
       r.should_not eq(nil)
@@ -279,7 +281,7 @@ describe RubyZoho::Crm do
       sleep(30)
       r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
       while r.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
       end
       r.first.email.should eq('raj@portra.com')
@@ -348,7 +350,7 @@ describe RubyZoho::Crm do
       p.save
       r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
       while r.nil? do
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
       end
       r.first.potential_name.should eq(h[:potential_name])
@@ -377,7 +379,7 @@ describe RubyZoho::Crm do
       t.save
       r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
       while r.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
       end
       r.first.subject.should eq(h[:subject])
@@ -441,7 +443,7 @@ describe RubyZoho::Crm do
       l.save
       r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
       while r.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
       end
       RubyZoho::Crm::Lead.update(
@@ -450,7 +452,7 @@ describe RubyZoho::Crm do
       )
       r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
       while r_changed.nil?
-        sleep(15)
+        sleep(SLEEP_INTERVAL)
         r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
       end
       r.first.leadid.should eq(r_changed.first.leadid)
