@@ -107,13 +107,11 @@ describe RubyZoho::Crm do
 
   it 'should find a contact by email or last name' do
     VCR.use_cassette 'zoho/find_by_email_or_name' do
-      r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+      r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
       r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
-      r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-      unless r.nil?
+      until RubyZoho::Crm::Contact.find_by_email('bob@smith.com').nil?
         sleep(SLEEP_INTERVAL)
-        r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
-      end
+      end unless r.nil?
       1.upto(3) do
         c = RubyZoho::Crm::Contact.new(
             :first_name => 'Bob',
