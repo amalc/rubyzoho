@@ -37,6 +37,17 @@ instance, set the gem to only load field data from 'Leads' by setting
 
 and only meta data from 'Leads' will be loaded.
 
+In `Test` environments with Continous Integration, one strategy is not to initialize the gem at all, so
+for example,
+
+     RubyZoho.configure do |config|
+       config.api_key = '<< API Key from Zoho>>'
+       config.crm_modules = ['Accounts']
+     end unless Rails.env.test?
+
+and wrap the code calling the API in a `begin ... rescue` block.
+
+
 === Ruby
 Make sure the following block is executed prior to making calls to the gem.
 

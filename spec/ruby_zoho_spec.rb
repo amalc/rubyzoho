@@ -320,6 +320,7 @@ describe RubyZoho::Crm do
         )
         l2 = RubyZoho::Crm::Lead.find(l.id)
         l2.first.test_label.should eq('$101')
+        l2.first.test_integer.should eq('1')
       end
     end
   end
