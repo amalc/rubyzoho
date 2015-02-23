@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = 'rubyzoho'
-  s.version = '0.3.4'
+  s.version = '0.4.1'
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['amalc']
-  s.date = '2015-02-22'
+  s.date = '2015-02-23'
   s.description = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho CRM API.'
   s.email = 'amalc@github.com'
   s.extra_rdoc_files = %w(LICENSE.txt README.rdoc)

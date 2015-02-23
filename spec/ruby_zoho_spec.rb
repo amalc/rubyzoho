@@ -7,7 +7,7 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  # c.default_cassette_options = {:record => :all}
+  c.default_cassette_options = {:record => :all}
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
 end
 
@@ -105,8 +105,6 @@ describe RubyZoho::Crm do
 
   it 'should find a contact by email or last name' do
     VCR.use_cassette 'zoho/find_by_email_or_name' do
-      r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
-      r.each { |m| RubyZoho::Crm::Contact.delete(m.id) } unless r.nil?
       1.upto(3) do
         c = RubyZoho::Crm::Contact.new(
             :first_name => 'Bob',
@@ -115,6 +113,10 @@ describe RubyZoho::Crm do
         c.save
       end
       r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
+      while r.nil?
+        sleep(15)
+        r = RubyZoho::Crm::Contact.find_by_email('bob@smith.com')
+      end
       r.should_not eq(nil)
       r.count.should eq(3)
       r.each { |m| m.email.should eq('bob@smith.com') }
@@ -274,7 +276,12 @@ describe RubyZoho::Crm do
           :last_name => 'Portra',
           :email => 'raj@portra.com')
       c.save
+      sleep(30)
       r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+      while r.nil?
+        sleep(15)
+        r = RubyZoho::Crm::Contact.find_by_email('raj@portra.com')
+      end
       r.first.email.should eq('raj@portra.com')
       r.each { |contact| RubyZoho::Crm::Contact.delete(contact.contactid) }
     end
@@ -340,6 +347,10 @@ describe RubyZoho::Crm do
       p = RubyZoho::Crm::Potential.new(h)
       p.save
       r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
+      while r.nil? do
+        sleep(15)
+        r = RubyZoho::Crm::Potential.find_by_potential_name(p.potential_name)
+      end
       r.first.potential_name.should eq(h[:potential_name])
       potential = RubyZoho::Crm::Potential.find(r.first.potentialid)
       potential.first.potentialid.should eq(r.first.potentialid)
@@ -365,6 +376,10 @@ describe RubyZoho::Crm do
       t = RubyZoho::Crm::Task.new(h)
       t.save
       r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
+      while r.nil?
+        sleep(15)
+        r = RubyZoho::Crm::Task.find_by_subject(h[:subject])
+      end
       r.first.subject.should eq(h[:subject])
       tasks = RubyZoho::Crm::Task.find_by_activityid(r.first.activityid)
       tasks.first.activityid.should eq(r.first.activityid)
@@ -425,11 +440,16 @@ describe RubyZoho::Crm do
           :email => 'raj@portra.com')
       l.save
       r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
+      while r.nil?
+        sleep(15)
+        r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
+      end
       RubyZoho::Crm::Lead.update(
           :id => r.first.leadid,
-          :email => 'changed_raj@portra.com'
+          :email => 'changed_rajj@portra.com'
       )
-      r_changed = RubyZoho::Crm::Lead.find_by_email('changed_raj@portra.com')
+      sleep(60)
+      r_changed = RubyZoho::Crm::Lead.find_by_email('changed_rajj@portra.com')
       r.first.leadid.should eq(r_changed.first.leadid)
       r.each { |c| RubyZoho::Crm::Lead.delete(c.leadid) }
       r_changed.each { |c| RubyZoho::Crm::Lead.delete(c.leadid) }
