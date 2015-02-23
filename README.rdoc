@@ -37,7 +37,7 @@ instance, set the gem to only load field data from 'Leads' by setting
 
 and only meta data from 'Leads' will be loaded.
 
-In `Test` environments with Continous Integration, one strategy is not to initialize the gem at all, so
+In Test or Continous Integration(CI) environments, one strategy is not to initialize the gem at all, so
 for example,
 
      RubyZoho.configure do |config|
@@ -46,7 +46,7 @@ for example,
        config.cache_fields = true
      end unless Rails.env.test?
 
-and wrap the code calling the API in a `begin ... rescue` block.
+and wrap the code calling the API in a <tt>begin ... rescue</tt> block.
 
 
 === Ruby
