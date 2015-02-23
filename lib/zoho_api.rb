@@ -23,7 +23,7 @@ module ZohoApi
     include ZohoApiFieldUtils
     include ZohoApiFinders
 
-    #debug_output $stderr
+    debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -173,6 +173,7 @@ module ZohoApi
                                      :scope => 'crmapi', :id => id,
                                      :xmlData => x, :wfTrigger => 'true'},
                           :headers => {'Content-length' => '0'})
+      pp r
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
       to_hash_with_id(x_r, module_name)[0]
