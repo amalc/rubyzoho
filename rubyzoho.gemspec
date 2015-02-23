@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rubyzoho'
-  s.version = '0.3.2'
+  s.version = '0.3.3'
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['amalc']
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
   s.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
 
-  s.add_runtime_dependency(%q<activemodel>, ['~> 3.0'])
+  s.add_runtime_dependency(%q<activemodel>, ['>= 3.0'])
   s.add_runtime_dependency(%q<httmultiparty>, ['~> 0.3'])
   s.add_runtime_dependency(%q<roxml>, ['~> 1.0'])
   s.add_runtime_dependency(%q<multipart-post>, ['~> 1.0'])
