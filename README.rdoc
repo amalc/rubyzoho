@@ -302,7 +302,9 @@ Copyright (c) 2013 - 2015 amalc (\@\amalc). Released under the MIT license. See 
         1. Replaces <tt>getSearchRecords</tt> with <tt>searchRecords</tt> in the Zoho API. The direct impact of this is
            increasing the number of API calls you can make. However, this search method appears to be
            asynchronous, so if you update a record and then immediately look for it, it will not updated
-           or in the event of a create, will return a nil. Be warned!
+           or in the event of a create, will return a nil. This applies to deletes as well. So a deleted
+           record will show up in a search which immediately follows. Empirica evidence shows about 30 -
+           45 seconds before search is updated. Be warned!
 [0.4.0]
         1. Fixed major bug with retrieving records thanks to @kjcpass PR#28
 [0.3.0]
