@@ -10,7 +10,7 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  # c.default_cassette_options = {:record => :all}
+  c.default_cassette_options = {:record => :all}
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
 end
 
@@ -21,6 +21,7 @@ describe ZohoApi do
       c = {:first_name => 'BobDifficultToMatch', :last_name => 'SmithDifficultToMatch',
            :email => 'bob@smith.com'}
       @zoho.add_record('Contacts', c)
+      sleep(30)
     end
   end
 
@@ -29,6 +30,7 @@ describe ZohoApi do
       c = @zoho.find_records(
           'Contacts', :email, '=', 'bob@smith.com')
       @zoho.delete_record('Contacts', c[0][:contactid]) unless c == []
+      sleep(30)
     end
   end
 
@@ -71,8 +73,12 @@ describe ZohoApi do
     VCR.use_cassette 'api_response/add_contact' do
       @zoho.add_record('Contacts', @h_smith)
       contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
-      @zoho.delete_record('Contacts', contacts[0][:contactid])
+      while contacts.nil?
+        sleep(15)
+        contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+      end
       contacts.should_not eq(nil)
+      @zoho.delete_record('Contacts', contacts[0][:contactid])
       # contacts.count.should eq(1)
     end
   end
@@ -100,6 +106,10 @@ describe ZohoApi do
     VCR.use_cassette 'api_response/add_file_to_contact' do
       @zoho.add_record('Contacts', @h_smith)
       contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+      while contacts.nil?
+        sleep(15)
+        contacts = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+      end
       @zoho.attach_file('Contacts', contacts[0][:contactid], @sample_pdf, File.basename(@sample_pdf))
       @zoho.delete_record('Contacts', contacts[0][:contactid])
     end
@@ -118,6 +128,10 @@ describe ZohoApi do
     VCR.use_cassette 'api_response/delete_contact_with_id' do
       add_dummy_contact
       c = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
+      while c.nil? do
+        sleep(15)
+        c = @zoho.find_records('Contacts', :email, '=', 'bob@smith.com')
+      end
       @zoho.delete_record('Contacts', c[0][:contactid])
     end
   end
@@ -159,6 +173,10 @@ describe ZohoApi do
 
       @zoho.add_record('Potentials', p)
       p1 = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+      while p1.nil?
+        sleep(15)
+        p1 = @zoho.find_records('Potentials', :potential_name, '=', p[:potential_name])
+      end
       p1.should_not eq(nil)
 
       p2 = @zoho.find_records('Potentials', :potentialid, '=', p1.first[:potentialid])
@@ -287,6 +305,10 @@ describe ZohoApi do
       fields.index(:task_owner).should_not eq(nil)
       @zoho.add_record(mod_name, {:task_owner => 'Task Owner', :subject => 'Test Task', :due_date => '2100/1/1'})
       r = @zoho.find_record_by_field('Tasks', 'Subject', '=', 'Test Task')
+      while r.nil?
+        sleep(15)
+        r = @zoho.find_record_by_field('Tasks', 'Subject', '=', 'Test Task')
+      end
       r.should_not eq(nil)
       r.map { |t| @zoho.delete_record('Tasks', t[:activityid]) }
     end
@@ -302,9 +324,17 @@ describe ZohoApi do
     VCR.use_cassette 'api_response/update_contact' do
       @zoho.add_record('Contacts', @h_smith)
       contact = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+      while contact.nil?
+        sleep(15)
+        contact = @zoho.find_records('Contacts', :email, '=', @h_smith[:email])
+      end
       h_changed = {:email => 'robert.smith@smithereens.com'}
       @zoho.update_record('Contacts', contact[0][:contactid], h_changed)
       changed_contact = @zoho.find_records('Contacts', :email, '=', h_changed[:email])
+      while changed_contact.nil?
+        sleep(15)
+        changed_contact = @zoho.find_records('Contacts', :email, '=', h_changed[:email])
+      end
       changed_contact[0][:email].should eq(h_changed[:email])
       @zoho.delete_record('Contacts', contact[0][:contactid])
     end
