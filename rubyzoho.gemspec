@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.summary = 'A set of Ruby classes supporting the ActiveRecord lifecycle for the Zoho API. Supports Rails and Devise.'
 
   s.add_runtime_dependency(%q<activemodel>, ['~> 3.0'])
-  s.add_runtime_dependency(%q<httmultiparty>, ['~> 3.0'])
+  s.add_runtime_dependency(%q<httmultiparty>, ['~> 0.3'])
   s.add_runtime_dependency(%q<roxml>, ['~> 1.0'])
   s.add_runtime_dependency(%q<multipart-post>, ['~> 1.0'])
   s.add_development_dependency(%q<bundler>, ['~> 1.2'])
