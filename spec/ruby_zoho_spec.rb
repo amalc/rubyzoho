@@ -7,7 +7,7 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  # c.default_cassette_options = {:record => :all}
+  c.default_cassette_options = {:record => :all}
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
 end
 
@@ -107,6 +107,13 @@ describe RubyZoho::Crm do
 
   it 'should find a contact by email or last name' do
     VCR.use_cassette 'zoho/find_by_email_or_name' do
+      r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+      r.each { |m| RubyZoho::Crm::Contact.delete(m.contactid) } unless r.nil?
+      r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+      unless r.nil?
+        sleep(SLEEP_INTERVAL)
+        r = RubyZoho::Crm::Contact.find_by_last_name('Smithereens')
+      end
       1.upto(3) do
         c = RubyZoho::Crm::Contact.new(
             :first_name => 'Bob',
