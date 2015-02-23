@@ -299,7 +299,7 @@ Copyright (c) 2013 - 2015 amalc (\@\amalc). Released under the MIT license. See 
         1. Support for testing without calling Zoho to prevent crushing API call limits in CI.
 == Released
 [0.5.0]
-        1. Replaces <<tt>getSearchRecords</tt> with <tt>searchRecords</tt> in the Zoho API. The direct impact of this is
+        1. Replaces <tt>getSearchRecords</tt> with <tt>searchRecords</tt> in the Zoho API. The direct impact of this is
            increasing the number of API calls you can make. However, this search method appears to be
            asynchronous, so if you update a record and then immediately look for it, it will not updated
            or in the event of a create, will return a nil. Be warned!
