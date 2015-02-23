@@ -30,7 +30,12 @@ You can reduce the number of API calls made during development and production by
 
     config.cache_fields = true
 
-to the initializer.
+to the initializer. You can also limit the number of modules in use, so if you're only using 'Leads' for
+instance, set the gem to only load field data from 'Leads' by setting
+
+      config.crm_modules = ['Leads']
+
+and only meta data from 'Leads' will be loaded.
 
 === Ruby
 Make sure the following block is executed prior to making calls to the gem.
