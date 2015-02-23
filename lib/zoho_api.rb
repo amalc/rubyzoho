@@ -16,14 +16,13 @@ module ZohoApi
 
   include ApiUtils
 
-  # noinspection RubyStringKeysInHashInspection
   class Crm
 
     include HTTMultiParty
     include ZohoApiFieldUtils
     include ZohoApiFinders
 
-    debug_output $stderr
+    #debug_output $stderr
 
     attr_reader :auth_token, :module_fields
 
@@ -38,7 +37,7 @@ module ZohoApi
       x = REXML::Document.new
       element = x.add_element module_name
       row = element.add_element 'row', {'no' => '1'}
-      fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      fields_values_hash.each_pair { |k, v| add_field(row, k, v, module_name) }
       r = self.class.post(create_url(module_name, 'insertRecords'),
                           :query => {:newFormat => 1, :authtoken => @auth_token,
                                      :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true'},
@@ -69,12 +68,12 @@ module ZohoApi
 
       # updateRelatedRecords returns two codes one in the status tag and another in a success tag, we want the
       # code under the success tag in this case
-      code = REXML::XPath.first(x, '//success/code') || REXML::XPath.first(x, '//code')
+      code = REXML::XPath.first(x, '//success/code') || code = REXML::XPath.first(x, '//code')
 
       # 4422 code is no records returned, not really an error
       # TODO: find out what 5000 is
       # 4800 code is returned when building an association. i.e Adding a product to a lead. Also this doesn't return a message
-      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || %w(4422 5000 4800).index(code.text)
+      raise(RuntimeError, "Zoho Error Code #{code.text}: #{REXML::XPath.first(x, '//message').text}.") unless code.nil? || ['4422', '5000', '4800'].index(code.text)
 
       return code.text unless code.nil?
       response.code
@@ -93,7 +92,7 @@ module ZohoApi
     end
 
     def method_name?(n)
-      /[@$"]/ !~ n.inspect
+      return /[@$"]/ !~ n.inspect
     end
 
     def post_action(module_name, record_id, action_type)
@@ -131,7 +130,7 @@ module ZohoApi
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :parentModule => parent_module, :id => parent_record_id})
 
-      REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
       check_for_errors(r)
     end
 
@@ -150,7 +149,7 @@ module ZohoApi
       x = REXML::Document.new
       leads = x.add_element related_module_fields[:related_module]
       row = leads.add_element 'row', {'no' => '1'}
-      related_module_fields[:xml_data].each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      related_module_fields[:xml_data].each_pair { |k, v| add_field(row, k, v, parent_module) }
 
       r = self.class.post(create_url("#{parent_module}", 'updateRelatedRecords'),
                           :query => {:newFormat => 1,
@@ -167,7 +166,7 @@ module ZohoApi
       x = REXML::Document.new
       contacts = x.add_element module_name
       row = contacts.add_element 'row', {'no' => '1'}
-      fields_values_hash.each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
+      fields_values_hash.each_pair { |k, v| add_field(row, k, v, module_name) }
       r = self.class.post(create_url(module_name, 'updateRecords'),
                           :query => {:newFormat => 1, :authtoken => @auth_token,
                                      :scope => 'crmapi', :id => id,
@@ -235,3 +234,4 @@ module ZohoApi
   end
 
 end
+
