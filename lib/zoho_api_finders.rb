@@ -10,7 +10,7 @@ module ZohoApiFinders
   end
 
   def find_record_by_field(module_name, sc_field, condition, value)
-    field = sc_field.rindex('id') ? sc_field.downcase : sc_field
+    field = sc_field.end_with?('id') ? sc_field.downcase : sc_field
     search_condition = "(#{field}:#{value})"
     r = self.class.get(create_url("#{module_name}", 'searchRecords'),
                        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',

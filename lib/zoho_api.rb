@@ -116,14 +116,14 @@ module ZohoApi
       fn = field_name.class == String ? field_name : field_name.to_s
       return true if fn == 'id'
       return true if %w[Calls Events Tasks].index(module_name) && fn.downcase == 'activityid'
-      fn.downcase.gsub('id', '') == module_name.chop.downcase
+      fn.downcase.gsub(/id$/, '') == module_name.chop.downcase
     end
 
     def related_id?(module_name, field_name)
       field = field_name.to_s
-      return false if field.rindex('id').nil?
+      return false if field.end_with?('id') == false
       return false if %w[Calls Events Tasks].index(module_name) && field_name.downcase == 'activityid'
-      field.downcase.gsub('id', '') != module_name.chop.downcase
+      field.downcase.gsub(/id$/, '') != module_name.chop.downcase
     end
 
     def related_records(parent_module, parent_record_id, related_module)

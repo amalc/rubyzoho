@@ -194,6 +194,7 @@ describe RubyZoho::Crm do
   end
 
   it 'should get a list of attr_writers for quotes' do
+    pending
     VCR.use_cassette 'zoho/list_attr_writers_for_quotes' do
       c = RubyZoho::Crm::Quote.new
       c.attr_writers.count.should be >= 18 unless c.nil?

@@ -10,7 +10,7 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  # c.default_cassette_options = {:record => :all}
+  c.default_cassette_options = {:record => :all}
   # c.debug_logger = File.open('log/vcr_debug.log', 'w')
 end
 
@@ -352,6 +352,7 @@ describe ZohoApi do
   end
 
   it 'should relate contact with a product' do
+    pending
     VCR.use_cassette 'api_response/relate_contact_with_product' do
       contact = @zoho.add_record('Contacts', @h_smith)
       product = @zoho.add_record('Products', {product_name: 'Watches'})
