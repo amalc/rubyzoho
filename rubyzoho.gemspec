@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<httmultiparty>, ['>= 0.3'])
   s.add_runtime_dependency(%q<roxml>, ['>= 1.0'])
   s.add_runtime_dependency(%q<multipart-post>, ['>= 1.0'])
+  s.add_runtime_dependency(%q<mime-types>, ['>= 2.6'])
   s.add_development_dependency(%q<bundler>, ['>= 1.2'])
   s.add_development_dependency(%q<holepicker>, ['>= 1.0'])
   s.add_development_dependency(%q<rdoc>, ['>= 3.12'])
