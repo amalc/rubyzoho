@@ -134,10 +134,11 @@ module ZohoApi
       check_for_errors(r)
     end
 
-    def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc)
+    def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc, last_modified_time = nil)
       r = self.class.get(create_url(module_name, 'getRecords'),
                          :query => {:newFormat => 2, :authtoken => @auth_token, :scope => 'crmapi',
                                     :sortColumnString => sort_column, :sortOrderString => sort_order,
+                                    :lastModifiedTime => last_modified_time,
                                     :fromIndex => index, :toIndex => index + (number_of_records || NUMBER_OF_RECORDS_TO_GET) - 1})
       return nil unless r.response.code == '200'
       check_for_errors(r)

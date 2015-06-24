@@ -11,11 +11,11 @@ module CrudMethods
       new(r[0])
     end
 
-    def all #TODO Refactor into low level API
+    def all(last_modified_time = nil) #TODO Refactor into low level API
       max_records = 200
       result = []
       begin
-        batch = RubyZoho.configuration.api.some(self.module_name, result.count + 1, max_records)
+        batch = RubyZoho.configuration.api.some(self.module_name, result.count + 1, max_records, :id, :asc, last_modified_time)
         result.concat(batch) unless batch.nil?
       end until batch.nil? || (batch.length < max_records)
       result.collect { |r| new(r) }
