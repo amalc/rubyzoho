@@ -37,7 +37,8 @@ module ZohoApiFinders
     r = self.class.get(create_url("#{module_name}", 'getSearchRecordsByPDC'),
                        :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                    :selectColumns => 'All', :version => 2, :searchColumn => field,
-                                   :searchValue => value })
+                                   :searchValue => value,
+                                   :fromIndex => 1, :toIndex => NUMBER_OF_RECORDS_TO_GET })
     check_for_errors(r)
     x = REXML::Document.new(r.body).elements.to_a("/response/result/#{module_name}/row")
     to_hash(x, module_name)
