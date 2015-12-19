@@ -126,7 +126,7 @@ module ZohoApi
     end
 
     def related_records(parent_module, parent_record_id, related_module)
-      r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'),
+      r = self.class.get(create_url("#{parent_module}", 'getRelatedRecords'),
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :parentModule => parent_module, :id => parent_record_id})
 
