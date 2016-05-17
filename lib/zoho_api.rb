@@ -130,7 +130,7 @@ module ZohoApi
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :parentModule => parent_module, :id => parent_record_id})
 
-      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{related_module}/row")
       check_for_errors(r)
       to_hash(x, related_module)
     end
