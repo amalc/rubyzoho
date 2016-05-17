@@ -126,12 +126,18 @@ module ZohoApi
     end
 
     def related_records(parent_module, parent_record_id, related_module)
-      r = self.class.get(create_url("#{parent_module}", 'getRelatedRecords'),
+      r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'),
                          :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                     :parentModule => parent_module, :id => parent_record_id})
 
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
       check_for_errors(r)
+      to_hash(x, related_module)
+    end
+
+    def download_file(parent_module, attachment_id)
+      self.class.get(create_url("#{parent_module}", 'downloadFile'),
+                        :query => {:authtoken => @auth_token, :scope => 'crmapi', :id => attachment_id})
     end
 
     def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc, last_modified_time = nil)
