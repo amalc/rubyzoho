@@ -191,6 +191,10 @@ To attach a file to a record (Tested for +Accounts+, +Contacts+, +Leads+, +Poten
     l = RubyZoho::Crm::Lead.find_by_email('email@domain.com')
     l.attach_file(file_path, file_name)     # Can only be attached to a pre-existing record
 
+To grab any attachments from a record:
+    attachments = RubyZoho.configuration.api.related_records('Contacts', 'contact_id', 'Attachments')
+    RubyZoho.configuration.api.download_file('Contacts', attachments.first[:id])
+
 Classes (Zoho modules) currently supported are:
     RubyZoho::Crm::Account
     RubyZoho::Crm::Contact

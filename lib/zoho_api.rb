@@ -137,7 +137,7 @@ module ZohoApi
 
     def download_file(parent_module, attachment_id)
       self.class.get(create_url("#{parent_module}", 'downloadFile'),
-                        :query => {:authtoken => @auth_token, :scope => 'crmapi', :id => attachment_id})
+        :query => {:authtoken => @auth_token, :scope => 'crmapi', :id => attachment_id})
     end
 
     def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc, last_modified_time = nil)
