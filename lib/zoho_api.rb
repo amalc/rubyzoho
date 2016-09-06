@@ -125,10 +125,19 @@ module ZohoApi
       field.downcase.gsub('id', '') != module_name.chop.downcase
     end
 
-    def related_records(parent_module, parent_record_id, related_module)
-      r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'),
-                         :query => {:newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
-                                    :parentModule => parent_module, :id => parent_record_id})
+    def related_records(parent_module, parent_record_id, related_module, query_index_options = nil)
+      modified_query = query_index_options || { fromIndex: 1, toIndex: 200 }
+      query = {
+        query: {
+          newFormat: 1,
+          authtoken: @auth_token,
+          scope: 'crmapi',
+          parentModule: parent_module,
+          id: parent_record_id
+        }
+      }
+      query.fetch(:query).merge!(modified_query) #fromIndex: 1, toIndex: 200
+      r = self.class.get(create_url("#{related_module}", 'getRelatedRecords'), query)
 
       x = REXML::Document.new(r.body).elements.to_a("/response/result/#{related_module}/row")
       check_for_errors(r)
