@@ -3,7 +3,14 @@ require 'rexml/document'
 module ApiUtils
 
   def self.camelize_with_space(str)
-    str.split('_').map {|w| w.capitalize}.join(' ')
+    new_str = str.split('_').map do |w|
+      if w == 'of'
+        w
+      else
+        w.capitalize
+      end
+    end
+    new_str.join(' ')
   end
 
   def self.string_to_method_name(s)
