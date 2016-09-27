@@ -300,7 +300,7 @@ describe RubyZoho::Crm do
           :first_name => 'Raj',
           :last_name => 'Portra',
           :email => 'raj@portra.com',
-			    :no_of_employees => 12345
+          :no_of_employees => 12345
 					)
       l.save
       r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
