@@ -2,15 +2,16 @@ require 'rexml/document'
 
 module ApiUtils
 
+  EXCEPTIONS = {
+      'no_of_employees': 'No of Employees',
+  }
+
   def self.camelize_with_space(str)
-    new_str = str.split('_').map do |w|
-      if w == 'of'
-        w
-      else
-        w.capitalize
-      end
+    if exception = EXCEPTIONS[str.to_sym]
+      exception
+    else
+      str.split('_').map { |w| w.capitalize }.join(' ')
     end
-    new_str.join(' ')
   end
 
   def self.string_to_method_name(s)
