@@ -3,7 +3,7 @@ require 'rexml/document'
 module ApiUtils
 
   EXCEPTIONS = {
-      'no_of_employees': 'No of Employees',
+      no_of_employees: 'No of Employees',
   }
 
   def self.camelize_with_space(str)
