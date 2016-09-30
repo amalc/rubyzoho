@@ -7,6 +7,8 @@ describe ApiUtils do
 
   it 'should camelize a method name' do
     ApiUtils.camelize_with_space('method_name').should eq('Method Name')
+    ApiUtils.camelize_with_space('no_of_employees').should eq('No of Employees')
+    ApiUtils.camelize_with_space('no_of_employees').should_not eq('No Of Employees')
   end
 
   it 'should convert a string to a method name' do
