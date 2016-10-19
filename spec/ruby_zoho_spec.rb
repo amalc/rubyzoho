@@ -299,11 +299,14 @@ describe RubyZoho::Crm do
       l = RubyZoho::Crm::Lead.new(
           :first_name => 'Raj',
           :last_name => 'Portra',
-          :email => 'raj@portra.com')
+          :email => 'raj@portra.com',
+          :no_of_employees => 12345
+					)
       l.save
       r = RubyZoho::Crm::Lead.find_by_email('raj@portra.com')
       r.should_not eq(nil)
       r.first.email.should eq(l.email)
+      r.first.no_of_employees.should eq(l.no_of_employees.to_s)
       r.each { |c| RubyZoho::Crm::Lead.delete(c.id) }
     end
   end
