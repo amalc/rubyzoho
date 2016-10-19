@@ -45,6 +45,21 @@ module CrudMethods
       find(id)
     end
 
+    def import(arr)
+      arr.each_slice(100) do |slice|
+        # convert each to field values hash
+        records = slice.collect do |record|
+          h = {}
+          record.fields.each { |f| h.merge!({ f => eval("record.#{f.to_s}") }) }
+          h.delete_if { |k, v| v.nil? }
+          h
+        end
+
+        RubyZoho.configuration.api.bulk_insert(self.module_name, records)
+      end
+
+      arr
+    end
   end
 
   def attach_file(file_path, file_name)

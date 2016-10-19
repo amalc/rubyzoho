@@ -13,7 +13,6 @@ require 'zoho_api_finders'
 
 module ZohoApi
 
-
   include ApiUtils
 
   class Crm
@@ -38,6 +37,24 @@ module ZohoApi
       element = x.add_element module_name
       row = element.add_element 'row', {'no' => '1'}
       fields_values_hash.each_pair { |k, v| add_field(row, k, v, module_name) }
+      r = self.class.post(create_url(module_name, 'insertRecords'),
+                          :query => {:newFormat => 1, :authtoken => @auth_token,
+                                     :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true'},
+                          :headers => {'Content-length' => '0'})
+      check_for_errors(r)
+      x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
+      to_hash(x_r, module_name)[0]
+    end
+
+    def bulk_insert(module_name, records)
+      x = REXML::Document.new
+      element = x.add_element module_name
+
+      records.each_with_index do |fields_values_hash, index|
+        row = element.add_element 'row', {'no' => "#{index + 1}"}
+        fields_values_hash.each_pair { |k, v| add_field(row, k, v, module_name) }
+      end
+
       r = self.class.post(create_url(module_name, 'insertRecords'),
                           :query => {:newFormat => 1, :authtoken => @auth_token,
                                      :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true'},

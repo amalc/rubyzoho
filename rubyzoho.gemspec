@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
     .coverall.yml .document .rspec .travis.yml Gemfile
     LICENSE.txt README.rdoc Rakefile lib/api_utils.rb lib/crm.rb lib/crud_methods.rb
     lib/ruby_zoho.rb lib/zoho_api.rb lib/zoho_api_field_utils.rb lib/zoho_api_finders.rb
-    lib/zoho_crm_users.rb lib/zoho_crm_utils.rb rubyzoho.gemspec spec/api_utils_spec.rb
+    lib/zoho_crm_utils.rb rubyzoho.gemspec spec/api_utils_spec.rb
     spec/fixtures/sample.pdf spec/fixtures/sample_contact.xml spec/fixtures/sample_contact_search.xml
     spec/fixtures/sample_contacts.xml spec/fixtures/sample_contacts_list.xml
     spec/fixtures/sample_leads_list.xml spec/ruby_zoho_spec.rb spec/spec_helper.rb spec/zoho_api_spec.rb
